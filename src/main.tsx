@@ -6,7 +6,7 @@ import App from "./App.tsx";
 import { Provider } from "react-redux";
 import { store } from "./store/store";
 
-createRoot(document.getElementById("root")!).render(
+createRoot(document.getElementById("root") as HTMLElement).render(
   <StrictMode>
     <Provider store={store}>
       <App />
