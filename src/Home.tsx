@@ -1,13 +1,13 @@
 import React, { useEffect, useState } from "react";
 import type { Product } from "./Product";
 import RatingStars from "./components/RatingStars";
+import SkeletonLoader from "./components/SkeletonLoader";
 
 function Home() {
 
     const [isLoading, setLoading] = useState(true);
     const [products, setProducts] = useState<Product[]>([]);
     const [categories, setCategories] = useState<string[]>([]);
-
 
     useEffect(() => {
         fetch('https://fakestoreapi.com/products')
@@ -87,7 +87,7 @@ function Home() {
                                             </div>
                                         )
                                     })}
-                                    {isLoading && <SkeletonLoader type={"trending"} count={4}></SkeletonLoader>}
+                                    {isLoading && <SkeletonLoader keyValue={"trending"} count={4}></SkeletonLoader>}
                                 </div>
                             </div>
                         </section>
@@ -117,7 +117,7 @@ function Home() {
                                         </div>
                                     )
                                 })}
-                                {isLoading && <SkeletonLoader type={"newsArrivals"} count={4}></SkeletonLoader>}
+                                {isLoading && <SkeletonLoader keyValue={"newsArrivals"} count={4}></SkeletonLoader>}
                             </div>
                         </section>
                     </div>
@@ -126,31 +126,5 @@ function Home() {
         </React.Fragment>
     );
 }
-
-type SkeletonLoaderProps = { type: string, count: number };
-
-function SkeletonLoader({ type, count }: SkeletonLoaderProps) {
-
-    return (
-        <React.Fragment>
-            {Array.from({ length: count }).map((_, i) => (
-                <div key={`key-${type}-${i}`}>
-                    <div className="flex flex-col rounded-xl border border-gray-200 dark:border-gray-800 bg-background-light dark:bg-gray-900 shadow-subtle animate-pulse">
-                        <div className="w-full aspect-square rounded-t-xl bg-gray-200 dark:bg-gray-700"></div>
-                        <div className="p-4 space-y-4">
-                            <div className="h-4 w-3/4 rounded bg-gray-200 dark:bg-gray-700"></div>
-                            <div className="h-4 w-1/2 rounded bg-gray-200 dark:bg-gray-700"></div>
-                            <div className="h-4 w-1/3 rounded bg-gray-200 dark:bg-gray-700"></div>
-                            <div className="h-10 w-full rounded-lg bg-gray-200 dark:bg-gray-700"></div>
-                        </div>
-                    </div>
-                </div>
-            ))}
-        </React.Fragment>
-    );
-}
-
-
-
 
 export default Home;
