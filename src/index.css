@@ -1,0 +1,27 @@
+/* Tailwind v4 uses automatic base styles — do NOT override body layout */
+
+:root {
+  font-family: system-ui, Avenir, Helvetica, Arial, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* Do NOT center the entire page like before */
+body {
+  margin: 0;
+}
+
+/* Optional link style */
+a {
+  text-decoration: none;
+  color: #646cff;
+}
+a:hover {
+  color: #535bf2;
+}
+
+/* Buttons fallbacks (Tailwind will override) */
+button {
+  font-family: inherit;
+  cursor: pointer;
+}
