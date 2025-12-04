@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
-import type { Product } from "./Product";
-import RatingStars from "./components/RatingStars";
-import SkeletonLoader from "./components/SkeletonLoader";
+import type { Product } from "../../models/Product";
+import RatingStars from "../../components/RatingStars";
+import SkeletonLoader from "../../components/SkeletonLoader";
 
 function Home() {
 
