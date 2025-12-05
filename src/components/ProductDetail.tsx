@@ -3,7 +3,6 @@ import { useDispatch, useSelector } from "react-redux";
 import { fetchProduct, fetchRelated } from "../store/productSlice";
 import { useParams } from "react-router-dom";
 import type { RootState, AppDispatch } from "../store/store";
-
 import ProductGallery from "./ProductGallery";
 import ProductInfo from "./ProductInfo";
 import ProductTabs from "./ProductTabs";
