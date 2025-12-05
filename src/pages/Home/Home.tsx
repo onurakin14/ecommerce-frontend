@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import type { Product } from "../../models/Product";
 import RatingStars from "../../components/RatingStars";
 import SkeletonLoader from "../../components/SkeletonLoader";
+import axios from "axios";
 
 function Home() {
 
@@ -10,12 +11,11 @@ function Home() {
     const [categories, setCategories] = useState<string[]>([]);
 
     useEffect(() => {
-        fetch('https://fakestoreapi.com/products')
-            .then(response => response.json())
-            .then(data => {
-                console.log(data);
-                setProducts(data);
-                setCategories(Array.from(new Set(data.map((item: Product) => item.category))));
+        axios.get("https://fakestoreapi.com/products")
+            .then(res => {
+                console.log(res.data);
+                setProducts(res.data);
+                setCategories(Array.from(new Set(res.data.map((item: Product) => item.category))));
             })
             .then(_ => setLoading(false))
             .catch(err => console.error(err));
