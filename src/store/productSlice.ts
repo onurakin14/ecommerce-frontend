@@ -1,10 +1,20 @@
+/**
+ * Product Redux Slice
+ *
+ * Ürün verilerini ve filtrelerini yöneten Redux store
+ * - FakeStore API'den ürünleri axios ile çeker
+ * - Loading ve error state'lerini yönetir
+ * - Ürün CRUD işlemleri için reducer'lar içerir
+ */
+
 import {
   createSlice,
   createAsyncThunk,
   type PayloadAction,
 } from "@reduxjs/toolkit";
+import axios from "axios";
 
-// FakeStore API response format
+// FakeStore API'den gelen ürün verisi formatı
 export interface Product {
   id: number;
   title: string;
@@ -18,19 +28,22 @@ export interface Product {
   };
 }
 
+// Filtre seçenekleri için interface
 export interface ProductFilters {
   category: string | null;
   minPrice: number | null;
   maxPrice: number | null;
 }
 
+// Redux state
 interface ProductState {
-  products: Product[];
-  filters: ProductFilters;
-  loading: boolean;
-  error: string | null;
+  products: Product[]; // Tüm ürünler
+  filters: ProductFilters; // Aktif filtreler
+  loading: boolean; // API isteği devam ediyor mu?
+  error: string | null; // Hata mesajı
 }
 
+// Başlangıç değerleri
 const initialState: ProductState = {
   products: [],
   filters: {
@@ -42,18 +55,16 @@ const initialState: ProductState = {
   error: null,
 };
 
-// Async thunk for fetching products
+// FakeStore API'den ürünleri çeken async thunk
+// 1 saniyelik gecikme  yapay skeleton loader'ı görmek için
 export const fetchProducts = createAsyncThunk(
   "product/fetchProducts",
   async () => {
-    const response = await fetch("https://fakestoreapi.com/products");
-    if (!response.ok) {
-      throw new Error("Failed to fetch products");
-    }
-    const data = await response.json();
-    // 1 saniye gecikme ekle (skeleton için)
+    const response = await axios.get<Product[]>(
+      "https://fakestoreapi.com/products"
+    );
     await new Promise((resolve) => setTimeout(resolve, 1000));
-    return data as Product[];
+    return response.data;
   }
 );
 
