@@ -65,30 +65,28 @@ function Home() {
                                 <a className="text-sm font-medium text-primary hover:underline" href="#">View All</a>
                             </div>
                             <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
-                                <div className="flex items-stretch p-4 gap-6">
-                                    {products.slice(0, 4).map((item) => {
-                                        return (
-                                            <div key={item.id}>
-                                                <div className="group flex h-full w-72 flex-col rounded-xl border border-gray-200 dark:border-gray-800 bg-background-light dark:bg-gray-900 shadow-subtle transition-shadow duration-300 hover:shadow-hover">
-                                                    <div className="w-full bg-center bg-no-repeat aspect-square bg-cover rounded-t-xl" data-alt="High-fidelity wireless headphones in black" style={{ backgroundImage: `url(${item.image})` }}></div>
-                                                    <div className="flex flex-col flex-1 justify-between p-4 gap-4">
-                                                        <div>
-                                                            <p className="text-gray-900 dark:text-white text-base font-semibold leading-normal"> {item.title} </p>
-                                                            <p className="text-gray-600 dark:text-gray-400 text-sm font-medium leading-normal mt-1">${item.price}</p>
-                                                            <div className="flex items-center mt-2 gap-0.5">
-                                                                <RatingStars id={item.id} rate={item.rating.rate}></RatingStars>
-                                                            </div>
+                                {products.slice(0, 4).map((item) => {
+                                    return (
+                                        <div key={item.id}>
+                                            <div className="group flex flex-col h-full rounded-xl border border-gray-200 dark:border-gray-800 bg-background-light dark:bg-gray-900 shadow-subtle transition-shadow duration-300 hover:shadow-hover">
+                                                <div className="w-full bg-center bg-no-repeat aspect-square bg-cover rounded-t-xl" data-alt="High-fidelity wireless headphones in black" style={{ backgroundImage: `url(${item.image})` }}></div>
+                                                <div className="flex flex-col flex-1 justify-between p-4 gap-4">
+                                                    <div>
+                                                        <p className="text-gray-900 dark:text-white text-base font-semibold leading-normal"> {item.title} </p>
+                                                        <p className="text-gray-600 dark:text-gray-400 text-sm font-medium leading-normal mt-1">${item.price}</p>
+                                                        <div className="flex items-center mt-2 gap-0.5">
+                                                            <RatingStars id={item.id} rate={item.rating.rate}></RatingStars>
                                                         </div>
-                                                        <button className="flex w-full cursor-pointer items-center justify-center overflow-hidden rounded-lg h-10 px-4 bg-gray-100 dark:bg-gray-800 text-gray-800 dark:text-gray-200 text-sm font-bold leading-normal tracking-wide hover:bg-gray-200 dark:hover:bg-gray-700">
-                                                            <span className="truncate">Add to Cart</span>
-                                                        </button>
                                                     </div>
+                                                    <button className="flex w-full cursor-pointer items-center justify-center overflow-hidden rounded-lg h-10 px-4 bg-gray-100 dark:bg-gray-800 text-gray-800 dark:text-gray-200 text-sm font-bold leading-normal tracking-wide hover:bg-gray-200 dark:hover:bg-gray-700">
+                                                        <span className="truncate">Add to Cart</span>
+                                                    </button>
                                                 </div>
                                             </div>
-                                        )
-                                    })}
-                                    {isLoading && <SkeletonLoader keyValue={"trending"} count={4}></SkeletonLoader>}
-                                </div>
+                                        </div>
+                                    )
+                                })}
+                                {isLoading && <SkeletonLoader keyValue={"trending"} count={4}></SkeletonLoader>}
                             </div>
                         </section>
                         {/* New Arrivals Section */}
@@ -101,7 +99,7 @@ function Home() {
                                 {products.slice(4, 8).map((item) => {
                                     return (
                                         <div key={item.id}>
-                                            <div className="group flex flex-col rounded-xl border border-gray-200 dark:border-gray-800 bg-background-light dark:bg-gray-900 shadow-subtle transition-shadow duration-300 hover:shadow-hover">
+                                            <div className="group flex flex-col h-full rounded-xl border border-gray-200 dark:border-gray-800 bg-background-light dark:bg-gray-900 shadow-subtle transition-shadow duration-300 hover:shadow-hover">
                                                 <div className="w-full bg-center bg-no-repeat aspect-square bg-cover rounded-t-xl" data-alt="Modern ergonomic office chair" style={{ backgroundImage: `url(${item.image})` }}></div>
                                                 <div className="flex flex-col flex-1 justify-between p-4 gap-4">
                                                     <div>
