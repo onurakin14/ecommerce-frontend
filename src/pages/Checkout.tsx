@@ -1,41 +1,42 @@
 import React from "react";
 
 function Checkout() {
+
     return (
         <React.Fragment>
             {/* Main Content Grid */}
-            <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-16 p-5">
+            <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-16 p-5 bg-gray-50" >
                 {/* Left Column: Forms */}
                 <div className="lg:col-span-7 space-y-8">
                     {/* Customer Information Card */}
-                    <div className="rounded-xl border border-border-light dark:border-border-dark bg-card-light dark:bg-card-dark shadow-soft">
-                        <div className="p-6 border-b border-border-light dark:border-border-dark">
+                    <div className="rounded-xl border border-gray-300 bg-white">
+                        <div className="p-6 border-b border-gray-300">
                             <h2 className="text-lg font-bold">Customer Information</h2>
                         </div>
                         <div className="p-6 grid grid-cols-1 sm:grid-cols-2 gap-6">
                             <label className="flex flex-col col-span-1">
                                 <p className="text-sm font-medium pb-2 text-text-primary-light dark:text-text-primary-dark">First Name</p>
-                                <input className="form-input flex w-full rounded-lg text-sm text-text-primary-light dark:text-text-primary-dark focus:outline-0 focus:ring-2 focus:ring-primary/50 border border-border-light dark:border-border-dark bg-transparent h-11 placeholder:text-text-secondary-light dark:placeholder:text-text-secondary-dark px-3" placeholder="John" />
+                                <input className="form-input flex w-full rounded-lg text-sm text-text-primary-light dark:text-text-primary-dark focus:outline-0 focus:ring-2 focus:ring-primary/50 border border-gray-300 h-11 placeholder:text-text-secondary-light px-3" placeholder="John" />
                             </label>
                             <label className="flex flex-col col-span-1">
                                 <p className="text-sm font-medium pb-2 text-text-primary-light dark:text-text-primary-dark">Last Name</p>
-                                <input className="form-input flex w-full rounded-lg text-sm text-text-primary-light dark:text-text-primary-dark focus:outline-0 focus:ring-2 focus:ring-primary/50 border border-border-light dark:border-border-dark bg-transparent h-11 placeholder:text-text-secondary-light dark:placeholder:text-text-secondary-dark px-3" placeholder="Doe" />
+                                <input className="form-input flex w-full rounded-lg text-sm text-text-primary-light dark:text-text-primary-dark focus:outline-0 focus:ring-2 focus:ring-primary/50 border border-gray-300 h-11 placeholder:text-text-secondary-light px-3" placeholder="Doe" />
                             </label>
                             <label className="flex flex-col sm:col-span-2">
                                 <p className="text-sm font-medium pb-2 text-text-primary-light dark:text-text-primary-dark">Email Address</p>
-                                <input className="form-input flex w-full rounded-lg text-sm text-text-primary-light dark:text-text-primary-dark focus:outline-0 focus:ring-2 focus:ring-primary/50 border border-border-light dark:border-border-dark bg-transparent h-11 placeholder:text-text-secondary-light dark:placeholder:text-text-secondary-dark px-3" placeholder="john.doe@example.com" type="email" />
+                                <input className="form-input flex w-full rounded-lg text-sm text-text-primary-light dark:text-text-primary-dark focus:outline-0 focus:ring-2 focus:ring-primary/50 border border-gray-300 h-11 placeholder:text-text-secondary-light px-3" placeholder="john.doe@example.com" type="email" />
                             </label>
                         </div>
                     </div>
                     {/* Shipping Address Card */}
-                    <div className="rounded-xl border border-border-light dark:border-border-dark bg-card-light dark:bg-card-dark shadow-soft">
-                        <div className="p-6 border-b border-border-light dark:border-border-dark">
+                    <div className="rounded-xl border border-gray-300 bg-white">
+                        <div className="p-6 border-b border-gray-300">
                             <h2 className="text-lg font-bold">Shipping Address</h2>
                         </div>
                         <div className="p-6 grid grid-cols-1 sm:grid-cols-6 gap-6">
                             <label className="flex flex-col sm:col-span-6">
                                 <p className="text-sm font-medium pb-2 text-text-primary-light dark:text-text-primary-dark">Country</p>
-                                <select className="form-select flex w-full rounded-lg text-sm text-text-primary-light dark:text-text-primary-dark focus:outline-0 focus:ring-2 focus:ring-primary/50 border border-border-light dark:border-border-dark bg-transparent h-11 px-3">
+                                <select className="form-select flex w-full rounded-lg text-sm text-text-primary-light dark:text-text-primary-dark focus:outline-0 focus:ring-2 focus:ring-primary/50 border border-gray-300 h-11 px-3">
                                     <option>United States</option>
                                     <option>Canada</option>
                                     <option>Mexico</option>
@@ -43,23 +44,23 @@ function Checkout() {
                             </label>
                             <label className="flex flex-col sm:col-span-6">
                                 <p className="text-sm font-medium pb-2 text-text-primary-light dark:text-text-primary-dark">Street Address</p>
-                                <input className="form-input flex w-full rounded-lg text-sm text-text-primary-light dark:text-text-primary-dark focus:outline-0 focus:ring-2 focus:ring-primary/50 border border-border-light dark:border-border-dark bg-transparent h-11 placeholder:text-text-secondary-light dark:placeholder:text-text-secondary-dark px-3" placeholder="123 Main St" />
+                                <input className="form-input flex w-full rounded-lg text-sm text-text-primary-light dark:text-text-primary-dark focus:outline-0 focus:ring-2 focus:ring-primary/50 border border-gray-300 h-11 placeholder:text-text-secondary-light dark:placeholder:text-text-secondary-dark px-3" placeholder="123 Main St" />
                             </label>
                             <label className="flex flex-col sm:col-span-6">
                                 <p className="text-sm font-medium pb-2 text-text-primary-light dark:text-text-primary-dark">Apartment, suite, etc. <span className="text-text-secondary-light dark:text-text-secondary-dark">(optional)</span></p>
-                                <input className="form-input flex w-full rounded-lg text-sm text-text-primary-light dark:text-text-primary-dark focus:outline-0 focus:ring-2 focus:ring-primary/50 border border-border-light dark:border-border-dark bg-transparent h-11 placeholder:text-text-secondary-light dark:placeholder:text-text-secondary-dark px-3" placeholder="Apt 4B" />
+                                <input className="form-input flex w-full rounded-lg text-sm text-text-primary-light dark:text-text-primary-dark focus:outline-0 focus:ring-2 focus:ring-primary/50 border border-gray-300 h-11 placeholder:text-text-secondary-light dark:placeholder:text-text-secondary-dark px-3" placeholder="Apt 4B" />
                             </label>
                             <label className="flex flex-col sm:col-span-2">
                                 <p className="text-sm font-medium pb-2 text-text-primary-light dark:text-text-primary-dark">City</p>
-                                <input className="form-input flex w-full rounded-lg text-sm text-text-primary-light dark:text-text-primary-dark focus:outline-0 focus:ring-2 focus:ring-primary/50 border border-border-light dark:border-border-dark bg-transparent h-11 placeholder:text-text-secondary-light dark:placeholder:text-text-secondary-dark px-3" placeholder="Anytown" />
+                                <input className="form-input flex w-full rounded-lg text-sm text-text-primary-light dark:text-text-primary-dark focus:outline-0 focus:ring-2 focus:ring-primary/50 border border-gray-300 h-11 placeholder:text-text-secondary-light dark:placeholder:text-text-secondary-dark px-3" placeholder="Anytown" />
                             </label>
                             <label className="flex flex-col sm:col-span-2">
                                 <p className="text-sm font-medium pb-2 text-text-primary-light dark:text-text-primary-dark">State / Province</p>
-                                <input className="form-input flex w-full rounded-lg text-sm text-text-primary-light dark:text-text-primary-dark focus:outline-0 focus:ring-2 focus:ring-primary/50 border border-border-light dark:border-border-dark bg-transparent h-11 placeholder:text-text-secondary-light dark:placeholder:text-text-secondary-dark px-3" placeholder="CA" />
+                                <input className="form-input flex w-full rounded-lg text-sm text-text-primary-light dark:text-text-primary-dark focus:outline-0 focus:ring-2 focus:ring-primary/50 border border-gray-300 h-11 placeholder:text-text-secondary-light dark:placeholder:text-text-secondary-dark px-3" placeholder="CA" />
                             </label>
                             <label className="flex flex-col sm:col-span-2">
                                 <p className="text-sm font-medium pb-2 text-text-primary-light dark:text-text-primary-dark">ZIP / Postal Code</p>
-                                <input className="form-input flex w-full rounded-lg text-sm text-text-primary-light dark:text-text-primary-dark focus:outline-0 focus:ring-2 focus:ring-primary/50 border border-border-light dark:border-border-dark bg-transparent h-11 placeholder:text-text-secondary-light dark:placeholder:text-text-secondary-dark px-3" placeholder="12345" />
+                                <input className="form-input flex w-full rounded-lg text-sm text-text-primary-light dark:text-text-primary-dark focus:outline-0 focus:ring-2 focus:ring-primary/50 border border-gray-300 h-11 placeholder:text-text-secondary-light dark:placeholder:text-text-secondary-dark px-3" placeholder="12345" />
                             </label>
                         </div>
                     </div>
@@ -68,8 +69,8 @@ function Checkout() {
                 <div className="lg:col-span-5">
                     <div className="sticky top-24 space-y-8">
                         {/* Order Summary Card */}
-                        <div className="rounded-xl border border-border-light dark:border-border-dark bg-card-light dark:bg-card-dark shadow-soft">
-                            <div className="p-6 border-b border-border-light dark:border-border-dark">
+                        <div className="rounded-xl border border-gray-300 bg-white">
+                            <div className="p-6 border-b border-gray-300">
                                 <h2 className="text-lg font-bold">Order Summary</h2>
                             </div>
                             <div className="p-6 space-y-4">
@@ -90,7 +91,7 @@ function Checkout() {
                                     <p className="font-medium">$85.50</p>
                                 </div>
                             </div>
-                            <div className="p-6 border-t border-border-light dark:border-border-dark space-y-3">
+                            <div className="p-6 border-t border-gray-300 space-y-3">
                                 <div className="flex justify-between text-sm">
                                     <p className="text-text-secondary-light dark:text-text-secondary-dark">Subtotal</p>
                                     <p>$205.50</p>
@@ -103,24 +104,24 @@ function Checkout() {
                                     <p className="text-text-secondary-light dark:text-text-secondary-dark">Taxes</p>
                                     <p>$16.44</p>
                                 </div>
-                                <div className="flex justify-between font-bold text-lg pt-2 border-t border-border-light dark:border-border-dark mt-3">
+                                <div className="flex justify-between font-bold text-lg pt-2 border-t border-gray-300 mt-3">
                                     <p>Total</p>
                                     <p>$226.94</p>
                                 </div>
                             </div>
                         </div>
                         {/* Payment Card */}
-                        <div className="rounded-xl border border-border-light dark:border-border-dark bg-card-light dark:bg-card-dark shadow-soft">
-                            <div className="p-6 border-b border-border-light dark:border-border-dark">
+                        <div className="rounded-xl border border-gray-300 bg-white">
+                            <div className="p-6 border-b border-gray-300">
                                 <h2 className="text-lg font-bold">Payment</h2>
                             </div>
                             <div className="p-6 space-y-6">
                                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                                    <div className="flex items-center p-3 border border-primary dark:border-primary rounded-lg bg-primary/10">
+                                    <div className="flex items-center p-3 border border-gray-300 rounded-lg">
                                         <input defaultChecked className="form-radio h-4 w-4 text-primary focus:ring-primary" id="credit-card" name="payment-method" type="radio" />
                                         <label className="ml-3 block text-sm font-medium" htmlFor="credit-card">Credit Card</label>
                                     </div>
-                                    <div className="flex items-center p-3 border border-border-light dark:border-border-dark rounded-lg">
+                                    <div className="flex items-center p-3 border border-gray-300 rounded-lg">
                                         <input className="form-radio h-4 w-4 text-primary focus:ring-primary" id="paypal" name="payment-method" type="radio" />
                                         <label className="ml-3 block text-sm font-medium" htmlFor="paypal">PayPal</label>
                                     </div>
@@ -130,17 +131,17 @@ function Checkout() {
                                         <p className="text-sm font-medium pb-2 text-text-primary-light dark:text-text-primary-dark">Card Number</p>
                                         <div className="relative">
                                             <span className="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-text-secondary-light dark:text-text-secondary-dark">credit_card</span>
-                                            <input className="form-input flex w-full rounded-lg text-sm text-text-primary-light dark:text-text-primary-dark focus:outline-0 focus:ring-2 focus:ring-primary/50 border border-border-light dark:border-border-dark bg-transparent h-11 placeholder:text-text-secondary-light dark:placeholder:text-text-secondary-dark pl-10 pr-3" placeholder="**** **** **** 1234" />
+                                            <input className="form-input flex w-full rounded-lg text-sm text-text-primary-light dark:text-text-primary-dark focus:outline-0 focus:ring-2 focus:ring-primary/50 border border-gray-300 h-11 placeholder:text-text-secondary-light dark:placeholder:text-text-secondary-dark pl-10 pr-3" placeholder="**** **** **** 1234" />
                                         </div>
                                     </label>
                                     <div className="grid grid-cols-2 gap-4">
                                         <label className="flex flex-col">
                                             <p className="text-sm font-medium pb-2 text-text-primary-light dark:text-text-primary-dark">Expiration Date</p>
-                                            <input className="form-input flex w-full rounded-lg text-sm text-text-primary-light dark:text-text-primary-dark focus:outline-0 focus:ring-2 focus:ring-primary/50 border border-border-light dark:border-border-dark bg-transparent h-11 placeholder:text-text-secondary-light dark:placeholder:text-text-secondary-dark px-3" placeholder="MM / YY" />
+                                            <input className="form-input flex w-full rounded-lg text-sm text-text-primary-light dark:text-text-primary-dark focus:outline-0 focus:ring-2 focus:ring-primary/50 border border-gray-300 h-11 placeholder:text-text-secondary-light dark:placeholder:text-text-secondary-dark px-3" placeholder="MM / YY" />
                                         </label>
                                         <label className="flex flex-col">
                                             <p className="text-sm font-medium pb-2 text-text-primary-light dark:text-text-primary-dark">CVC</p>
-                                            <input className="form-input flex w-full rounded-lg text-sm text-text-primary-light dark:text-text-primary-dark focus:outline-0 focus:ring-2 focus:ring-primary/50 border border-border-light dark:border-border-dark bg-transparent h-11 placeholder:text-text-secondary-light dark:placeholder:text-text-secondary-dark px-3" placeholder="123" />
+                                            <input className="form-input flex w-full rounded-lg text-sm text-text-primary-light dark:text-text-primary-dark focus:outline-0 focus:ring-2 focus:ring-primary/50 border border-gray-300 h-11 placeholder:text-text-secondary-light dark:placeholder:text-text-secondary-dark px-3" placeholder="123" />
                                         </label>
                                     </div>
                                 </div>
