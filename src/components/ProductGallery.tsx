@@ -1,19 +1,18 @@
-import { useState } from 'react';
+import { useState } from "react";
 
 interface Props {
   image: string;
 }
 
 const ProductGallery = ({ image }: Props) => {
-  const [selectedImage, setSelectedImage] = useState(0);
+  const [selected, setSelected] = useState(0);
   const thumbnails = [image, image, image, image];
 
   return (
     <div>
-      <div className="w-full aspect-square bg-gray-100 rounded-2xl overflow-hidden shadow-lg border border-gray-200">
+      <div className="w-full aspect-square bg-gray-100 rounded-2xl overflow-hidden shadow-md">
         <img
-          src={thumbnails[selectedImage]}
-          alt="Product"
+          src={thumbnails[selected]}
           className="w-full h-full object-cover"
         />
       </div>
@@ -22,18 +21,14 @@ const ProductGallery = ({ image }: Props) => {
         {thumbnails.map((img, i) => (
           <button
             key={i}
-            onClick={() => setSelectedImage(i)}
-            className={`aspect-square bg-gray-100 rounded-xl overflow-hidden border-2 transition-all duration-200 ${
-              i === selectedImage
-                ? "border-blue-600 ring-2 ring-blue-200 scale-105"
-                : "border-gray-200 hover:border-gray-300 opacity-70 hover:opacity-100"
-            }`}
+            onClick={() => setSelected(i)}
+            className={`aspect-square rounded-xl overflow-hidden border-2 ${
+              selected === i
+                ? "border-blue-600 scale-105"
+                : "border-gray-200 hover:border-gray-400 opacity-70 hover:opacity-100"
+            } transition`}
           >
-            <img
-              src={img}
-              alt={`Thumbnail ${i + 1}`}
-              className="w-full h-full object-cover"
-            />
+            <img src={img} className="w-full h-full object-cover" />
           </button>
         ))}
       </div>

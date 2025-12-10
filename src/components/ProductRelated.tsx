@@ -1,65 +1,67 @@
-import { useNavigate } from 'react-router-dom';
-import { Star } from 'lucide-react';
+import { useNavigate } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
+import { toggleWishlist } from "../store/wishlistSlide";
+import type { RootState } from "../store/store";
 import type { Product } from "../store/productSlice";
+import { Heart } from "lucide-react";
 
-interface Props {
-  products: Product[];
-}
-
-const ProductRelated = ({ products }: Props) => {
+const ProductRelated = ({ products }: { products: Product[] }) => {
   const navigate = useNavigate();
+  const dispatch = useDispatch();
 
-  const handleProductClick = (productId: number) => {
-    navigate(`/product/${productId}`);
-    window.scrollTo({ top: 0, behavior: 'smooth' });
-  };
+  const wishlistItems = useSelector((state: RootState) => state.wishlist.items);
+
+  const isWishlisted = (id: number) => wishlistItems.includes(id);
 
   return (
-    <div>
-      <h2 className="text-3xl font-bold text-gray-900 mb-8">
-        You Might Also Like
-      </h2>
+    <div className="mt-12">
+      <h2 className="text-2xl font-semibold mb-6">You Might Also Like</h2>
 
-      <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
-        {products.map((p) => (
-          <button
-            key={p.id}
-            onClick={() => handleProductClick(p.id)}
-            className="group flex flex-col gap-3 text-left transition-transform hover:scale-105 duration-200"
+      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-6">
+        {products.map((product) => (
+          <div
+            key={product.id}
+            className="relative group bg-white rounded-xl shadow-md hover:shadow-lg 
+                       transition-all duration-300 cursor-pointer border border-gray-100"
+            onClick={() => navigate(`/product/${product.id}`)}
           >
-            <div className="aspect-square bg-gray-100 rounded-xl overflow-hidden shadow-md group-hover:shadow-xl transition-shadow border border-gray-200">
+            {/* Wishlist Button */}
+            <button
+              onClick={(e) => {
+                e.stopPropagation();
+                dispatch(toggleWishlist(product.id));
+              }}
+              className="absolute top-3 right-3 z-10"
+            >
+              <Heart
+                className={`w-6 h-6 transition ${
+                  isWishlisted(product.id)
+                    ? "fill-red-500 stroke-red-500"
+                    : "stroke-gray-600 hover:stroke-red-500"
+                }`}
+              />
+            </button>
+
+            {/* PRODUCT IMAGE */}
+            <div className="w-full h-60 bg-gray-50 rounded-t-xl overflow-hidden flex items-center justify-center">
               <img
-                src={p.image}
-                alt={p.title}
-                className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-300"
+                src={product.image}
+                alt={product.title}
+                className="object-contain h-full w-full group-hover:scale-105 transition-transform duration-300"
               />
             </div>
 
-            <div className="space-y-2">
-              <h3 className="text-sm text-gray-700 line-clamp-2 group-hover:text-blue-600 transition-colors">
-                {p.title}
+            {/* CONTENT */}
+            <div className="p-4">
+              <h3 className="text-sm font-medium text-gray-800 line-clamp-2 min-h-10">
+                {product.title}
               </h3>
 
-              {p.rating && (
-                <div className="flex items-center gap-1">
-                  {[1, 2, 3, 4, 5].map((star) => (
-                    <Star
-                      key={star}
-                      className={`w-3 h-3 ${
-                        star <= Math.round(p.rating!.rate)
-                          ? "fill-yellow-400 text-yellow-400"
-                          : "fill-gray-200 text-gray-200"
-                      }`}
-                    />
-                  ))}
-                </div>
-              )}
-
-              <p className="font-bold text-gray-900 text-lg">
-                ${p.price.toFixed(2)}
+              <p className="text-lg font-semibold text-gray-900 mt-2">
+                ${product.price}
               </p>
             </div>
-          </button>
+          </div>
         ))}
       </div>
     </div>
