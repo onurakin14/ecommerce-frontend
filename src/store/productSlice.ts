@@ -1,3 +1,12 @@
+/**
+ * Product Redux Slice
+ *
+ * Ürün verilerini ve filtrelerini yöneten Redux store
+ * - FakeStore API'den ürünleri axios ile çeker
+ * - Loading ve error state'lerini yönetir
+ * - Ürün CRUD işlemleri için reducer'lar içerir
+ */
+
 import {
   createSlice,
   createAsyncThunk,
@@ -5,7 +14,7 @@ import {
 } from "@reduxjs/toolkit";
 import axios from "axios";
 
-// PRODUCT MODEL
+// FakeStore API'den gelen ürün verisi formatı
 export interface Product {
   id: number;
   title: string;
@@ -13,13 +22,13 @@ export interface Product {
   category: string;
   description: string;
   image: string;
-  rating?: {
+  rating: {
     rate: number;
     count: number;
   };
 }
 
-// FILTER MODEL
+// Filtre seçenekleri için interface
 export interface ProductFilters {
   category: string | null;
   minPrice: number | null;
