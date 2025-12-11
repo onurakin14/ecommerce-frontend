@@ -14,20 +14,18 @@ import {
 } from "@reduxjs/toolkit";
 import axios from "axios";
 
-// DummyJSON API'den gelen ürün verisi formatı
+// PRODUCT MODEL
 export interface Product {
   id: number;
   title: string;
   price: number;
   category: string;
   description: string;
-  thumbnail: string;
-  images: string[];
-  rating: number;
-  discountPercentage: number;
-  stock: number;
-  brand: string;
-  tags: string[];
+  image: string;
+  rating?: {
+    rate: number;
+    count: number;
+  };
 }
 
 // Filtre seçenekleri için interface
