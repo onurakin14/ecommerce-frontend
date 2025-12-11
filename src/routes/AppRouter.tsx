@@ -1,6 +1,6 @@
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 
-import ProductDetailPage from "../pages/ProductDetailPage";
+import ProductDetailPage from "../pages/ProductDetail";
 import Wishlist from "../pages/WishList";
 
 export default function AppRouter() {

@@ -1,3 +1,12 @@
+/**
+ * Product Redux Slice
+ *
+ * Ürün verilerini ve filtrelerini yöneten Redux store
+ * - FakeStore API'den ürünleri axios ile çeker
+ * - Loading ve error state'lerini yönetir
+ * - Ürün CRUD işlemleri için reducer'lar içerir
+ */
+
 import {
   createSlice,
   createAsyncThunk,
@@ -5,21 +14,23 @@ import {
 } from "@reduxjs/toolkit";
 import axios from "axios";
 
-// PRODUCT MODEL
+// DummyJSON API'den gelen ürün verisi formatı
 export interface Product {
   id: number;
   title: string;
   price: number;
   category: string;
   description: string;
-  image: string;
-  rating?: {
-    rate: number;
-    count: number;
-  };
+  thumbnail: string;
+  images: string[];
+  rating: number;
+  discountPercentage: number;
+  stock: number;
+  brand: string;
+  tags: string[];
 }
 
-// FILTER MODEL
+// Filtre seçenekleri için interface
 export interface ProductFilters {
   category: string | null;
   minPrice: number | null;
@@ -28,10 +39,10 @@ export interface ProductFilters {
 
 // REDUX STATE
 interface ProductState {
-  list: Product[];        // Tüm ürünler
-  item: Product | null;   // Liste veya detaydan seçilen ürün
-  related: Product[];     // Benzer ürünler
-  wishlist: Product[];    // Favoriler
+  list: Product[]; // Tüm ürünler
+  item: Product | null; // Liste veya detaydan seçilen ürün
+  related: Product[]; // Benzer ürünler
+  wishlist: Product[]; // Favoriler
 
   filters: ProductFilters;
 
@@ -58,8 +69,10 @@ const initialState: ProductState = {
 export const fetchProducts = createAsyncThunk(
   "product/fetchProducts",
   async () => {
-    const res = await axios.get<Product[]>("https://fakestoreapi.com/products");
-    return res.data;
+    const res = await axios.get<{ products: Product[] }>(
+      "https://dummyjson.com/products"
+    );
+    return res.data.products;
   }
 );
 
@@ -67,7 +80,9 @@ export const fetchProducts = createAsyncThunk(
 export const fetchProduct = createAsyncThunk<Product, string>(
   "product/fetchProduct",
   async (id) => {
-    const res = await axios.get(`https://fakestoreapi.com/products/${id}`);
+    const res = await axios.get<Product>(
+      `https://dummyjson.com/products/${id}`
+    );
     return res.data;
   }
 );
@@ -76,8 +91,10 @@ export const fetchProduct = createAsyncThunk<Product, string>(
 export const fetchRelated = createAsyncThunk(
   "product/fetchRelated",
   async () => {
-    const res = await axios.get<Product[]>(`https://fakestoreapi.com/products?limit=4`);
-    return res.data;
+    const res = await axios.get<{ products: Product[] }>(
+      `https://dummyjson.com/products?limit=4`
+    );
+    return res.data.products;
   }
 );
 
@@ -100,7 +117,10 @@ export const productSlice = createSlice({
     },
     setPriceFilter(
       state,
-      action: PayloadAction<{ minPrice: number | null; maxPrice: number | null }>
+      action: PayloadAction<{
+        minPrice: number | null;
+        maxPrice: number | null;
+      }>
     ) {
       state.filters.minPrice = action.payload.minPrice;
       state.filters.maxPrice = action.payload.maxPrice;
@@ -141,7 +161,7 @@ export const productSlice = createSlice({
         state.error = "Ürün yüklenemedi.";
       })
 
-      //RELATED 
+      //RELATED
       .addCase(fetchRelated.fulfilled, (state, action) => {
         state.related = action.payload;
       });

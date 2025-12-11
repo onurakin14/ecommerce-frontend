@@ -1,115 +1,184 @@
 import { useState } from "react";
-import { Star, ShoppingCart, Minus, Plus, Heart } from "lucide-react";
+import { ShoppingCart, Minus, Plus, Heart, Star } from "lucide-react";
 import { useDispatch, useSelector } from "react-redux";
-import { toggleWishlist } from "../store/wishlistSlide";
-import type { Product } from "../store/productSlice";
+import { toggleWishlist } from "../store/wishlistSlice";
 import type { RootState } from "../store/store";
+import type { Product } from "../store/productSlice";
+import Notification from "./Notification";
 
 interface Props {
   product: Product;
 }
 
-const ProductInfo = ({ product }: Props) => {
-  const [quantity, setQuantity] = useState(1);
-  const [addedToCart, setAddedToCart] = useState(false);
-
+export default function ProductInfo({ product }: Props) {
   const dispatch = useDispatch();
-  const wishlist = useSelector((state: RootState) => state.wishlist.items);
-
+  const wishlist = useSelector((s: RootState) => s.wishlist.items);
   const isWishlisted = wishlist.includes(product.id);
 
-  const handleAddToCart = () => {
-    setAddedToCart(true);
-    setTimeout(() => setAddedToCart(false), 2000);
-  };
+  const [quantity, setQuantity] = useState<number>(1);
+  const [notification, setNotification] = useState<{
+    message: string;
+    type: "success" | "wishlist" | "error";
+  } | null>(null);
+
+  function handleAddToCart() {
+    setNotification({
+      message: `${product.title} sepete eklendi!`,
+      type: "success",
+    });
+    setQuantity(1);
+  }
+
+  function handleToggleWishlist() {
+    dispatch(toggleWishlist(product.id));
+    setNotification({
+      message: isWishlisted
+        ? `${product.title} favorilerden çıkarıldı`
+        : `${product.title} favorilere eklendi!`,
+      type: "wishlist",
+    });
+  }
+
+  const discountedPrice = product.discountPercentage
+    ? (product.price * (1 - product.discountPercentage / 100)).toFixed(2)
+    : product.price;
 
   return (
-    <div className="flex flex-col gap-6">
-      <h1 className="text-3xl sm:text-4xl font-bold text-gray-900">
-        {product.title}
-      </h1>
-      <p className="text-gray-600 text-base leading-relaxed">
-        {product.description.slice(0, 150)}...
-      </p>
-      <div className="flex items-center gap-3">
-        {product.rating && (
-          <div className="flex items-center gap-0.5">
-            {[1, 2, 3, 4, 5].map((star) => (
+    <>
+      {notification && (
+        <Notification
+          message={notification.message}
+          type={notification.type}
+          onClose={() => setNotification(null)}
+        />
+      )}
+
+      <div className="flex flex-col gap-6">
+        <div>
+          <h1 className="text-3xl sm:text-4xl font-bold text-gray-900 leading-tight">
+            {product.title}
+          </h1>
+          {product.brand && (
+            <p className="text-sm text-gray-500 mt-2 font-medium">
+              Marka: {product.brand}
+            </p>
+          )}
+        </div>
+
+        <p className="text-gray-600 text-base leading-relaxed">
+          {product.description}
+        </p>
+
+        <div className="flex items-center gap-4">
+          <div className="flex items-center gap-1">
+            {[1, 2, 3, 4, 5].map((s) => (
               <Star
-                key={star}
+                key={s}
                 className={`w-4 h-4 ${
-                  star <= Math.round(product.rating!.rate)
+                  s <= Math.round(product.rating ?? 0)
                     ? "fill-yellow-400 text-yellow-400"
-                    : "fill-gray-200 text-gray-200"
+                    : "text-gray-300 fill-gray-300"
                 }`}
               />
             ))}
           </div>
-        )}
-        <span className="text-sm text-gray-600">
-          ({product.rating?.count} reviews)
-        </span>
-      </div>
-      <div className="text-4xl sm:text-5xl font-bold text-gray-900">
-        ${product.price.toFixed(2)}
-      </div>
-      <div>
-        <label className="block text-sm font-medium text-gray-700 mb-2">
-          Quantity
-        </label>
+          <span className="text-sm text-gray-500">
+            {product.rating?.toFixed(1) ?? "0"}
+          </span>
+          <span className="text-sm text-gray-400">|</span>
+          <span className="text-sm text-gray-600">
+            <span className={product.stock > 0 ? "text-green-600 font-medium" : "text-red-600"}>
+              {product.stock > 0 ? `${product.stock} adet stokta` : "Stokta yok"}
+            </span>
+          </span>
+        </div>
 
-        <div className="flex items-center border-2 border-gray-300 rounded-lg w-fit overflow-hidden">
+        <div className="flex items-center gap-4">
+          {product.discountPercentage > 0 && (
+            <div className="flex items-center gap-3">
+              <div className="text-4xl font-bold text-gray-900">
+                ${discountedPrice}
+              </div>
+              <div className="flex flex-col">
+                <span className="text-lg text-gray-400 line-through">
+                  ${product.price}
+                </span>
+                <span className="text-sm font-medium text-red-500">
+                  %{product.discountPercentage.toFixed(0)} indirim
+                </span>
+              </div>
+            </div>
+          )}
+          {!product.discountPercentage && (
+            <div className="text-4xl font-bold text-gray-900">${product.price}</div>
+          )}
+        </div>
+
+        {product.tags && product.tags.length > 0 && (
+          <div className="flex flex-wrap gap-2">
+            {product.tags.slice(0, 4).map((tag, i) => (
+              <span
+                key={i}
+                className="px-3 py-1 bg-gray-100 text-gray-700 text-xs rounded-full"
+              >
+                #{tag}
+              </span>
+            ))}
+          </div>
+        )}
+
+        <div>
+          <label className="block text-sm font-medium text-gray-700 mb-2">
+            Miktar
+          </label>
+          <div className="inline-flex items-center border-2 border-gray-200 rounded-xl overflow-hidden">
+            <button
+              onClick={() => setQuantity((q) => Math.max(1, q - 1))}
+              className="px-4 py-3 hover:bg-gray-100 disabled:opacity-50 disabled:cursor-not-allowed transition"
+              aria-label="decrease-quantity"
+              disabled={quantity <= 1}
+            >
+              <Minus className="w-4 h-4" />
+            </button>
+
+            <div className="px-6 py-3 border-x-2 border-gray-200 font-semibold min-w-16 text-center">
+              {quantity}
+            </div>
+
+            <button
+              onClick={() => setQuantity((q) => Math.min(product.stock, q + 1))}
+              className="px-4 py-3 hover:bg-gray-100 disabled:opacity-50 disabled:cursor-not-allowed transition"
+              aria-label="increase-quantity"
+              disabled={quantity >= product.stock}
+            >
+              <Plus className="w-4 h-4" />
+            </button>
+          </div>
+        </div>
+
+        <div className="flex flex-col sm:flex-row gap-3">
           <button
-            onClick={() => quantity > 1 && setQuantity(quantity - 1)}
-            className="px-4 py-2 hover:bg-gray-100 transition disabled:opacity-50 disabled:cursor-not-allowed"
-            disabled={quantity <= 1}
+            onClick={handleAddToCart}
+            disabled={product.stock === 0}
+            className="flex-1 px-6 py-4 rounded-xl flex items-center justify-center gap-3 text-white font-medium transition-all bg-blue-600 hover:bg-blue-700 disabled:bg-gray-300 disabled:cursor-not-allowed active:scale-95"
           >
-            <Minus className="w-4 h-4" />
+            <ShoppingCart className="w-5 h-5" />
+            Sepete Ekle
           </button>
 
-          <span className="px-6 py-2 min-w-[50px] text-center border-x-2 border-gray-200 font-medium">
-            {quantity}
-          </span>
-
           <button
-            onClick={() => setQuantity(quantity + 1)}
-            className="px-4 py-2 hover:bg-gray-100 transition"
+            onClick={handleToggleWishlist}
+            className="p-4 rounded-xl border-2 border-gray-200 hover:border-red-400 transition active:scale-95"
+            aria-label="toggle-wishlist"
           >
-            <Plus className="w-4 h-4" />
+            <Heart
+              className={`w-6 h-6 ${
+                isWishlisted ? "fill-red-500 text-red-500" : "text-gray-400"
+              }`}
+            />
           </button>
         </div>
       </div>
-
-      {/* ACTION BUTTONS */}
-      <div className="flex items-center gap-4 mt-4">
-        <button
-          onClick={handleAddToCart}
-          className={`flex items-center justify-center gap-3 py-4 px-6 rounded-xl text-white font-semibold text-lg transition-all duration-200 ${
-            addedToCart
-              ? "bg-green-600 scale-95"
-              : "bg-blue-600 hover:bg-blue-700 hover:scale-105 active:scale-95"
-          } shadow-lg`}
-        >
-          <ShoppingCart className="w-5 h-5" />
-          {addedToCart ? "Added!" : "Add to Cart"}
-        </button>
-
-        {/* FAVORITE BUTTON */}
-        <button
-          onClick={() => dispatch(toggleWishlist(product.id))}
-          className="p-4 rounded-xl border-2 border-gray-300 hover:border-red-500 transition shadow-sm hover:shadow-md"
-        >
-          <Heart
-            className={`w-6 h-6 transition ${
-              isWishlisted
-                ? "fill-red-500 text-red-500"
-                : "text-gray-400 hover:text-red-500"
-            }`}
-          />
-        </button>
-      </div>
-    </div>
+    </>
   );
-};
-
-export default ProductInfo;
+}

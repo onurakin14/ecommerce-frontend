@@ -1,121 +1,242 @@
-import { useState } from 'react';
-import { Star } from 'lucide-react';
+import { useEffect, useState } from "react";
+import { Star, User, Calendar } from "lucide-react";
 
 interface Props {
-  description: string;
+  product: {
+    id: number;
+    description?: string;
+    brand?: string;
+    category?: string;
+    weight?: number;
+    dimensions?: {
+      width: number;
+      height: number;
+      depth: number;
+    };
+    warrantyInformation?: string;
+    shippingInformation?: string;
+    availabilityStatus?: string;
+    returnPolicy?: string;
+  };
 }
 
-type TabType = 'description' | 'reviews' | 'specifications';
+type TabType = "description" | "reviews" | "specifications";
 
-const ProductTabs = ({ description }: Props) => {
-  const [activeTab, setActiveTab] = useState<TabType>('description');
+interface Review {
+  rating: number;
+  comment: string;
+  date: string;
+  reviewerName: string;
+  reviewerEmail: string;
+}
+
+export default function ProductTabs({ product }: Props) {
+  const [active, setActive] = useState<TabType>("description");
+  const [reviews, setReviews] = useState<Review[]>([]);
+  const [loadingReviews, setLoadingReviews] = useState(false);
+
+  useEffect(() => {
+    if (!product?.id) return;
+
+    async function loadReviews() {
+      setLoadingReviews(true);
+      try {
+        const res = await fetch(
+          `https://dummyjson.com/comments/post/${product.id}`
+        );
+        const data = await res.json();
+
+        const mockReviews = data.comments?.slice(0, 5).map((c: any) => ({
+          rating: Math.floor(Math.random() * 2) + 4,
+          comment: c.body,
+          date: new Date().toISOString(),
+          reviewerName: c.user?.username || "Anonymous",
+          reviewerEmail: c.user?.id + "@example.com",
+        }));
+
+        setReviews(mockReviews || []);
+      } catch (e) {
+        setReviews([]);
+      } finally {
+        setLoadingReviews(false);
+      }
+    }
+    loadReviews();
+  }, [product?.id]);
 
   const tabs = [
-    { id: 'description', label: 'Description' },
-    { id: 'reviews', label: 'Reviews' },
-    { id: 'specifications', label: 'Specifications' },
+    { id: "description", label: "Açıklama" },
+    { id: "reviews", label: "Yorumlar" },
+    { id: "specifications", label: "Özellikler" },
   ];
 
   return (
-    <div>
-      <div className="border-b border-gray-200 flex gap-8">
+    <div className="mt-10">
+      <div className="flex gap-1 border-b border-gray-200">
         {tabs.map((tab) => (
           <button
             key={tab.id}
-            onClick={() => setActiveTab(tab.id as TabType)}
-            className={`py-4 px-2 font-medium transition-all relative ${
-              activeTab === tab.id
+            className={`px-6 py-4 font-medium text-sm sm:text-base transition-all relative ${
+              active === tab.id
                 ? "text-blue-600"
-                : "text-gray-500 hover:text-gray-700"
+                : "text-gray-600 hover:text-gray-900"
             }`}
+            onClick={() => setActive(tab.id as TabType)}
           >
             {tab.label}
-            {activeTab === tab.id && (
+            {active === tab.id && (
               <div className="absolute bottom-0 left-0 right-0 h-0.5 bg-blue-600" />
             )}
           </button>
         ))}
       </div>
 
-      <div className="mt-8">
-        {activeTab === 'description' && (
+      <div className="mt-6">
+        {active === "description" && (
           <div className="prose max-w-none">
             <p className="text-gray-700 leading-relaxed text-base">
-              {description}
+              {product.description}
             </p>
-            <div className="mt-6 space-y-4">
-              <p className="text-gray-700 leading-relaxed">
-                Experience unparalleled sophistication with our premium product. Tailored to perfection,
-                this item is crafted from high-quality materials that offer both durability and a luxurious feel.
-              </p>
-              <p className="text-gray-700 leading-relaxed">
-                Whether you're looking for everyday elegance or special occasion style, this product provides
-                timeless design and exceptional comfort that complements any wardrobe perfectly.
-              </p>
-            </div>
-          </div>
-        )}
 
-        {activeTab === 'reviews' && (
-          <div className="space-y-6">
-            {[1, 2, 3].map((review) => (
-              <div key={review} className="border-b border-gray-200 pb-6">
-                <div className="flex items-center gap-3 mb-2">
-                  <div className="flex gap-0.5">
-                    {[1, 2, 3, 4, 5].map((star) => (
-                      <Star
-                        key={star}
-                        className="w-4 h-4 fill-yellow-400 text-yellow-400"
-                      />
-                    ))}
-                  </div>
-                  <span className="text-sm text-gray-600">5 days ago</span>
-                </div>
-                <h4 className="font-semibold text-gray-900 mb-2">Great Product!</h4>
-                <p className="text-gray-600 leading-relaxed">
-                  Absolutely love this! The quality is exceptional and it fits perfectly.
-                  Highly recommend to anyone looking for premium quality.
+            {product.shippingInformation && (
+              <div className="mt-6 p-4 bg-blue-50 rounded-xl">
+                <h4 className="font-semibold text-gray-900 mb-2">
+                  Kargo Bilgisi
+                </h4>
+                <p className="text-gray-700 text-sm">
+                  {product.shippingInformation}
                 </p>
               </div>
-            ))}
+            )}
+
+            {product.returnPolicy && (
+              <div className="mt-4 p-4 bg-green-50 rounded-xl">
+                <h4 className="font-semibold text-gray-900 mb-2">
+                  İade Politikası
+                </h4>
+                <p className="text-gray-700 text-sm">{product.returnPolicy}</p>
+              </div>
+            )}
           </div>
         )}
 
-        {activeTab === 'specifications' && (
+        {active === "reviews" && (
+          <div className="space-y-4">
+            {loadingReviews ? (
+              <div className="text-gray-500 text-center py-8">
+                Yorumlar yükleniyor...
+              </div>
+            ) : reviews.length === 0 ? (
+              <div className="text-center py-12">
+                <p className="text-gray-500">Henüz yorum yapılmamış.</p>
+                <button className="mt-4 px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition">
+                  İlk yorumu siz yapın
+                </button>
+              </div>
+            ) : (
+              <div className="grid gap-4">
+                {reviews.map((r, i) => (
+                  <div
+                    key={i}
+                    className="border-2 border-gray-100 rounded-xl p-5 bg-white hover:shadow-md transition"
+                  >
+                    <div className="flex items-start justify-between mb-3">
+                      <div className="flex items-center gap-3">
+                        <div className="w-10 h-10 bg-blue-100 rounded-full flex items-center justify-center">
+                          <User className="w-5 h-5 text-blue-600" />
+                        </div>
+                        <div>
+                          <div className="font-semibold text-gray-900">
+                            {r.reviewerName}
+                          </div>
+                          <div className="flex items-center gap-2 text-xs text-gray-500">
+                            <Calendar className="w-3 h-3" />
+                            {new Date(r.date).toLocaleDateString("tr-TR")}
+                          </div>
+                        </div>
+                      </div>
+                      <div className="flex items-center gap-1">
+                        {[...Array(5)].map((_, j) => (
+                          <Star
+                            key={j}
+                            className={`w-4 h-4 ${
+                              j < r.rating
+                                ? "fill-yellow-400 text-yellow-400"
+                                : "text-gray-300"
+                            }`}
+                          />
+                        ))}
+                      </div>
+                    </div>
+                    <p className="text-gray-700 leading-relaxed">{r.comment}</p>
+                  </div>
+                ))}
+              </div>
+            )}
+          </div>
+        )}
+
+        {active === "specifications" && (
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             <div className="space-y-3">
-              <div className="flex justify-between py-2 border-b border-gray-200">
-                <span className="text-gray-600">Material</span>
-                <span className="font-medium text-gray-900">Premium Quality</span>
-              </div>
-              <div className="flex justify-between py-2 border-b border-gray-200">
-                <span className="text-gray-600">Weight</span>
-                <span className="font-medium text-gray-900">Standard</span>
-              </div>
-              <div className="flex justify-between py-2 border-b border-gray-200">
-                <span className="text-gray-600">Dimensions</span>
-                <span className="font-medium text-gray-900">Standard Fit</span>
-              </div>
+              {product.brand && (
+                <div className="flex justify-between items-center border-b border-gray-200 py-3">
+                  <span className="text-gray-600 font-medium">Marka</span>
+                  <span className="font-semibold text-gray-900">
+                    {product.brand}
+                  </span>
+                </div>
+              )}
+              {product.category && (
+                <div className="flex justify-between items-center border-b border-gray-200 py-3">
+                  <span className="text-gray-600 font-medium">Kategori</span>
+                  <span className="font-semibold text-gray-900 capitalize">
+                    {product.category}
+                  </span>
+                </div>
+              )}
+              {product.availabilityStatus && (
+                <div className="flex justify-between items-center border-b border-gray-200 py-3">
+                  <span className="text-gray-600 font-medium">
+                    Stok Durumu
+                  </span>
+                  <span className="font-semibold text-green-600">
+                    {product.availabilityStatus}
+                  </span>
+                </div>
+              )}
             </div>
+
             <div className="space-y-3">
-              <div className="flex justify-between py-2 border-b border-gray-200">
-                <span className="text-gray-600">Care Instructions</span>
-                <span className="font-medium text-gray-900">Machine Washable</span>
-              </div>
-              <div className="flex justify-between py-2 border-b border-gray-200">
-                <span className="text-gray-600">Origin</span>
-                <span className="font-medium text-gray-900">Imported</span>
-              </div>
-              <div className="flex justify-between py-2 border-b border-gray-200">
-                <span className="text-gray-600">Warranty</span>
-                <span className="font-medium text-gray-900">1 Year</span>
-              </div>
+              {product.warrantyInformation && (
+                <div className="flex justify-between items-center border-b border-gray-200 py-3">
+                  <span className="text-gray-600 font-medium">Garanti</span>
+                  <span className="font-semibold text-gray-900">
+                    {product.warrantyInformation}
+                  </span>
+                </div>
+              )}
+              {product.dimensions && (
+                <div className="flex justify-between items-center border-b border-gray-200 py-3">
+                  <span className="text-gray-600 font-medium">Boyutlar</span>
+                  <span className="font-semibold text-gray-900">
+                    {product.dimensions.width} x {product.dimensions.height} x{" "}
+                    {product.dimensions.depth} cm
+                  </span>
+                </div>
+              )}
+              {product.weight && (
+                <div className="flex justify-between items-center border-b border-gray-200 py-3">
+                  <span className="text-gray-600 font-medium">Ağırlık</span>
+                  <span className="font-semibold text-gray-900">
+                    {product.weight} kg
+                  </span>
+                </div>
+              )}
             </div>
           </div>
         )}
       </div>
     </div>
   );
-};
-
-export default ProductTabs;
+}
