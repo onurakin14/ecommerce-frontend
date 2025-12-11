@@ -28,7 +28,7 @@ export default function AppRouter() {
           <Route path="/shop/all" element={<AllProducts />} />
           
           <Route path="/product/:id" element={<ProductDetailPage />} />
-            <Route path="/wishlist" element={<Wishlist />} />
+          <Route path="/wishlist" element={<Wishlist />} />
         </Routes>
       </Layout>
     </Router>
