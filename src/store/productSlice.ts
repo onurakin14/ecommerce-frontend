@@ -18,14 +18,15 @@ import axios from "axios";
 export interface Product {
   id: number;
   title: string;
-  price: number;
-  category: string;
   description: string;
-  image: string;
-  rating?: {
-    rate: number;
-    count: number;
-  };
+  price: number;
+  discountPercentage?: number;
+  rating?: number;
+  stock?: number;
+  brand?: string;
+  category?: string;
+  thumbnail?: string;
+  images?: string[];
 }
 
 // Filtre seçenekleri için interface
