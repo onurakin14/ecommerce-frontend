@@ -20,9 +20,11 @@ import Pagination from "../features/products/components/Pagination";
 function ProductList() {
   // Redux store'dan ürünleri ve yükleme durumunu al
   const dispatch = useDispatch<AppDispatch>();
-  const { products, loading, error } = useSelector(
-    (state: RootState) => state.product
-  );
+  const {
+    list: products,
+    loading,
+    error,
+  } = useSelector((state: RootState) => state.product);
 
   // Filtre ve sayfa state'leri
   const [minPrice, setMinPrice] = useState<number>(0);
