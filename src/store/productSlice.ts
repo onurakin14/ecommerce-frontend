@@ -24,7 +24,7 @@ export interface Product {
   rating?: number;
   stock?: number;
   brand?: string;
-  category?: string;
+  category: string;
   thumbnail?: string;
   images?: string[];
 }
@@ -42,6 +42,7 @@ interface ProductState {
   item: Product | null; // Liste veya detaydan seçilen ürün
   related: Product[]; // Benzer ürünler
   wishlist: Product[]; // Favoriler
+  products: Product[];
 
   filters: ProductFilters;
 
@@ -50,6 +51,7 @@ interface ProductState {
 }
 
 const initialState: ProductState = {
+  products: [],
   list: [],
   item: null,
   related: [],

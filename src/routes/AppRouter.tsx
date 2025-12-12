@@ -1,6 +1,6 @@
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 
-import ProductDetailPage from "../pages/ProductDetail";
+import ProductDetail from "../pages/ProductDetail";
 import Wishlist from "../pages/WishList";
 import Layout from "../layout/Layout";
 
@@ -27,7 +27,7 @@ export default function AppRouter() {
           <Route path="/shop" element={<Shop />} />
           <Route path="/shop/all" element={<AllProducts />} />
           
-          <Route path="/product/:id" element={<ProductDetailPage />} />
+          <Route path="/product/:id" element={<ProductDetail />} />
           <Route path="/wishlist" element={<Wishlist />} />
         </Routes>
       </Layout>
