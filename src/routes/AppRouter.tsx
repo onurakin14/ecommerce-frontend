@@ -8,6 +8,7 @@ import NewArrivals from "../pages/New Arrivals";
 import Categories from "../pages/Categories";
 import Shop from "../pages/Shop";
 import AllProducts from "../pages/AllProducts";
+import Login from "../pages/Auth/Login";
 
 export default function AppRouter() {
   return (
@@ -23,6 +24,7 @@ export default function AppRouter() {
           <Route path="/categories" element={<Categories />} />
           <Route path="/shop" element={<Shop />} />
           <Route path="/shop/all" element={<AllProducts />} />
+          <Route path="/login" element={<Login />} />
         </Routes>
       </Layout>
     </Router>
