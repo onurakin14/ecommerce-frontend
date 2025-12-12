@@ -14,20 +14,19 @@ import {
 } from "@reduxjs/toolkit";
 import axios from "axios";
 
-// DummyJSON API'den gelen ürün verisi formatı
+// PRODUCT MODEL
 export interface Product {
   id: number;
   title: string;
-  price: number;
-  category: string;
   description: string;
-  thumbnail: string;
-  images: string[];
-  rating: number;
-  discountPercentage: number;
-  stock: number;
-  brand: string;
-  tags: string[];
+  price: number;
+  discountPercentage?: number;
+  rating?: number;
+  stock?: number;
+  brand?: string;
+  category: string;
+  thumbnail?: string;
+  images?: string[];
 }
 
 // Filtre seçenekleri için interface
@@ -43,6 +42,7 @@ interface ProductState {
   item: Product | null; // Liste veya detaydan seçilen ürün
   related: Product[]; // Benzer ürünler
   wishlist: Product[]; // Favoriler
+  products: Product[];
 
   filters: ProductFilters;
 
@@ -51,6 +51,7 @@ interface ProductState {
 }
 
 const initialState: ProductState = {
+  products: [],
   list: [],
   item: null,
   related: [],

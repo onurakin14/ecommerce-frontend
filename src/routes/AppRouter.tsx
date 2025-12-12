@@ -1,6 +1,6 @@
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 
-import ProductDetailPage from "../pages/ProductDetailPage";
+import ProductDetail from "../pages/ProductDetail";
 import Wishlist from "../pages/WishList";
 import Layout from "../layout/Layout";
 
