@@ -46,8 +46,6 @@ export default function Navbar() {
             <Link to="/categories" className="hover:text-black flex items-center gap-1">
               Categories <FiChevronDown size={14} />
             </Link>
-            <Link to="/deals" className="hover:text-black">Deals</Link>
-            <Link to="/new-arrivals" className="hover:text-black">New Arrivals</Link>
           </div>
         </div>
 
