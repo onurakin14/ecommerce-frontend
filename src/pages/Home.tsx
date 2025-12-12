@@ -1,23 +1,37 @@
 import React, { useEffect, useState } from "react";
+import { Link } from "react-router-dom";
 import type { Product } from "../models/Product";
 import RatingStars from "../components/RatingStars";
 import SkeletonLoader from "../components/SkeletonLoader";
 import axios from "axios";
+import { useCart } from "../features/shopping-cart/CartContext";
 
 function Home() {
-
   const [isLoading, setLoading] = useState(true);
   const [products, setProducts] = useState<Product[]>([]);
+  const { addItem } = useCart();
+
+  const handleAddToCart = (product: Product) => {
+    addItem({
+      id: product.id.toString(),
+      name: product.title,
+      price: product.price,
+      quantity: 1,
+      image: product.image,
+    });
+  };
   const [categories, setCategories] = useState<string[]>([]);
 
   useEffect(() => {
     axios.get("https://fakestoreapi.com/products")
       .then(res => {
         setProducts(res.data);
-        setCategories(Array.from(new Set(res.data.map((item: Product) => item.category))));
+        setCategories(
+          Array.from(new Set(res.data.map((item: Product) => item.category)))
+        );
       })
-      .then(_ => setLoading(false))
-      .catch(err => console.error(err));
+      .then((_) => setLoading(false))
+      .catch((err) => console.error(err));
   }, []);
 
   return (
