@@ -1,4 +1,4 @@
-import { useSelector} from "react-redux";
+import { useSelector } from "react-redux";
 import { useEffect, useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import { Heart, ShoppingBag, Loader2, Star } from "lucide-react";
@@ -54,7 +54,7 @@ export default function WishlistPage() {
           </div>
 
           <Link
-            to="/"
+            to="/products"
             className="px-4 py-2 sm:px-6 sm:py-3 bg-blue-600 text-white rounded-xl hover:bg-blue-700 transition text-sm sm:text-base font-medium"
           >
             Alışverişe Devam
@@ -72,91 +72,92 @@ export default function WishlistPage() {
               bulabilirsiniz.
             </p>
             <Link
-              to="/"
+              to="/products"
               className="inline-block px-8 py-3 bg-blue-600 text-white rounded-xl hover:bg-blue-700 transition font-medium"
             >
               Ürünleri Keşfet
             </Link>
           </div>
         ) : (
-         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-6">
-          {filtered.map((product) => (
-    <div
-      key={product.id}
-      className="bg-white rounded-2xl shadow-sm hover:shadow-lg transition-all duration-300 overflow-hidden group flex flex-col h-full"
-    >
-      <div className="p-4 flex flex-col h-full">
-
-        {/* IMAGE */}
-        <div
-          onClick={() => navigate(`/product/${product.id}`)}
-          className="
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-6">
+            {filtered.map((product) => (
+              <div
+                key={product.id}
+                className="bg-white rounded-2xl shadow-sm hover:shadow-lg transition-all duration-300 overflow-hidden group flex flex-col h-full"
+              >
+                <div className="p-4 flex flex-col h-full">
+                  {/* IMAGE */}
+                  <div
+                    onClick={() => navigate(`/product/${product.id}`)}
+                    className="
             bg-gray-50 rounded-xl overflow-hidden
             h-48 sm:h-52 flex items-center justify-center
             cursor-pointer group-hover:scale-[1.02] transition
           "
-        >
-          <img
-            src={product.images?.[0] || product.thumbnail}
-            alt={product.title}
-            className="w-36 h-36 sm:w-44 sm:h-44 object-contain"
-          />
-        </div>
+                  >
+                    <img
+                      src={product.images?.[0] || product.thumbnail}
+                      alt={product.title}
+                      className="w-36 h-36 sm:w-44 sm:h-44 object-contain"
+                    />
+                  </div>
 
-        {/* PRODUCT INFO */}
-        <div
-          onClick={() => navigate(`/product/${product.id}`)}
-          className="mt-4 cursor-pointer flex flex-col flex-1"
-        >
-          {/* TITLE */}
-          <h3 className="font-semibold text-sm sm:text-base text-gray-800 line-clamp-2 min-h-12">
-            {product.title}
-          </h3>
+                  {/* PRODUCT INFO */}
+                  <div
+                    onClick={() => navigate(`/product/${product.id}`)}
+                    className="mt-4 cursor-pointer flex flex-col flex-1"
+                  >
+                    {/* TITLE */}
+                    <h3 className="font-semibold text-sm sm:text-base text-gray-800 line-clamp-2 min-h-12">
+                      {product.title}
+                    </h3>
 
-          {product.brand && (
-            <p className="text-xs text-gray-500 mt-1">{product.brand}</p>
-          )}
+                    {product.brand && (
+                      <p className="text-xs text-gray-500 mt-1">
+                        {product.brand}
+                      </p>
+                    )}
 
-          <div className="flex items-center justify-between mt-3">
-            <div>
-              <p className="font-bold text-lg sm:text-xl text-gray-900">
-                ${product.price}
-              </p>
+                    <div className="flex items-center justify-between mt-3">
+                      <div>
+                        <p className="font-bold text-lg sm:text-xl text-gray-900">
+                          ${product.price}
+                        </p>
 
-              {(product.discountPercentage ?? 0) > 0 && (
-              <p className="text-xs text-red-500 font-medium">
-                %{product.discountPercentage?.toFixed(0)} indirim
-              </p>
-            )}
-            </div>
+                        {(product.discountPercentage ?? 0) > 0 && (
+                          <p className="text-xs text-red-500 font-medium">
+                            %{product.discountPercentage?.toFixed(0)} indirim
+                          </p>
+                        )}
+                      </div>
 
-            {product.rating && (
-              <div className="flex items-center gap-1">
-                <Star className="w-4 h-4 fill-yellow-400 text-yellow-400" />
-                <span className="text-sm font-medium">
-                  {product.rating.toFixed(1)}
-                </span>
-              </div>
-            )}
-          </div>
+                      {product.rating && (
+                        <div className="flex items-center gap-1">
+                          <Star className="w-4 h-4 fill-yellow-400 text-yellow-400" />
+                          <span className="text-sm font-medium">
+                            {product.rating.toFixed(1)}
+                          </span>
+                        </div>
+                      )}
+                    </div>
 
-          {/* BUTTON — ALWAYS AT BOTTOM */}
-          <button
-            onClick={(e) => {
-              e.stopPropagation();
-              navigate(`/product/${product.id}`);
-            }}
-            className="w-full mt-auto bg-blue-600 hover:bg-blue-700 
+                    {/* BUTTON — ALWAYS AT BOTTOM */}
+                    <button
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        navigate(`/product/${product.id}`);
+                      }}
+                      className="w-full mt-auto bg-blue-600 hover:bg-blue-700 
               text-white py-2.5 sm:py-3 rounded-xl 
               text-sm font-medium transition active:scale-95"
-          >
-            Ürünü İncele
-          </button>
-        </div>
-      </div>
-    </div>
-        ))}
-        </div>
+                    >
+                      Ürünü İncele
+                    </button>
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
         )}
       </div>
     </div>

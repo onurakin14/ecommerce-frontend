@@ -1,7 +1,8 @@
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useCart } from "../features/shopping-cart/CartContext";
 
 export default function CartPage() {
+  const navigate = useNavigate();
   const { items, removeItem, updateQuantity, getTotalPrice } = useCart();
 
   const subtotal = getTotalPrice();
@@ -185,7 +186,10 @@ export default function CartPage() {
                 </span>
               </div>
 
-              <button className="flex w-full cursor-pointer items-center justify-center overflow-hidden rounded-xl h-12 bg-indigo-600 text-white gap-2 text-base font-bold leading-normal tracking-wide hover:bg-indigo-700 transition-colors">
+              <button
+                onClick={() => navigate("/checkout")}
+                className="flex w-full cursor-pointer items-center justify-center overflow-hidden rounded-xl h-12 bg-indigo-600 text-white gap-2 text-base font-bold leading-normal tracking-wide hover:bg-indigo-700 transition-colors"
+              >
                 Proceed to Checkout
               </button>
 

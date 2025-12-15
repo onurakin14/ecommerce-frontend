@@ -10,6 +10,7 @@
 interface PriceFilterProps {
   minPrice: number;
   maxPrice: number;
+  maxValue: number;
   onMinChange: (value: number) => void;
   onMaxChange: (value: number) => void;
 }
@@ -17,6 +18,7 @@ interface PriceFilterProps {
 function PriceFilter({
   minPrice,
   maxPrice,
+  maxValue,
   onMinChange,
   onMaxChange,
 }: PriceFilterProps) {
@@ -52,15 +54,15 @@ function PriceFilter({
               <div
                 className="absolute h-2 bg-indigo-500 rounded-full"
                 style={{
-                  left: `${(minPrice / 1000) * 100}%`,
-                  right: `${100 - (maxPrice / 1000) * 100}%`,
+                  left: `${(minPrice / maxValue) * 100}%`,
+                  right: `${100 - (maxPrice / maxValue) * 100}%`,
                 }}
               ></div>
               {/* Min Range Slider */}
               <input
                 type="range"
                 min="0"
-                max="1000"
+                max={maxValue}
                 value={minPrice}
                 onChange={(e) => {
                   const value = Number(e.target.value);
@@ -74,7 +76,7 @@ function PriceFilter({
               <input
                 type="range"
                 min="0"
-                max="1000"
+                max={maxValue}
                 value={maxPrice}
                 onChange={(e) => {
                   const value = Number(e.target.value);

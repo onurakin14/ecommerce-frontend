@@ -3,7 +3,7 @@ import { Link } from "react-router-dom";
 import { FiSearch, FiChevronDown, FiMenu, FiX } from "react-icons/fi";
 import { FaShoppingCart } from "react-icons/fa";
 import { AiOutlineHeart } from "react-icons/ai";
-import { useCart } from "../../../features/shopping-cart/CartContext";
+import { useCart } from "../../features/shopping-cart/CartContext";
 
 export default function Navbar() {
   const [open, setOpen] = useState(false);
@@ -60,7 +60,9 @@ export default function Navbar() {
           </button>
 
           {/* Icons */}
-          <Icon icon={<AiOutlineHeart size={20} />} />
+          <Link to="/wishlist">
+            <Icon icon={<AiOutlineHeart size={20} />} link={true} />
+          </Link>
           <Link to="/cart">
             <Icon icon={<FaShoppingCart size={18} />} link={true}>
               {totalItems > 0 && (

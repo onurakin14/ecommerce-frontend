@@ -29,6 +29,7 @@ function ProductList() {
   // Filtre ve sayfa state'leri
   const [minPrice, setMinPrice] = useState<number>(0);
   const [maxPrice, setMaxPrice] = useState<number>(1000);
+  const [maxProductPrice, setMaxProductPrice] = useState<number>(1000);
   const [selectedCategories, setSelectedCategories] = useState<Set<string>>(
     new Set()
   );
@@ -41,6 +42,15 @@ function ProductList() {
   useEffect(() => {
     dispatch(fetchProducts());
   }, [dispatch]);
+
+  // Ürünler yüklendikten sonra maxPrice'ı güncelle
+  useEffect(() => {
+    if (products.length > 0) {
+      const maxPriceValue = Math.max(...products.map((p) => p.price));
+      setMaxProductPrice(Math.ceil(maxPriceValue));
+      setMaxPrice(Math.ceil(maxPriceValue));
+    }
+  }, [products]);
 
   // Ürünleri filtreleme: arama, kategori ve fiyat filtrelerini uygula
   const filteredProducts = products.filter((product) => {
@@ -126,7 +136,7 @@ function ProductList() {
   const handleResetFilters = () => {
     dispatch(clearFilters());
     setMinPrice(0);
-    setMaxPrice(1000);
+    setMaxPrice(maxProductPrice);
     setSelectedCategories(new Set());
     setSearchQuery("");
     setCurrentPage(1);
@@ -156,6 +166,7 @@ function ProductList() {
             selectedCategories={selectedCategories}
             minPrice={minPrice}
             maxPrice={maxPrice}
+            maxValue={maxProductPrice}
             onCategoryToggle={handleCategoryToggle}
             onMinPriceChange={handleMinPriceChange}
             onMaxPriceChange={handleMaxPriceChange}
