@@ -8,7 +8,7 @@
  */
 
 import type { Product } from "../../../store/productSlice";
-import ProductCard from "./ProductCard";
+import ProductCard from "../../../components/shared-components/ProductCard";
 import ProductSkeleton from "./ProductSkeleton";
 
 interface ProductGridProps {

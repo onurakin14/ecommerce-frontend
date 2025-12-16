@@ -1,9 +1,10 @@
 import { useState } from "react";
 import { ShoppingCart, Minus, Plus, Heart, Star } from "lucide-react";
 import { useDispatch, useSelector } from "react-redux";
-import { toggleWishlist } from "../store/wishlistSlice";
-import type { RootState } from "../store/store";
-import type { Product } from "../store/productSlice";
+import { toggleWishlist } from "../../../store/wishlistSlice";
+import type { RootState } from "../../../store/store";
+import type { Product } from "../../../store/productSlice";
+import { useCart } from "../../shopping-cart/CartContext";
 import Notification from "./Notification";
 
 interface Props {
@@ -14,6 +15,7 @@ export default function ProductInfo({ product }: Props) {
   const dispatch = useDispatch();
   const wishlist = useSelector((s: RootState) => s.wishlist.items);
   const isWishlisted = wishlist.includes(product.id);
+  const { addItem } = useCart();
 
   const [quantity, setQuantity] = useState<number>(1);
   const [notification, setNotification] = useState<{
@@ -22,6 +24,13 @@ export default function ProductInfo({ product }: Props) {
   } | null>(null);
 
   function handleAddToCart() {
+    addItem({
+      id: product.id.toString(),
+      name: product.title,
+      price: parseFloat(discountedPrice),
+      quantity: quantity,
+      image: product.thumbnail,
+    });
     setNotification({
       message: `${product.title} sepete eklendi!`,
       type: "success",
@@ -87,14 +96,22 @@ export default function ProductInfo({ product }: Props) {
           </span>
           <span className="text-sm text-gray-400">|</span>
           <span className="text-sm text-gray-600">
-            <span className={product.stock > 0 ? "text-green-600 font-medium" : "text-red-600"}>
-              {product.stock > 0 ? `${product.stock} adet stokta` : "Stokta yok"}
+            <span
+              className={
+                (product.stock ?? 0) > 0
+                  ? "text-green-600 font-medium"
+                  : "text-red-600"
+              }
+            >
+              {(product.stock ?? 0) > 0
+                ? `${product.stock} adet stokta`
+                : "Stokta yok"}
             </span>
           </span>
         </div>
 
         <div className="flex items-center gap-4">
-          {product.discountPercentage > 0 && (
+          {(product.discountPercentage ?? 0) > 0 && (
             <div className="flex items-center gap-3">
               <div className="text-4xl font-bold text-gray-900">
                 ${discountedPrice}
@@ -104,19 +121,21 @@ export default function ProductInfo({ product }: Props) {
                   ${product.price}
                 </span>
                 <span className="text-sm font-medium text-red-500">
-                  %{product.discountPercentage.toFixed(0)} indirim
+                  %{(product.discountPercentage ?? 0).toFixed(0)} indirim
                 </span>
               </div>
             </div>
           )}
-          {!product.discountPercentage && (
-            <div className="text-4xl font-bold text-gray-900">${product.price}</div>
+          {!(product.discountPercentage ?? 0) && (
+            <div className="text-4xl font-bold text-gray-900">
+              ${product.price}
+            </div>
           )}
         </div>
 
         {product.tags && product.tags.length > 0 && (
           <div className="flex flex-wrap gap-2">
-            {product.tags.slice(0, 4).map((tag, i) => (
+            {product.tags.slice(0, 4).map((tag: string, i: number) => (
               <span
                 key={i}
                 className="px-3 py-1 bg-gray-100 text-gray-700 text-xs rounded-full"
@@ -146,10 +165,12 @@ export default function ProductInfo({ product }: Props) {
             </div>
 
             <button
-              onClick={() => setQuantity((q) => Math.min(product.stock, q + 1))}
+              onClick={() =>
+                setQuantity((q) => Math.min(product.stock ?? 0, q + 1))
+              }
               className="px-4 py-3 hover:bg-gray-100 disabled:opacity-50 disabled:cursor-not-allowed transition"
               aria-label="increase-quantity"
-              disabled={quantity >= product.stock}
+              disabled={quantity >= (product.stock ?? 0)}
             >
               <Plus className="w-4 h-4" />
             </button>

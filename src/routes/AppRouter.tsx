@@ -1,6 +1,5 @@
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 
-import ProductDetail from "../pages/ProductDetail";
 import Wishlist from "../pages/WishList";
 import Layout from "../layout/Layout";
 
@@ -14,6 +13,8 @@ import AllProducts from "../pages/AllProducts";
 import Login from "../pages/Auth/Login";
 import ProductList from "../pages/ProductList";
 import CartPage from "../pages/CartPage";
+import ProductDetail from "../pages/ProductDetail";
+import Checkout from "../pages/Checkout";
 
 export default function AppRouter() {
   return (
@@ -32,8 +33,9 @@ export default function AppRouter() {
           <Route path="/login" element={<Login />} />
           <Route path="/products" element={<ProductList />} />
           <Route path="/cart" element={<CartPage />} />
+          <Route path="/checkout" element={<Checkout />} />
 
-          <Route path="/product/:id" element={<ProductDetailPage />} />
+          <Route path="/product/:id" element={<ProductDetail />} />
           <Route path="/wishlist" element={<Wishlist />} />
         </Routes>
       </Layout>

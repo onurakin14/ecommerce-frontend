@@ -22,11 +22,13 @@ export interface Product {
   price: number;
   discountPercentage?: number;
   rating?: number;
+  reviews?: number;
   stock?: number;
   brand?: string;
   category: string;
   thumbnail?: string;
   images?: string[];
+  tags?: string[];
 }
 
 // Filtre seçenekleri için interface

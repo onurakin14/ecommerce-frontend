@@ -14,6 +14,7 @@ interface FilterSidebarProps {
   selectedCategories: Set<string>;
   minPrice: number;
   maxPrice: number;
+  maxValue: number;
   onCategoryToggle: (category: string) => void;
   onMinPriceChange: (value: number) => void;
   onMaxPriceChange: (value: number) => void;
@@ -25,6 +26,7 @@ function FilterSidebar({
   selectedCategories,
   minPrice,
   maxPrice,
+  maxValue,
   onCategoryToggle,
   onMinPriceChange,
   onMaxPriceChange,
@@ -41,6 +43,7 @@ function FilterSidebar({
         <PriceFilter
           minPrice={minPrice}
           maxPrice={maxPrice}
+          maxValue={maxValue}
           onMinChange={onMinPriceChange}
           onMaxChange={onMaxPriceChange}
         />

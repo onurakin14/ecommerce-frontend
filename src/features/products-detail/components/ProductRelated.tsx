@@ -2,8 +2,8 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Heart, ChevronLeft, ChevronRight, Star } from "lucide-react";
 import { useDispatch, useSelector } from "react-redux";
-import { toggleWishlist } from "../store/wishlistSlice";
-import type { RootState } from "../store/store";
+import { toggleWishlist } from "../../../store/wishlistSlice";
+import type { RootState } from "../../../store/store";
 
 interface Product {
   id: number;
@@ -135,11 +135,12 @@ export default function ProductRelated({ products }: ProductRelatedProps) {
                       <p className="text-xl font-bold text-gray-900">
                         ${product.price}
                       </p>
-                      {product.discountPercentage && product.discountPercentage > 0 && (
-                        <p className="text-xs text-red-500 font-medium">
-                          %{product.discountPercentage.toFixed(0)} indirim
-                        </p>
-                      )}
+                      {product.discountPercentage &&
+                        product.discountPercentage > 0 && (
+                          <p className="text-xs text-red-500 font-medium">
+                            %{product.discountPercentage.toFixed(0)} indirim
+                          </p>
+                        )}
                     </div>
 
                     {product.rating && (

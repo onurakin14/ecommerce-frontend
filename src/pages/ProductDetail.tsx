@@ -2,10 +2,10 @@ import { useEffect, useState } from "react";
 import { useParams, Link } from "react-router-dom";
 import { ChevronRight, Home, Loader2 } from "lucide-react";
 
-import ProductGallery from "../components/ProductGallery";
-import ProductInfo from "../components/ProductInfo";
-import ProductTabs from "../components/ProductTabs";
-import ProductRelated from "../components/ProductRelated";
+import ProductGallery from "../features/products-detail/components/ProductGallery";
+import ProductInfo from "../features/products-detail/components/ProductInfo";
+import ProductTabs from "../features/products-detail/components/ProductTabs";
+import ProductRelated from "../features/products-detail/components/ProductRelated";
 
 interface ProductDetail {
   id: number;

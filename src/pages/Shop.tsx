@@ -1,4 +1,4 @@
-import Breadcrumb from "../feature/components/Breadcrumb/Breadcrumb";
+import Breadcrumb from "../components/Breadcrumb/Breadcrumb";
 
 export default function Shop() {
   return (
