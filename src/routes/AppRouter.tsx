@@ -10,6 +10,7 @@ import NewArrivals from "../pages/New Arrivals";
 import Categories from "../pages/Categories";
 import Shop from "../pages/Shop";
 import AllProducts from "../pages/AllProducts";
+import Login from "../pages/Auth/Login";
 import ProductList from "../pages/ProductList";
 import CartPage from "../pages/CartPage";
 import ProductDetail from "../pages/ProductDetail";
@@ -29,6 +30,7 @@ export default function AppRouter() {
           <Route path="/categories" element={<Categories />} />
           <Route path="/shop" element={<Shop />} />
           <Route path="/shop/all" element={<AllProducts />} />
+          <Route path="/login" element={<Login />} />
           <Route path="/products" element={<ProductList />} />
           <Route path="/cart" element={<CartPage />} />
           <Route path="/checkout" element={<Checkout />} />
