@@ -1,125 +1,116 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { FiSearch, FiChevronDown, FiMenu, FiX } from "react-icons/fi";
 import { FaShoppingCart } from "react-icons/fa";
 import { AiOutlineHeart } from "react-icons/ai";
-import { useCart } from "../../../features/shopping-cart/CartContext";
+import { useSelector, useDispatch } from "react-redux";
+import type { RootState } from "../../../store/store";
+import { logout, fetchUser } from "../../../store/authSlice";
 
 export default function Navbar() {
   const [open, setOpen] = useState(false);
-  const { getTotalItems } = useCart();
-  const totalItems = getTotalItems();
+  const dispatch = useDispatch();
+
+  const token = useSelector((state: RootState) => state.auth.token);
+  const user = useSelector((state: RootState) => state.auth.user);
+  const isLoggedIn = !!token;
+
+
+  useEffect(() => {
+    if (!token) return;               // token yoksa çalışmıyor
+    dispatch(fetchUser());            // sayfa yenilendiğinde kullanıcıyı getirriyor
+
+    const refresh = () => dispatch(fetchUser());
+    window.addEventListener("authChanged", refresh);
+
+    return () => window.removeEventListener("authChanged", refresh);
+  }, [token, dispatch]);
+
+  // Debug 
+  console.log("NAVBAR USER:", user);
+  console.log("NAVBAR TOKEN:", token);
 
   return (
-    <nav className="w-full border-b border-gray-200 bg-white">
-      <div className="w-full flex items-center justify-between py-3">
-        {/* LEFT */}
-        <div className="flex items-center gap-8 md:gap-10 pl-0">
-          {/* LOGO */}
-          <Link to="/" className="flex items-center gap-2 pl-2 md:pl-4">
+    <nav className="w-full bg-white border-b border-gray-200">
+      <div className="flex items-center justify-between py-3 px-3 sm:px-6">
+
+        {/* LEFT — Logo + Menü */}
+        <div className="flex items-center gap-10">
+          <Link to="/" className="flex items-center gap-2">
             <div className="w-8 h-8 bg-blue-600 rounded-md"></div>
-            <span className="text-xl md:text-2xl font-semibold">enoca</span>
+            <span className="text-xl font-semibold">enoca</span>
           </Link>
 
-          {/* Desktop Menu */}
-          <div className="hidden md:flex items-center gap-8 text-gray-600 font-medium text-sm">
-            <Link
-              to="/categories"
-              className="hover:text-black flex items-center gap-1"
-            >
+          {/* Desktop Menü */}
+          <div className="hidden md:flex gap-8 text-gray-600 text-sm font-medium">
+            <Link to="/categories" className="hover:text-black flex items-center gap-1">
               Categories <FiChevronDown size={14} />
-            </Link>
-            <Link to="/deals" className="hover:text-black">
-              Deals
-            </Link>
-            <Link to="/new-arrivals" className="hover:text-black">
-              New Arrivals
             </Link>
           </div>
         </div>
 
-        {/* RIGHT */}
-        <div className="flex items-center gap-3 md:gap-4 pr-2 md:pr-4">
-          {/* Search desktop */}
-          <div
-            className="
-            hidden lg:flex items-center bg-gray-100 px-3 py-2 rounded-lg gap-2
-            w-[220px] md:w-[300px] xl:w-[380px] 2xl:w-[460px]
-          "
-          >
+        {/* RIGHT — Search + Icons + Login/Logout */}
+        <div className="flex items-center gap-3">
+
+          {/* Desktop Search */}
+          <div className="hidden lg:flex bg-gray-100 items-center gap-2 px-3 py-2 rounded-lg w-[250px]">
             <FiSearch className="text-gray-500" />
-            <input
-              placeholder="Search products..."
-              className="w-full outline-none bg-transparent text-sm"
-            />
+            <input className="bg-transparent outline-none w-full text-sm" placeholder="Search products..." />
           </div>
 
           {/* Mobile Search */}
-          <button className="lg:hidden text-gray-600">
-            <FiSearch size={22} />
+          <button className="lg:hidden">
+            <FiSearch size={20} />
           </button>
 
           {/* Icons */}
           <Icon icon={<AiOutlineHeart size={20} />} />
-          <Link to="/cart">
-            <Icon icon={<FaShoppingCart size={18} />} link={true}>
-              {totalItems > 0 && (
-                <span className="absolute -top-[6px] -right-[6px] bg-blue-600 text-white text-[10px] px-[6px] rounded-full">
-                  {totalItems}
-                </span>
-              )}
-            </Icon>
-          </Link>
+          <Icon icon={<FaShoppingCart size={18} />}>
+            <span className="absolute -top-1 -right-1 bg-blue-600 text-white text-[10px] px-1 rounded-full">3</span>
+          </Icon>
 
-          {/* Avatar */}
-          <div className="hidden md:block w-9 h-9 rounded-full overflow-hidden hover:ring-2 ring-blue-600 cursor-pointer">
-            <img
-              src="https://i.pravatar.cc/100"
-              className="w-full h-full object-cover"
-            />
-          </div>
+          {/* Auth UI */}
+          {isLoggedIn ? (
+            <div className="flex items-center gap-3">
+              <span className="text-sm font-medium text-gray-700">{user?.firstName}</span>
 
-          {/* Mobile menu */}
-          <button onClick={() => setOpen(!open)} className="md:hidden">
+              <button
+                onClick={() => dispatch(logout())}
+                className="text-sm text-red-600 hover:underline"
+              >
+                Logout
+              </button>
+            </div>
+          ) : (
+            <Link to="/login" className="text-sm text-blue-600 hover:underline">Login</Link>
+          )}
+
+          {/* Hamburger */}
+          <button className="md:hidden" onClick={() => setOpen(!open)}>
             {open ? <FiX size={26} /> : <FiMenu size={26} />}
           </button>
         </div>
       </div>
 
+      {/* Mobile Menü */}
       {open && (
-        <div className="md:hidden flex flex-col px-4 pb-4 gap-3 text-gray-700 text-[15px] font-medium border-t border-gray-200">
-          <Link to="/" onClick={() => setOpen(false)}>
-            Home
-          </Link>
-          <Link to="/categories" onClick={() => setOpen(false)}>
-            Categories
-          </Link>
-          <Link to="/deals" onClick={() => setOpen(false)}>
-            Deals
-          </Link>
-          <Link to="/new-arrivals" onClick={() => setOpen(false)}>
-            New Arrivals
-          </Link>
+        <div className="md:hidden flex flex-col px-4 pb-4 gap-3 text-gray-700 text-[15px] font-medium border-t">
+          <Link to="/" onClick={() => setOpen(false)}>Home</Link>
+          <Link to="/categories" onClick={() => setOpen(false)}>Categories</Link>
+          <Link to="/deals" onClick={() => setOpen(false)}>Deals</Link>
+          <Link to="/new-arrivals" onClick={() => setOpen(false)}>New Arrivals</Link>
         </div>
       )}
     </nav>
   );
 }
 
-const Icon = ({ children, icon, link }: any) => {
-  if (link) {
-    return (
-      <div className="relative w-9 h-9 bg-gray-100 rounded-full flex items-center justify-center hover:bg-gray-200">
-        {icon}
-        {children}
-      </div>
-    );
-  }
-
+/* Global Icon Component */
+function Icon({ icon, children }: any) {
   return (
     <button className="relative w-9 h-9 bg-gray-100 rounded-full flex items-center justify-center hover:bg-gray-200">
       {icon}
       {children}
     </button>
   );
-};
+}
