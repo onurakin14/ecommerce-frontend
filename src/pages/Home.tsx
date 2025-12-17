@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
-import { fetchCategories, fetchProducts, type Category, type Product } from "../store/productSlice";
+import { fetchCategories, fetchProductsSortBy, type Category, type Product } from "../store/productSlice";
 import SkeletonLoader from "../components/shared-components/SkeletonLoader";
 import ProductCard from "../components/shared-components/ProductCard";
 import { useDispatch } from "react-redux";
@@ -9,22 +9,29 @@ import type { AppDispatch } from "store/store";
 function Home() {
 
   const [isLoading, setLoading] = useState(true);
-  const [products, setProducts] = useState<Product[]>([]);
   const [categories, setCategories] = useState<Category[]>([]);
+  const [newProducts, setNewProducts] = useState<Product[]>([]);
+  const [trendProducts, setTrendProducts] = useState<Product[]>([]);
 
   const dispatch = useDispatch<AppDispatch>();
 
   useEffect(() => {
-    dispatch(fetchProducts()).then(res => {
+    // get trend products from api
+    dispatch(fetchProductsSortBy("rating")).then(res => {
       const data = res.payload as Product[];
-      setProducts(data);
-    })
-      .catch(err => console.error(err))
-      .finally(() => setLoading(false));
+      setTrendProducts(data);
+    }).catch(err => console.error(err)).finally(() => setLoading(false));
 
+    // get new products from api
+    dispatch(fetchProductsSortBy("id")).then(res => {
+      const data = res.payload as Product[];
+      setNewProducts(data);
+    }).catch(err => console.error(err)).finally(() => setLoading(false));
+
+    // get categories from api
     dispatch(fetchCategories()).then(res => {
       setCategories(res.payload as Category[])
-    })
+    }).catch(err => console.error(err))
   }, []);
 
   return (
@@ -69,7 +76,7 @@ function Home() {
               <div key={index}>
                 <button className="min-w-[124px] flex h-10 shrink-0 items-center justify-center gap-x-2 rounded-full bg-gray-100 px-5 text-gray-800 hover:bg-gray-200">
                   <p className="text-sm font-medium leading-normal capitalize">
-                    <Link to={item.url}>{item.name}</Link>
+                    <Link to={`products/${item.slug}`}>{item.name}</Link>
                   </p>
                 </button>
               </div>
@@ -84,16 +91,14 @@ function Home() {
           <a className="text-sm font-medium text-primary hover:underline" href="/products">View All</a>
         </div>
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
-          {products.slice(0, 4).map((item) => {
+          {trendProducts.slice(0, 4).map((item) => {
             return (
               <div key={item.id}>
                 <ProductCard product={item}></ProductCard>
               </div>
             );
           })}
-          {isLoading && (
-            <SkeletonLoader keyValue={"trending"} count={4}></SkeletonLoader>
-          )}
+          {isLoading && (<SkeletonLoader keyValue={"trending"} count={4} />)}
         </div>
       </section>
       {/* New Arrivals Section */}
@@ -103,14 +108,14 @@ function Home() {
           <a className="text-sm font-medium text-primary hover:underline" href="/products">View All</a>
         </div>
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
-          {products.slice(4, 8).map((item) => {
+          {newProducts.slice(0, 4).map((item) => {
             return (
               <div key={item.id}>
                 <ProductCard product={item}></ProductCard>
               </div>
             );
           })}
-          {isLoading && (<SkeletonLoader keyValue={"newsArrivals"} count={4}></SkeletonLoader>)}
+          {isLoading && (<SkeletonLoader keyValue={"newsArrivals"} count={4} />)}
         </div>
       </section>
     </React.Fragment>
