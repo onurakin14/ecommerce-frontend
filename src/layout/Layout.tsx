@@ -13,7 +13,7 @@ export default function Layout({ children }: LayoutProps) {
       <Navbar />
       {/* CONTENT AREA */}
       <main className="flex-1 bg-white">
-        <div className="max-w-7x4 mx-auto w-full px-4 py-">{children}</div>
+        <div className="max-w-7x4 mx-auto w-full px-4 py-4">{children}</div>
       </main>
 
       {/* FOOTER */}
