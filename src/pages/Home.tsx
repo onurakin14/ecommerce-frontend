@@ -71,7 +71,7 @@ function Home() {
           <button className="flex h-10 shrink-0 items-center justify-center gap-x-2 rounded-full bg-indigo-500 px-5 text-white">
             <p className="text-sm font-medium leading-normal">All</p>
           </button>
-          {categories.map((item, index) => {
+          {categories.slice(0, 5).map((item, index) => {
             return (
               <div key={index}>
                 <button className="min-w-[124px] flex h-10 shrink-0 items-center justify-center gap-x-2 rounded-full bg-gray-100 px-5 text-gray-800 hover:bg-gray-200">
