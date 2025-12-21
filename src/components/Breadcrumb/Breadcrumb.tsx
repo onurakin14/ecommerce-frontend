@@ -10,8 +10,8 @@ export default function Breadcrumb({ path }: { path: string[] }) {
             <Link 
               to={
                 index === 0 ? "/" :
-                index === 1 ? "/shop" :
-                index === 2 ? "/shop/all" : ""
+                index === 1 ? "/orders" :
+                index === 2 ? "/orders" : ""
               }
               className="hover:text-blue-600 transition"
             >

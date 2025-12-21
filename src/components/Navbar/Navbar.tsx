@@ -5,21 +5,22 @@ import { FaShoppingCart } from "react-icons/fa";
 import { AiOutlineHeart } from "react-icons/ai";
 import { useCart } from "../../features/shopping-cart/CartContext";
 import { useSelector, useDispatch } from "react-redux";
-import type { RootState } from "../../../store/store";
-import { logout, fetchUser } from "../../../store/authSlice";
+import type { RootState } from "../../store/store";
+import { logout, fetchUser } from "../../store/authSlice";
 
 export default function Navbar() {
   const [open, setOpen] = useState(false);
   const dispatch = useDispatch();
+  const { getTotalItems } = useCart();
 
   const token = useSelector((state: RootState) => state.auth.token);
   const user = useSelector((state: RootState) => state.auth.user);
   const isLoggedIn = !!token;
-
+  const totalItems = getTotalItems();
 
   useEffect(() => {
-    if (!token) return;               // token yoksa çalışmıyor
-    dispatch(fetchUser());            // sayfa yenilendiğinde kullanıcıyı getirriyor
+    if (!token) return; // token yoksa çalışmıyor
+    dispatch(fetchUser()); // sayfa yenilendiğinde kullanıcıyı getirriyor
 
     const refresh = () => dispatch(fetchUser());
     window.addEventListener("authChanged", refresh);
@@ -27,14 +28,13 @@ export default function Navbar() {
     return () => window.removeEventListener("authChanged", refresh);
   }, [token, dispatch]);
 
-  // Debug 
+  // Debug
   console.log("NAVBAR USER:", user);
   console.log("NAVBAR TOKEN:", token);
 
   return (
     <nav className="w-full bg-white border-b border-gray-200">
       <div className="flex items-center justify-between py-3 px-3 sm:px-6">
-
         {/* LEFT — Logo + Menü */}
         <div className="flex items-center gap-10">
           <Link to="/" className="flex items-center gap-2">
@@ -44,19 +44,32 @@ export default function Navbar() {
 
           {/* Desktop Menü */}
           <div className="hidden md:flex gap-8 text-gray-600 text-sm font-medium">
-            <Link to="/categories" className="hover:text-black flex items-center gap-1">
+            <Link
+              to="/categories"
+              className="hover:text-black flex items-center gap-1"
+            >
               Categories <FiChevronDown size={14} />
             </Link>
+            {isLoggedIn && (
+              <Link
+                to="/orders"
+                className="hover:text-black flex items-center gap-1"
+              >
+                My Orders
+              </Link>
+            )}
           </div>
         </div>
 
         {/* RIGHT — Search + Icons + Login/Logout */}
         <div className="flex items-center gap-3">
-
           {/* Desktop Search */}
           <div className="hidden lg:flex bg-gray-100 items-center gap-2 px-3 py-2 rounded-lg w-[250px]">
             <FiSearch className="text-gray-500" />
-            <input className="bg-transparent outline-none w-full text-sm" placeholder="Search products..." />
+            <input
+              className="bg-transparent outline-none w-full text-sm"
+              placeholder="Search products..."
+            />
           </div>
 
           {/* Mobile Search */}
@@ -68,15 +81,17 @@ export default function Navbar() {
           <Link to="/wishlist">
             <Icon icon={<AiOutlineHeart size={20} />} link={true} />
           </Link>
-          <Link to="/cart">
-            <Icon icon={<FaShoppingCart size={18} />} link={true}>
-              {totalItems > 0 && (
-                <span className="absolute -top-[6px] -right-[6px] bg-blue-600 text-white text-[10px] px-[6px] rounded-full">
-                  {totalItems}
-                </span>
-              )}
-            </Icon>
-          </Link>
+          {isLoggedIn && (
+            <Link to="/cart">
+              <Icon icon={<FaShoppingCart size={18} />} link={true}>
+                {totalItems > 0 && (
+                  <span className="absolute -top-[6px] -right-[6px] bg-blue-600 text-white text-[10px] px-[6px] rounded-full">
+                    {totalItems}
+                  </span>
+                )}
+              </Icon>
+            </Link>
+          )}
 
           {/* Avatar */}
           <div className="hidden md:block w-9 h-9 rounded-full overflow-hidden hover:ring-2 ring-blue-600 cursor-pointer">
@@ -85,15 +100,13 @@ export default function Navbar() {
               className="w-full h-full object-cover"
             />
           </div>
-          <Icon icon={<AiOutlineHeart size={20} />} />
-          <Icon icon={<FaShoppingCart size={18} />}>
-            <span className="absolute -top-1 -right-1 bg-blue-600 text-white text-[10px] px-1 rounded-full">3</span>
-          </Icon>
 
           {/* Auth UI */}
           {isLoggedIn ? (
             <div className="flex items-center gap-3">
-              <span className="text-sm font-medium text-gray-700">{user?.firstName}</span>
+              <span className="text-sm font-medium text-gray-700">
+                {user?.firstName}
+              </span>
 
               <button
                 onClick={() => dispatch(logout())}
@@ -103,7 +116,9 @@ export default function Navbar() {
               </button>
             </div>
           ) : (
-            <Link to="/login" className="text-sm text-blue-600 hover:underline">Login</Link>
+            <Link to="/login" className="text-sm text-blue-600 hover:underline">
+              Login
+            </Link>
           )}
 
           {/* Hamburger */}
@@ -116,10 +131,23 @@ export default function Navbar() {
       {/* Mobile Menü */}
       {open && (
         <div className="md:hidden flex flex-col px-4 pb-4 gap-3 text-gray-700 text-[15px] font-medium border-t">
-          <Link to="/" onClick={() => setOpen(false)}>Home</Link>
-          <Link to="/categories" onClick={() => setOpen(false)}>Categories</Link>
-          <Link to="/deals" onClick={() => setOpen(false)}>Deals</Link>
-          <Link to="/new-arrivals" onClick={() => setOpen(false)}>New Arrivals</Link>
+          <Link to="/" onClick={() => setOpen(false)}>
+            Home
+          </Link>
+          <Link to="/categories" onClick={() => setOpen(false)}>
+            Categories
+          </Link>
+          <Link to="/deals" onClick={() => setOpen(false)}>
+            Deals
+          </Link>
+          <Link to="/new-arrivals" onClick={() => setOpen(false)}>
+            New Arrivals
+          </Link>
+          {isLoggedIn && (
+            <Link to="/orders" onClick={() => setOpen(false)}>
+              My Orders
+            </Link>
+          )}
         </div>
       )}
     </nav>

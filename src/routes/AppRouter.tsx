@@ -15,6 +15,8 @@ import ProductList from "../pages/ProductList";
 import CartPage from "../pages/CartPage";
 import ProductDetail from "../pages/ProductDetail";
 import Checkout from "../pages/Checkout";
+import OrderDetail from "../pages/OrderDetail";
+import Orders from "../pages/Orders";
 
 export default function AppRouter() {
   return (
@@ -37,6 +39,8 @@ export default function AppRouter() {
 
           <Route path="/product/:id" element={<ProductDetail />} />
           <Route path="/wishlist" element={<Wishlist />} />
+          <Route path="/orders" element={<Orders />} />
+          <Route path="/order/:id" element={<OrderDetail />} />
         </Routes>
       </Layout>
     </Router>
