@@ -16,7 +16,6 @@ import CartPage from "../pages/CartPage";
 import ProductDetail from "../pages/ProductDetail";
 import Checkout from "../pages/Checkout";
 import ComparePage from "../pages/ComparePage";
-import CompareResultPage from "../pages/CompareResultPage";
 
 export default function AppRouter() {
   return (
@@ -40,7 +39,6 @@ export default function AppRouter() {
           <Route path="/product/:id" element={<ProductDetail />} />
           <Route path="/wishlist" element={<Wishlist />} />
           <Route path="/compare" element={<ComparePage />} />
-          <Route path="/compare/result" element={<CompareResultPage />} />
 
         </Routes>
       </Layout>

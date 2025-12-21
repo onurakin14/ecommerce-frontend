@@ -6,35 +6,11 @@ import ProductGallery from "../features/products-detail/components/ProductGaller
 import ProductInfo from "../features/products-detail/components/ProductInfo";
 import ProductTabs from "../features/products-detail/components/ProductTabs";
 import ProductRelated from "../features/products-detail/components/ProductRelated";
-
-interface ProductDetail {
-  id: number;
-  title: string;
-  price: number;
-  category: string;
-  description: string;
-  thumbnail: string;
-  images: string[];
-  rating: number;
-  discountPercentage: number;
-  stock: number;
-  brand: string;
-  tags: string[];
-  weight?: number;
-  dimensions?: {
-    width: number;
-    height: number;
-    depth: number;
-  };
-  warrantyInformation?: string;
-  shippingInformation?: string;
-  availabilityStatus?: string;
-  returnPolicy?: string;
-}
+import type { Product } from "../store/productSlice";
 
 export default function ProductDetailPage() {
   const { id } = useParams();
-  const [product, setProduct] = useState<ProductDetail | null>(null);
+  const [product, setProduct] = useState<Product | null>(null);
   const [related, setRelated] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
 
