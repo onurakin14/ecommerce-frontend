@@ -10,10 +10,22 @@ import { useCart } from "../features/shopping-cart/CartContext";
 import Notification from "../features/products-detail/components/Notification";
 
 const FEATURES = [
-  { label: "Screen Size", getValue: (p: Product) => p.dimensions ? `${p.dimensions.width}"` : "15.6 inches" },
-  { label: "Processor", getValue: (p: Product) => p.category === "smartphones" ? "A17 Bionic" : "M3 Chip" },
-  { label: "Storage", getValue: (_p: Product) => "256GB SSD" },
-  { label: "Weight", getValue: (p: Product) => p.weight ? `${p.weight} lbs` : "3.1 lbs" },
+  {
+    label: "Rating",
+    getValue: (p: Product) => `${p.rating} / 5`
+  },
+  {
+    label: "Stock",
+    getValue: (p: Product) => `${p.stock} available`
+  },
+  {
+    label: "Brand",
+    getValue: (p: Product) => p.brand ?? "—"
+  },
+  {
+    label: "Return Policy",
+    getValue: (p: Product) => p.returnPolicy ?? "—"
+  }
 ];
 
 export default function ComparePage() {
