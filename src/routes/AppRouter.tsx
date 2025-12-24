@@ -1,9 +1,9 @@
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 
-import Wishlist from "../pages/WishList";
 import Layout from "../layout/Layout";
+import AdminLayout from "../layout/AdminLayout";
 
-// Pages
+// SHOP PAGES
 import Home from "../pages/Home";
 import Deals from "../pages/Deals";
 import NewArrivals from "../pages/New Arrivals";
@@ -15,16 +15,21 @@ import ProductList from "../pages/ProductList";
 import CartPage from "../pages/CartPage";
 import ProductDetail from "../pages/ProductDetail";
 import Checkout from "../pages/Checkout";
+import Wishlist from "../pages/WishList";
 
+// ADMIN PAGE (⚠️ DOSYA YOLU ÇOK ÖNEMLİ)
+import AdminDashboard from "../pages/Admin/Dashboard";
+import AdminProducts from "../pages/Admin/Products";
+import AdminOrders from "../pages/Admin/Orders";
+import AdminUsers from "../pages/Admin/Users";
 export default function AppRouter() {
   return (
     <Router>
-      <Layout>
-        <Routes>
-          {/* Logo veya "/" → Home */}
-          <Route path="/" element={<Home />} />
+      <Routes>
 
-          {/* Menü sayfalarının yönlendirmesi */}
+        {/* ========== SHOP ROUTES ========== */}
+        <Route element={<Layout />}>
+          <Route path="/" element={<Home />} />
           <Route path="/deals" element={<Deals />} />
           <Route path="/new-arrivals" element={<NewArrivals />} />
           <Route path="/categories" element={<Categories />} />
@@ -34,11 +39,19 @@ export default function AppRouter() {
           <Route path="/products" element={<ProductList />} />
           <Route path="/cart" element={<CartPage />} />
           <Route path="/checkout" element={<Checkout />} />
-
           <Route path="/product/:id" element={<ProductDetail />} />
           <Route path="/wishlist" element={<Wishlist />} />
-        </Routes>
-      </Layout>
+        </Route>
+
+        {/* ========== ADMIN ROUTES ========== */}
+        <Route path="/admin" element={<AdminLayout />}>
+          <Route index element={<AdminDashboard />} />
+          <Route path="products" element={<AdminProducts />} />
+  <Route path="orders" element={<AdminOrders />} />
+  <Route path="users" element={<AdminUsers />} />
+        </Route>
+
+      </Routes>
     </Router>
   );
 }
