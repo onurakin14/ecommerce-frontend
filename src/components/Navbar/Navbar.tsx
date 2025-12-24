@@ -99,10 +99,23 @@ export default function Navbar() {
       {/* Mobile Menu */}
       {open && (
         <div className="md:hidden flex flex-col px-4 pb-4 gap-3 text-gray-700 text-[15px] font-medium border-t">
-          <Link to="/" onClick={() => setOpen(false)}>Home</Link>
-          <Link to="/categories" onClick={() => setOpen(false)}>Categories</Link>
-          <Link to="/deals" onClick={() => setOpen(false)}>Deals</Link>
-          <Link to="/new-arrivals" onClick={() => setOpen(false)}>New Arrivals</Link>
+          <Link to="/" onClick={() => setOpen(false)}>
+            Home
+          </Link>
+          <Link to="/categories" onClick={() => setOpen(false)}>
+            Categories
+          </Link>
+          <Link to="/deals" onClick={() => setOpen(false)}>
+            Deals
+          </Link>
+          <Link to="/new-arrivals" onClick={() => setOpen(false)}>
+            New Arrivals
+          </Link>
+          {isLoggedIn && (
+            <Link to="/orders" onClick={() => setOpen(false)}>
+              My Orders
+            </Link>
+          )}
         </div>
       )}
     </nav>

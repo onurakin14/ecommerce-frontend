@@ -16,6 +16,10 @@ import CartPage from "../pages/CartPage";
 import ProductDetail from "../pages/ProductDetail";
 import Checkout from "../pages/Checkout";
 import Wishlist from "../pages/WishList";
+import OrderSuccess from "../pages/OrderSuccess";
+import OrderHistory from "../pages/OrderHistory";
+import OrderDetail from "../pages/OrderDetail";
+import Orders from "../pages/Orders";
 
 // ADMIN PAGE (⚠️ DOSYA YOLU ÇOK ÖNEMLİ)
 import AdminDashboard from "../pages/Admin/Dashboard";
@@ -25,6 +29,7 @@ import AdminUsers from "../pages/Admin/Users";
 export default function AppRouter() {
   return (
     <Router>
+
       <Routes>
 
         {/* ========== SHOP ROUTES ========== */}
@@ -37,21 +42,30 @@ export default function AppRouter() {
           <Route path="/shop/all" element={<AllProducts />} />
           <Route path="/login" element={<Login />} />
           <Route path="/products" element={<ProductList />} />
+          <Route path="/products/:categoryName" element={<ProductList />} />
           <Route path="/cart" element={<CartPage />} />
           <Route path="/checkout" element={<Checkout />} />
           <Route path="/product/:id" element={<ProductDetail />} />
           <Route path="/wishlist" element={<Wishlist />} />
+          <Route path="/order-success" element={<OrderSuccess />} />
+          <Route path="/order-history" element={<OrderHistory />} />
+          <Route path="/product/:id" element={<ProductDetail />} />
+          <Route path="/wishlist" element={<Wishlist />} />
+          <Route path="/orders" element={<Orders />} />
+          <Route path="/order/:id" element={<OrderDetail />} />
         </Route>
 
         {/* ========== ADMIN ROUTES ========== */}
         <Route path="/admin" element={<AdminLayout />}>
           <Route index element={<AdminDashboard />} />
           <Route path="products" element={<AdminProducts />} />
-  <Route path="orders" element={<AdminOrders />} />
-  <Route path="users" element={<AdminUsers />} />
+          <Route path="orders" element={<AdminOrders />} />
+          <Route path="users" element={<AdminUsers />} />
         </Route>
 
       </Routes>
-    </Router>
+
+
+    </Router >
   );
 }
