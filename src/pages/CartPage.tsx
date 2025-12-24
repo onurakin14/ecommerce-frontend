@@ -70,9 +70,8 @@ export default function CartPage() {
               {items.map((item, index) => (
                 <div
                   key={item.id}
-                  className={`flex flex-col sm:flex-row gap-4 p-4 justify-between ${
-                    index !== items.length - 1 ? "border-b border-gray-200" : ""
-                  }`}
+                  className={`flex flex-col sm:flex-row gap-4 p-4 justify-between ${index !== items.length - 1 ? "border-b border-gray-200" : ""
+                    }`}
                 >
                   <div className="flex items-start gap-4 min-w-0">
                     {/* Product Image */}
@@ -187,7 +186,7 @@ export default function CartPage() {
               </div>
 
               <button
-                onClick={() => navigate("/checkout")}
+                onClick={() => navigate("/checkout", { state: { items } })}
                 className="flex w-full cursor-pointer items-center justify-center overflow-hidden rounded-xl h-12 bg-indigo-600 text-white gap-2 text-base font-bold leading-normal tracking-wide hover:bg-indigo-700 transition-colors"
               >
                 Proceed to Checkout

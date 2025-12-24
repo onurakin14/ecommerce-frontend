@@ -1,6 +1,20 @@
-import React from "react";
+import axios from "axios";
+import React, { useEffect, useState } from "react";
+import { Link, useLocation } from "react-router-dom";
 
 function Checkout() {
+
+    const [user, setUser] = useState<any>(null);
+    const [userCart, setUserCart] = useState<any>(null);
+
+    const location = useLocation();
+    const items = location.state?.items;
+
+    useEffect(() => {
+        const userId = 142;
+        axios.get(`https://dummyjson.com/users/${userId}`).then(res => setUser(res.data));
+        axios.get(`https://dummyjson.com/users/${userId}/carts`).then(res => setUserCart(res.data.carts[0]));
+    }, []);
 
     return (
         <React.Fragment>
@@ -16,15 +30,15 @@ function Checkout() {
                         <div className="p-6 grid grid-cols-1 sm:grid-cols-2 gap-6">
                             <label className="flex flex-col col-span-1">
                                 <p className="text-sm font-medium pb-2 text-text-primary-light dark:text-text-primary-dark">First Name</p>
-                                <input className="form-input flex w-full rounded-lg text-sm text-text-primary-light dark:text-text-primary-dark focus:outline-0 focus:ring-2 focus:ring-primary/50 border border-gray-300 h-11 placeholder:text-text-secondary-light px-3" placeholder="John" />
+                                <input defaultValue={user?.firstName} className="form-input flex w-full rounded-lg text-sm text-text-primary-light dark:text-text-primary-dark focus:outline-0 focus:ring-2 focus:ring-primary/50 border border-gray-300 h-11 placeholder:text-text-secondary-light px-3" placeholder="John" />
                             </label>
                             <label className="flex flex-col col-span-1">
                                 <p className="text-sm font-medium pb-2 text-text-primary-light dark:text-text-primary-dark">Last Name</p>
-                                <input className="form-input flex w-full rounded-lg text-sm text-text-primary-light dark:text-text-primary-dark focus:outline-0 focus:ring-2 focus:ring-primary/50 border border-gray-300 h-11 placeholder:text-text-secondary-light px-3" placeholder="Doe" />
+                                <input defaultValue={user?.lastName} className="form-input flex w-full rounded-lg text-sm text-text-primary-light dark:text-text-primary-dark focus:outline-0 focus:ring-2 focus:ring-primary/50 border border-gray-300 h-11 placeholder:text-text-secondary-light px-3" placeholder="Doe" />
                             </label>
                             <label className="flex flex-col sm:col-span-2">
                                 <p className="text-sm font-medium pb-2 text-text-primary-light dark:text-text-primary-dark">Email Address</p>
-                                <input className="form-input flex w-full rounded-lg text-sm text-text-primary-light dark:text-text-primary-dark focus:outline-0 focus:ring-2 focus:ring-primary/50 border border-gray-300 h-11 placeholder:text-text-secondary-light px-3" placeholder="john.doe@example.com" type="email" />
+                                <input defaultValue={user?.email} className="form-input flex w-full rounded-lg text-sm text-text-primary-light dark:text-text-primary-dark focus:outline-0 focus:ring-2 focus:ring-primary/50 border border-gray-300 h-11 placeholder:text-text-secondary-light px-3" placeholder="john.doe@example.com" type="email" />
                             </label>
                         </div>
                     </div>
@@ -36,7 +50,7 @@ function Checkout() {
                         <div className="p-6 grid grid-cols-1 sm:grid-cols-6 gap-6">
                             <label className="flex flex-col sm:col-span-6">
                                 <p className="text-sm font-medium pb-2 text-text-primary-light dark:text-text-primary-dark">Country</p>
-                                <select className="form-select flex w-full rounded-lg text-sm text-text-primary-light dark:text-text-primary-dark focus:outline-0 focus:ring-2 focus:ring-primary/50 border border-gray-300 h-11 px-3">
+                                <select defaultValue={user?.address.country} className="form-select flex w-full rounded-lg text-sm text-text-primary-light dark:text-text-primary-dark focus:outline-0 focus:ring-2 focus:ring-primary/50 border border-gray-300 h-11 px-3">
                                     <option>United States</option>
                                     <option>Canada</option>
                                     <option>Mexico</option>
@@ -44,23 +58,23 @@ function Checkout() {
                             </label>
                             <label className="flex flex-col sm:col-span-6">
                                 <p className="text-sm font-medium pb-2 text-text-primary-light dark:text-text-primary-dark">Street Address</p>
-                                <input className="form-input flex w-full rounded-lg text-sm text-text-primary-light dark:text-text-primary-dark focus:outline-0 focus:ring-2 focus:ring-primary/50 border border-gray-300 h-11 placeholder:text-text-secondary-light dark:placeholder:text-text-secondary-dark px-3" placeholder="123 Main St" />
+                                <input defaultValue={user?.address.address} className="form-input flex w-full rounded-lg text-sm text-text-primary-light dark:text-text-primary-dark focus:outline-0 focus:ring-2 focus:ring-primary/50 border border-gray-300 h-11 placeholder:text-text-secondary-light dark:placeholder:text-text-secondary-dark px-3" placeholder="123 Main St" />
                             </label>
                             <label className="flex flex-col sm:col-span-6">
                                 <p className="text-sm font-medium pb-2 text-text-primary-light dark:text-text-primary-dark">Apartment, suite, etc. <span className="text-text-secondary-light dark:text-text-secondary-dark">(optional)</span></p>
-                                <input className="form-input flex w-full rounded-lg text-sm text-text-primary-light dark:text-text-primary-dark focus:outline-0 focus:ring-2 focus:ring-primary/50 border border-gray-300 h-11 placeholder:text-text-secondary-light dark:placeholder:text-text-secondary-dark px-3" placeholder="Apt 4B" />
+                                <input defaultValue={user?.address.stateCode} className="form-input flex w-full rounded-lg text-sm text-text-primary-light dark:text-text-primary-dark focus:outline-0 focus:ring-2 focus:ring-primary/50 border border-gray-300 h-11 placeholder:text-text-secondary-light dark:placeholder:text-text-secondary-dark px-3" placeholder="Apt 4B" />
                             </label>
                             <label className="flex flex-col sm:col-span-2">
                                 <p className="text-sm font-medium pb-2 text-text-primary-light dark:text-text-primary-dark">City</p>
-                                <input className="form-input flex w-full rounded-lg text-sm text-text-primary-light dark:text-text-primary-dark focus:outline-0 focus:ring-2 focus:ring-primary/50 border border-gray-300 h-11 placeholder:text-text-secondary-light dark:placeholder:text-text-secondary-dark px-3" placeholder="Anytown" />
+                                <input defaultValue={user?.address.city} className="form-input flex w-full rounded-lg text-sm text-text-primary-light dark:text-text-primary-dark focus:outline-0 focus:ring-2 focus:ring-primary/50 border border-gray-300 h-11 placeholder:text-text-secondary-light dark:placeholder:text-text-secondary-dark px-3" placeholder="Anytown" />
                             </label>
                             <label className="flex flex-col sm:col-span-2">
                                 <p className="text-sm font-medium pb-2 text-text-primary-light dark:text-text-primary-dark">State / Province</p>
-                                <input className="form-input flex w-full rounded-lg text-sm text-text-primary-light dark:text-text-primary-dark focus:outline-0 focus:ring-2 focus:ring-primary/50 border border-gray-300 h-11 placeholder:text-text-secondary-light dark:placeholder:text-text-secondary-dark px-3" placeholder="CA" />
+                                <input defaultValue={user?.address.state} className="form-input flex w-full rounded-lg text-sm text-text-primary-light dark:text-text-primary-dark focus:outline-0 focus:ring-2 focus:ring-primary/50 border border-gray-300 h-11 placeholder:text-text-secondary-light dark:placeholder:text-text-secondary-dark px-3" placeholder="CA" />
                             </label>
                             <label className="flex flex-col sm:col-span-2">
                                 <p className="text-sm font-medium pb-2 text-text-primary-light dark:text-text-primary-dark">ZIP / Postal Code</p>
-                                <input className="form-input flex w-full rounded-lg text-sm text-text-primary-light dark:text-text-primary-dark focus:outline-0 focus:ring-2 focus:ring-primary/50 border border-gray-300 h-11 placeholder:text-text-secondary-light dark:placeholder:text-text-secondary-dark px-3" placeholder="12345" />
+                                <input defaultValue={user?.address.postalCode} className="form-input flex w-full rounded-lg text-sm text-text-primary-light dark:text-text-primary-dark focus:outline-0 focus:ring-2 focus:ring-primary/50 border border-gray-300 h-11 placeholder:text-text-secondary-light dark:placeholder:text-text-secondary-dark px-3" placeholder="12345" />
                             </label>
                         </div>
                     </div>
@@ -74,39 +88,45 @@ function Checkout() {
                                 <h2 className="text-lg font-bold">Order Summary</h2>
                             </div>
                             <div className="p-6 space-y-4">
-                                <div className="flex items-center gap-4">
-                                    <img className="h-16 w-16 rounded-lg object-cover" data-alt="Red and black modern sneaker" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAfxrdcVoww2nSh7w5KJ8KzSdmfxWKOGpo_q1yKEPKJsAkj-4ut28tyAvSYFCL6Kumoj4HeYhhUloinM6Saf3UUsCDaLoSeApgXRVeow7UQI0162reezOCghJNGD1HemXdOUQF4AZxBYQ-t7O2Ezs-Ryzde7H5N614TnFFJo8BBsH6A1tVQwBqanAytsFZAOK5uBoLrZt7mB2xPwXxM6vl5fkapLEHtVr5YI121AGg_489PWaQTPPUMAsewuLbAzskzSQM3ksG7JZg" />
-                                    <div className="flex-1">
-                                        <p className="font-medium">Modern Runner Shoe</p>
-                                        <p className="text-sm text-text-secondary-light dark:text-text-secondary-dark">Qty: 1</p>
-                                    </div>
-                                    <p className="font-medium">$120.00</p>
-                                </div>
-                                <div className="flex items-center gap-4">
-                                    <img className="h-16 w-16 rounded-lg object-cover" data-alt="classNameic silver analog watch" src="https://lh3.googleusercontent.com/aida-public/AB6AXuC7ir-3GY0lBp5TYC1DwSr2zSxrpRK002u-AE646RN7cv0jcjYFRrAlwSfcerTiBw6HDq3eWC675shKpKNGKHFEuRCQ9bmpebzFhhUsN-f1S1SHPrAhaR5Fd6cA_j8I4zWUUiCXBnsdRp62UTm6QAB3xehZVk3l3TLIiiwpls1uwfoA9ZMg114B6WUWu2MaxG8CBBP-wH7VuI_NTd6VjmcvOyVMk5VmpCSLYFBG1xGOV4QGPol7gj--6oqDZZ7UC_57AC7wUrZo5no" />
-                                    <div className="flex-1">
-                                        <p className="font-medium">classNameic Wristwatch</p>
-                                        <p className="text-sm text-text-secondary-light dark:text-text-secondary-dark">Qty: 1</p>
-                                    </div>
-                                    <p className="font-medium">$85.50</p>
-                                </div>
+                                {/* api cart data */}
+                                {userCart?.products.map((item: any) => {
+                                    return (
+                                        <div key={item.id} className="flex items-center gap-4">
+                                            <img className="h-16 w-16 rounded-lg object-cover" data-alt="Red and black modern sneaker" src={item.thumbnail} />
+                                            <div className="flex-1">
+                                                <p className="font-medium">{item.title}</p>
+                                                <p className="text-sm text-text-secondary-light dark:text-text-secondary-dark">Qty: {item.quantity}</p>
+                                            </div>
+                                            <p className="font-medium">${item.price}</p>
+                                        </div>
+                                    )
+                                })}
+                                {/* redux cart data */}
+                                {items.map((item: any) => {
+                                    return (
+                                        <div key={item.id} className="flex items-center gap-4">
+                                            <img className="h-16 w-16 rounded-lg object-cover" data-alt="Red and black modern sneaker" src={item.image} />
+                                            <div className="flex-1">
+                                                <p className="font-medium">{item.name}</p>
+                                                <p className="text-sm text-text-secondary-light dark:text-text-secondary-dark">Qty: {item.quantity}</p>
+                                            </div>
+                                            <p className="font-medium">${item.price}</p>
+                                        </div>
+                                    )
+                                })}
                             </div>
                             <div className="p-6 border-t border-gray-300 space-y-3">
                                 <div className="flex justify-between text-sm">
-                                    <p className="text-text-secondary-light dark:text-text-secondary-dark">Subtotal</p>
-                                    <p>$205.50</p>
+                                    <p className="text-text-secondary-light dark:text-text-secondary-dark">Total Products</p>
+                                    <p>{userCart?.totalProducts}</p>
                                 </div>
                                 <div className="flex justify-between text-sm">
-                                    <p className="text-text-secondary-light dark:text-text-secondary-dark">Shipping</p>
-                                    <p>$5.00</p>
-                                </div>
-                                <div className="flex justify-between text-sm">
-                                    <p className="text-text-secondary-light dark:text-text-secondary-dark">Taxes</p>
-                                    <p>$16.44</p>
+                                    <p className="text-text-secondary-light dark:text-text-secondary-dark">Total Quantity</p>
+                                    <p>{userCart?.totalQuantity}</p>
                                 </div>
                                 <div className="flex justify-between font-bold text-lg pt-2 border-t border-gray-300 mt-3">
                                     <p>Total</p>
-                                    <p>$226.94</p>
+                                    <p>${userCart?.total}</p>
                                 </div>
                             </div>
                         </div>
@@ -131,21 +151,23 @@ function Checkout() {
                                         <p className="text-sm font-medium pb-2 text-text-primary-light dark:text-text-primary-dark">Card Number</p>
                                         <div className="relative">
                                             <span className="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-text-secondary-light dark:text-text-secondary-dark">credit_card</span>
-                                            <input className="form-input flex w-full rounded-lg text-sm text-text-primary-light dark:text-text-primary-dark focus:outline-0 focus:ring-2 focus:ring-primary/50 border border-gray-300 h-11 placeholder:text-text-secondary-light dark:placeholder:text-text-secondary-dark pl-10 pr-3" placeholder="**** **** **** 1234" />
+                                            <input defaultValue={user?.bank.cardNumber.replace(/(\d{4})(?=\d)/g, "$1 ")} className="form-input flex w-full rounded-lg text-sm text-text-primary-light dark:text-text-primary-dark focus:outline-0 focus:ring-2 focus:ring-primary/50 border border-gray-300 h-11 placeholder:text-text-secondary-light dark:placeholder:text-text-secondary-dark pl-10 pr-3" placeholder="**** **** **** 1234" />
                                         </div>
                                     </label>
                                     <div className="grid grid-cols-2 gap-4">
                                         <label className="flex flex-col">
                                             <p className="text-sm font-medium pb-2 text-text-primary-light dark:text-text-primary-dark">Expiration Date</p>
-                                            <input className="form-input flex w-full rounded-lg text-sm text-text-primary-light dark:text-text-primary-dark focus:outline-0 focus:ring-2 focus:ring-primary/50 border border-gray-300 h-11 placeholder:text-text-secondary-light dark:placeholder:text-text-secondary-dark px-3" placeholder="MM / YY" />
+                                            <input defaultValue={user?.bank.cardExpire} className="form-input flex w-full rounded-lg text-sm text-text-primary-light dark:text-text-primary-dark focus:outline-0 focus:ring-2 focus:ring-primary/50 border border-gray-300 h-11 placeholder:text-text-secondary-light dark:placeholder:text-text-secondary-dark px-3" placeholder="MM / YY" />
                                         </label>
                                         <label className="flex flex-col">
                                             <p className="text-sm font-medium pb-2 text-text-primary-light dark:text-text-primary-dark">CVC</p>
-                                            <input className="form-input flex w-full rounded-lg text-sm text-text-primary-light dark:text-text-primary-dark focus:outline-0 focus:ring-2 focus:ring-primary/50 border border-gray-300 h-11 placeholder:text-text-secondary-light dark:placeholder:text-text-secondary-dark px-3" placeholder="123" />
+                                            <input className="form-input flex w-full rounded-lg text-sm text-text-primary-light dark:text-text-primary-dark focus:outline-0 focus:ring-2 focus:ring-primary/50 border border-gray-300 h-11 placeholder:text-text-secondary-light dark:placeholder:text-text-secondary-dark px-3" placeholder="479" />
                                         </label>
                                     </div>
                                 </div>
-                                <button className="w-full h-12 flex items-center justify-center rounded-lg bg-indigo-500 text-white font-bold text-sm hover:bg-primary/90 transition-colors">Pay $226.94</button>
+                                <button className="w-full h-12 flex items-center justify-center rounded-lg bg-indigo-500 text-white font-bold text-sm hover:bg-primary/90 transition-colors">
+                                    <Link to={"/order-success"}>Pay $226.94</Link>
+                                </button>
                             </div>
                         </div>
                     </div>

@@ -19,16 +19,38 @@ export interface Product {
   id: number;
   title: string;
   description: string;
-  price: number;
-  discountPercentage?: number;
-  rating?: number;
-  reviews?: number;
-  stock?: number;
-  brand?: string;
+  brand: string;
   category: string;
-  thumbnail?: string;
-  images?: string[];
-  tags?: string[];
+  price: number;
+  discountPercentage: number;
+  rating: number;
+  stock: number;
+  availabilityStatus: string;
+  minimumOrderQuantity: number;
+  shippingInformation: string;
+  returnPolicy: string;
+  warrantyInformation: string;
+  sku: string;
+  weight: number;
+  dimensions: {
+    width: number;
+    height: number;
+    depth: number;
+  };
+  tags: string[];
+  thumbnail: string;
+  images: string[];
+  meta: {
+    createdAt: string;
+    updatedAt: string;
+    barcode: string;
+    qrCode: string;
+  };
+  reviews: [{
+    reviewerName: string;
+    comment: string;
+    rating: number;
+  }];
 }
 
 // Filtre seçenekleri için interface
@@ -98,6 +120,27 @@ export const fetchRelated = createAsyncThunk(
       `https://dummyjson.com/products?limit=4`
     );
     return res.data.products;
+  }
+);
+
+export const fetchProductsSortBy = createAsyncThunk(
+  `product/fetchProductsSortBy`, async (value: string) => {
+    const sortApiUrl = `https://dummyjson.com/products?sortBy=${value}&order=desc`;
+    const res = await axios.get<{ products: Product[] }>(sortApiUrl);
+    return res.data.products;
+  }
+);
+
+export interface Category {
+  slug: string,
+  name: string,
+  url: string
+}
+
+export const fetchCategories = createAsyncThunk(
+  "category/fetchCategories", async () => {
+    const res = await axios.get<Category[]>('https://dummyjson.com/products/categories');
+    return res.data;
   }
 );
 

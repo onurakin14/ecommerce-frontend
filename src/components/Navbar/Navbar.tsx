@@ -3,15 +3,13 @@ import { Link } from "react-router-dom";
 import { FiSearch, FiChevronDown, FiMenu, FiX } from "react-icons/fi";
 import { FaShoppingCart } from "react-icons/fa";
 import { AiOutlineHeart } from "react-icons/ai";
-import { useCart } from "../../features/shopping-cart/CartContext";
 import { useSelector, useDispatch } from "react-redux";
-import type { RootState } from "../../store/store";
-import { logout, fetchUser } from "../../store/authSlice";
+import type { AppDispatch, RootState } from "../../store/store";
+import { fetchUser, logout } from "../../store/authSlice";
 
 export default function Navbar() {
   const [open, setOpen] = useState(false);
-  const dispatch = useDispatch();
-  const { getTotalItems } = useCart();
+  const dispatch = useDispatch<AppDispatch>();
 
   const token = useSelector((state: RootState) => state.auth.token);
   const user = useSelector((state: RootState) => state.auth.user);
@@ -27,10 +25,6 @@ export default function Navbar() {
 
     return () => window.removeEventListener("authChanged", refresh);
   }, [token, dispatch]);
-
-  // Debug
-  console.log("NAVBAR USER:", user);
-  console.log("NAVBAR TOKEN:", token);
 
   return (
     <nav className="w-full bg-white border-b border-gray-200">
@@ -81,17 +75,10 @@ export default function Navbar() {
           <Link to="/wishlist">
             <Icon icon={<AiOutlineHeart size={20} />} link={true} />
           </Link>
-          {isLoggedIn && (
-            <Link to="/cart">
-              <Icon icon={<FaShoppingCart size={18} />} link={true}>
-                {totalItems > 0 && (
-                  <span className="absolute -top-[6px] -right-[6px] bg-blue-600 text-white text-[10px] px-[6px] rounded-full">
-                    {totalItems}
-                  </span>
-                )}
-              </Icon>
-            </Link>
-          )}
+          <Link to="/cart">
+            <Icon icon={<FaShoppingCart size={18} />} link={true}>
+            </Icon>
+          </Link>
 
           {/* Avatar */}
           <div className="hidden md:block w-9 h-9 rounded-full overflow-hidden hover:ring-2 ring-blue-600 cursor-pointer">
