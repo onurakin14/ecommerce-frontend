@@ -8,6 +8,18 @@ import { CartProvider } from "./features/shopping-cart/CartContext";
 
 import AppRouter from "./routes/AppRouter";
 
+/* =====================
+   LOAD SAVED THEME
+===================== */
+const savedTheme = localStorage.getItem("theme-color");
+
+if (savedTheme) {
+  document.documentElement.style.setProperty(
+    "--primary-color",
+    savedTheme
+  );
+}
+
 createRoot(document.getElementById("root") as HTMLElement).render(
   <StrictMode>
     <Provider store={store}>

@@ -1,8 +1,7 @@
-// src/store/authSlice.ts
-
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 
 
+/* ================== LOGIN ================== */
 export const loginUser = createAsyncThunk(
   "auth/loginUser",
   async (
@@ -16,16 +15,11 @@ export const loginUser = createAsyncThunk(
         body: JSON.stringify({ username, password }),
       });
 
-      if (!res.ok) return thunkAPI.rejectWithValue("Invalid credentials");
+      if (!res.ok) {
+        return thunkAPI.rejectWithValue("Invalid credentials");
+      }
 
       const data = await res.json();
-
-      // LocalStorage'a kaydet
-      localStorage.setItem("token", data.accessToken);
-      localStorage.setItem("user", JSON.stringify(data));
-
-      // Navbar güncellensin
-      window.dispatchEvent(new Event("authChanged"));
 
       return data;
     } catch (error) {
@@ -33,21 +27,26 @@ export const loginUser = createAsyncThunk(
     }
   }
 );
+export const ADMIN_USERS = [
+  "michaelw",
+  "admin",
+];
 
-// User Fetch kısmı
-export const fetchUser = createAsyncThunk("auth/fetchUser", async () => {
-  const user = localStorage.getItem("user");
-  return user ? JSON.parse(user) : null;
-});
-
+/* ================== TYPES ================== */
+interface AuthUser {
+  id: number;
+  username: string;
+  email?: string;
+  role: "admin" | "user";
+}
 
 interface AuthState {
   token: string | null;
-  user: any | null;
+  user: AuthUser | null;
   loading: boolean;
 }
 
-// İlk açılışta localStorage varsa çeksin
+/* ================== INITIAL STATE ================== */
 const savedUser = localStorage.getItem("user");
 const savedToken = localStorage.getItem("token");
 
@@ -57,8 +56,7 @@ const initialState: AuthState = {
   loading: false,
 };
 
-
-// Slice kısmı
+/* ================== SLICE ================== */
 const authSlice = createSlice({
   name: "auth",
   initialState,
@@ -66,24 +64,39 @@ const authSlice = createSlice({
     logout(state) {
       state.token = null;
       state.user = null;
-      localStorage.removeItem("user");
       localStorage.removeItem("token");
-      window.dispatchEvent(new Event("authChanged"));
+      localStorage.removeItem("user");
     },
   },
   extraReducers: (builder) => {
     builder
-      .addCase(loginUser.pending, (s) => { s.loading = true })
-      .addCase(loginUser.fulfilled, (s, a) => {
-        s.loading = false;
-        s.user = a.payload;
-        s.token = a.payload.accessToken;   // 🔥 kritik fix burası
+      /* -------- LOGIN -------- */
+      .addCase(loginUser.pending, (state) => {
+        state.loading = true;
       })
-      .addCase(loginUser.rejected, (s) => {
-        s.loading = false;
+
+      .addCase(loginUser.fulfilled, (state, action) => {
+        state.loading = false;
+
+        const isAdmin = ADMIN_USERS.includes(action.payload.username);
+
+        const user: AuthUser = {
+          id: action.payload.id,
+          username: action.payload.username,
+          email: action.payload.email,
+          role: isAdmin ? "admin" : "user",
+        };
+
+        state.user = user;
+        state.token = action.payload.accessToken;
+
+        // 🔐 PERSIST
+        localStorage.setItem("token", action.payload.accessToken);
+        localStorage.setItem("user", JSON.stringify(user));
       })
-      .addCase(fetchUser.fulfilled, (s, a) => {
-        s.user = a.payload;
+
+      .addCase(loginUser.rejected, (state) => {
+        state.loading = false;
       });
   },
 });
