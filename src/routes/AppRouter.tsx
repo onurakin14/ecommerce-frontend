@@ -27,6 +27,7 @@ import AdminDashboard from "../pages/Admin/Dashboard";
 import AdminProducts from "../pages/Admin/Products";
 import AdminOrders from "../pages/Admin/Orders";
 import AdminUsers from "../pages/Admin/Users";
+import UserDetail from "../pages/UserDetail";
 
 export default function AppRouter() {
   return (
@@ -44,6 +45,7 @@ export default function AppRouter() {
           <Route path="shop" element={<Shop />} />
           <Route path="shop/all" element={<AllProducts />} />
           <Route path="login" element={<Login />} />
+          <Route path="/user/:id" element={<UserDetail />} />
 
           <Route path="products" element={<ProductList />} />
           <Route path="products/:categoryName" element={<ProductList />} />
