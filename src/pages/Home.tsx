@@ -3,8 +3,7 @@ import { Link } from "react-router-dom";
 import { fetchCategories, fetchProductsSortBy, type Category, type Product } from "../store/productSlice";
 import SkeletonLoader from "../components/shared-components/SkeletonLoader";
 import ProductCard from "../components/shared-components/ProductCard";
-import { useDispatch } from "react-redux";
-import type { AppDispatch } from "store/store";
+import { useAppDispatch } from "../store/hooks";
 
 function Home() {
 
@@ -13,17 +12,17 @@ function Home() {
   const [newProducts, setNewProducts] = useState<Product[]>([]);
   const [trendProducts, setTrendProducts] = useState<Product[]>([]);
 
-  const dispatch = useDispatch<AppDispatch>();
+  const dispatch = useAppDispatch();
 
   useEffect(() => {
     // get trend products from api
-    dispatch(fetchProductsSortBy("rating")).then(res => {
+    dispatch(fetchProductsSortBy({ value: "rating" })).then(res => {
       const data = res.payload as Product[];
       setTrendProducts(data);
     }).catch(err => console.error(err)).finally(() => setLoading(false));
 
     // get new products from api
-    dispatch(fetchProductsSortBy("id")).then(res => {
+    dispatch(fetchProductsSortBy({ value: "id" })).then(res => {
       const data = res.payload as Product[];
       setNewProducts(data);
     }).catch(err => console.error(err)).finally(() => setLoading(false));

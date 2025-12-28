@@ -123,9 +123,17 @@ export const fetchRelated = createAsyncThunk(
   }
 );
 
-export const fetchProductsSortBy = createAsyncThunk(
-  `product/fetchProductsSortBy`, async (value: string) => {
-    const sortApiUrl = `https://dummyjson.com/products?sortBy=${value}&order=desc`;
+export const fetchProductsByPage = createAsyncThunk<Product[], { limit?: string, skip?: string }>(
+  "product/fetchProductsByPage", async ({ limit = "5", skip = "0" }) => {
+    const apiUrl = `https://dummyjson.com/products?limit=${limit}&skip=${skip}`;
+    const res = await axios.get<{ products: Product[] }>(apiUrl);
+    return res.data.products;
+  }
+);
+
+export const fetchProductsSortBy = createAsyncThunk<Product[], { value: string; direction?: "desc" | "asc" }>(
+  "product/fetchProductsSortBy", async ({ value, direction = "desc" }) => {
+    const sortApiUrl = `https://dummyjson.com/products?sortBy=${value}&order=${direction}`;
     const res = await axios.get<{ products: Product[] }>(sortApiUrl);
     return res.data.products;
   }
