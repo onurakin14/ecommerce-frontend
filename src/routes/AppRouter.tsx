@@ -19,6 +19,7 @@ import OrderSuccess from "../pages/OrderSuccess";
 import OrderHistory from "../pages/OrderHistory";
 import OrderDetail from "../pages/OrderDetail";
 import Orders from "../pages/Orders";
+import Compare from "../pages/ComparePage";
 
 export default function AppRouter() {
   return (
@@ -46,6 +47,7 @@ export default function AppRouter() {
           <Route path="/wishlist" element={<Wishlist />} />
           <Route path="/orders" element={<Orders />} />
           <Route path="/order/:id" element={<OrderDetail />} />
+          <Route path="/compare" element={<Compare />} />
         </Routes>
       </Layout>
     </Router>
