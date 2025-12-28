@@ -11,7 +11,7 @@
 
 /* =====================
    DEFAULT BASE THEME
-   (Tema seçilmemişken – BEYAZ PRIMARY)
+   (Tema seçilmemişken)
 ===================== */
 :root {
   /* App base */
@@ -19,13 +19,16 @@
   --card-bg: #ffffff;
   --text-color: #111827;
 
-  /* 🔥 DEFAULT */
-  --primary: #ffffff;        /* navbar / primary bg */
+  /* Layout / surfaces */
+  --primary: #ffffff;
   --primary-hover: #f3f4f6;
   --primary-light: #f9fafb;
 
-  /* 🔥 DEFAULT TEXT */
-  --primary-text: #111827;   /* yazılar SİYAH */
+  /* Text on primary */
+  --primary-text: #111827;
+
+  /* Actions (buttons, CTA) */
+  --action: var(--brand-primary);
 }
 
 /* =====================
@@ -52,7 +55,7 @@ body {
 }
 
 /* =====================
-   THEME UTILITY CLASSES
+   THEME UTILITIES
 ===================== */
 .bg-primary {
   background-color: var(--primary);
@@ -76,7 +79,7 @@ body {
 }
 
 /* =====================
-   BRAND UTILITY
+   BRAND UTILITIES
 ===================== */
 .bg-brand {
   background-color: var(--brand-primary);
@@ -84,4 +87,45 @@ body {
 
 .text-brand {
   color: var(--brand-primary);
+}
+
+/* =====================
+   GLOBAL BUTTONS
+===================== */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+
+  padding: 0.5rem 1.25rem;
+  border-radius: 9999px;
+  font-weight: 500;
+  font-size: 0.875rem;
+
+  transition: all 0.2s ease;
+}
+
+.btn-primary {
+  background-color: var(--action);
+  color: #ffffff;
+}
+
+.btn-primary:hover {
+  filter: brightness(0.95);
+}
+
+.btn-secondary {
+  background-color: transparent;
+  color: var(--action);
+  border: 1px solid var(--action);
+}
+
+.btn-secondary:hover {
+  background-color: var(--primary-hover);
+}
+
+.btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
 }
