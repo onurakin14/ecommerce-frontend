@@ -19,15 +19,7 @@ import Wishlist from "../pages/WishList";
 import OrderSuccess from "../pages/OrderSuccess";
 import OrderHistory from "../pages/OrderHistory";
 import Orders from "../pages/Orders";
-import OrderDetail from "../pages/OrderDetail";
-import Settings from "../pages/Settings";
-
-// ADMIN
-import AdminDashboard from "../pages/Admin/Dashboard";
-import AdminProducts from "../pages/Admin/Products";
-import AdminOrders from "../pages/Admin/Orders";
-import AdminUsers from "../pages/Admin/Users";
-import UserDetail from "../pages/UserDetail";
+import Compare from "../pages/ComparePage";
 
 export default function AppRouter() {
   return (
@@ -61,7 +53,7 @@ export default function AppRouter() {
           <Route path="order/:id" element={<OrderDetail />} />
           <Route path="order-history" element={<OrderHistory />} />
           <Route path="order-success" element={<OrderSuccess />} />
-
+<Route path="/compare" element={<Compare />} />
           {/* ✅ SETTINGS – ARTIK SORUNSUZ */}
           <Route path="settings" element={<Settings />} />
         </Route>

@@ -4,16 +4,7 @@ import { Heart, ChevronLeft, ChevronRight, Star } from "lucide-react";
 import { useDispatch, useSelector } from "react-redux";
 import { toggleWishlist } from "../../../store/wishlistSlice";
 import type { RootState } from "../../../store/store";
-
-interface Product {
-  id: number;
-  title: string;
-  price: number;
-  thumbnail: string;
-  images?: string[];
-  rating?: number;
-  discountPercentage?: number;
-}
+import type { Product } from "../../../store/productSlice";
 
 interface ProductRelatedProps {
   products: Product[];
