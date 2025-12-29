@@ -5,27 +5,73 @@ type Props = {
   setActivePage: (page: Props["activePage"]) => void;
 };
 
+type ThemeColor = "indigo" | "blue" | "emerald" | "rose" | "amber" | "violet";
+
 export default function UserSidebar({ activePage, setActivePage }: Props) {
   const [isDarkMode, setIsDarkMode] = useState(() => {
     return localStorage.getItem("darkMode") === "true";
   });
 
+  const [themeColor, setThemeColor] = useState<ThemeColor>(() => {
+    return (localStorage.getItem("themeColor") as ThemeColor) || "indigo";
+  });
+
   useEffect(() => {
     if (isDarkMode) {
       document.documentElement.classList.add("dark");
-      document.body.classList.remove("bg-gray-50");
-      document.body.classList.add("bg-gray-900");
     } else {
       document.documentElement.classList.remove("dark");
-      document.body.classList.remove("bg-gray-900");
-      document.body.classList.add("bg-gray-50");
     }
     localStorage.setItem("darkMode", String(isDarkMode));
   }, [isDarkMode]);
 
+  useEffect(() => {
+    localStorage.setItem("themeColor", themeColor);
+    // Burada renk değişikliği için CSS variable ayarlayabilirsin
+    document.documentElement.setAttribute("data-theme", themeColor);
+  }, [themeColor]);
+
   const toggleTheme = () => {
-    setIsDarkMode(!isDarkMode);
+    setIsDarkMode((prev) => !prev);
   };
+
+  const changeColor = (color: ThemeColor) => {
+    setThemeColor(color);
+  };
+
+  const colorOptions: {
+    color: ThemeColor;
+    bg: string;
+    ring: string;
+    title: string;
+  }[] = [
+    {
+      color: "indigo",
+      bg: "bg-indigo-500",
+      ring: "ring-indigo-500",
+      title: "Indigo",
+    },
+    { color: "blue", bg: "bg-blue-500", ring: "ring-blue-500", title: "Mavi" },
+    {
+      color: "emerald",
+      bg: "bg-emerald-500",
+      ring: "ring-emerald-500",
+      title: "Yeşil",
+    },
+    { color: "rose", bg: "bg-rose-500", ring: "ring-rose-500", title: "Pembe" },
+    {
+      color: "amber",
+      bg: "bg-amber-500",
+      ring: "ring-amber-500",
+      title: "Turuncu",
+    },
+    {
+      color: "violet",
+      bg: "bg-violet-500",
+      ring: "ring-violet-500",
+      title: "Mor",
+    },
+  ];
 
   return (
     <aside className="col-span-12 md:col-span-3">
@@ -143,7 +189,7 @@ export default function UserSidebar({ activePage, setActivePage }: Props) {
               </svg>
             )}
             <span className="text-sm font-medium text-gray-700 dark:text-gray-200">
-              {isDarkMode ? "Koyu Tema" : "Açık Tema"}
+              {isDarkMode ? "Dark Mode" : "Light Mode"}
             </span>
           </div>
           <button
@@ -158,6 +204,44 @@ export default function UserSidebar({ activePage, setActivePage }: Props) {
               }`}
             />
           </button>
+        </div>
+
+        {/* Tema Rengi Seçici */}
+        <div className="rounded-lg bg-gray-50 dark:bg-gray-700 px-3 py-2.5">
+          <div className="flex items-center gap-3 mb-2">
+            <svg
+              className="h-5 w-5 text-gray-600 dark:text-gray-400"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth={2}
+                d="M7 21a4 4 0 01-4-4V5a2 2 0 012-2h4a2 2 0 012 2v12a4 4 0 01-4 4zm0 0h12a2 2 0 002-2v-4a2 2 0 00-2-2h-2.343M11 7.343l1.657-1.657a2 2 0 012.828 0l2.829 2.829a2 2 0 010 2.828l-8.486 8.485M7 17h.01"
+              />
+            </svg>
+            <span className="text-sm font-medium text-gray-700 dark:text-gray-200">
+              Theme Color
+            </span>
+          </div>
+          <div className="flex items-center gap-2">
+            {colorOptions.map((option) => (
+              <button
+                key={option.color}
+                onClick={() => changeColor(option.color)}
+                className={`h-7 w-7 rounded-full ${
+                  option.bg
+                } ring-offset-2 dark:ring-offset-gray-700 transition-all hover:scale-110 ${
+                  themeColor === option.color
+                    ? `ring-2 ${option.ring}`
+                    : `hover:ring-2 hover:${option.ring}`
+                }`}
+                title={option.title}
+              />
+            ))}
+          </div>
         </div>
       </div>
     </aside>
