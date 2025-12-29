@@ -60,6 +60,13 @@ export default function Navbar() {
             <Link to="/new-arrivals" className="hover:opacity-80">
               New Arrivals
             </Link>
+
+            {isLoggedIn && (
+              <Link to="/orders
+              " className="hover:opacity-80">
+                My Orders
+              </Link>
+            )}
           </div>
         </div>
 
@@ -93,7 +100,15 @@ export default function Navbar() {
               </span>
             )}
           </NavIcon>
-
+ <Link to="/user/1">
+            <div className="hidden md:block w-9 h-9 rounded-full overflow-hidden hover:ring-2 ring-blue-600 cursor-pointer">
+              <img
+                src="https://i.pravatar.cc/100"
+                className="w-full h-full object-cover"
+              />
+            </div>
+          </Link>
+          
           {isLoggedIn ? (
             <div className="hidden md:flex items-center gap-3">
               <span className="text-sm">{user?.username}</span>
@@ -134,6 +149,12 @@ export default function Navbar() {
           <Link to="/new-arrivals" onClick={() => setOpen(false)}>
             New Arrivals
           </Link>
+
+          {isLoggedIn && (
+            <Link to="/order-history" onClick={() => setOpen(false)}>
+              Order History
+            </Link>
+          )}
         </div>
       )}
     </nav>
