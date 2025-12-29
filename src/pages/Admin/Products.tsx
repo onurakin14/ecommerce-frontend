@@ -7,8 +7,9 @@ function AdminProducts() {
     const dispatch = useAppDispatch();
     const [products, setProducts] = useState<Product[]>([]);
     const [categories, setCategories] = useState<Category[]>([]);
-    const [selectedProduct, setSelectedProduct] = useState<Product>();
+
     const [openMenuById, setOpenMenuById] = useState<number | null>(null);
+    const [selectedProduct, setSelectedProduct] = useState<Product | null>();
 
     const [isEditModalActive, setEditModalActive] = useState(false);
     const [isDeleteModalActive, setDeleteModalActive] = useState(false);
@@ -23,14 +24,40 @@ function AdminProducts() {
         }).catch(err => console.error(err));
     }, []);
 
+    const createProduct = () => {
+        fetch('https://dummyjson.com/products/add', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+                title: 'BMW Pencil',
+                /* other product data */
+            })
+        })
+            .then(res => res.json())
+            .then(data => { console.log(data); closeModals(); });
+    }
+
+    const updateProduct = () => {
+        fetch('https://dummyjson.com/products/1', {
+            method: 'PUT', /* or PATCH */
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+                title: 'iPhone Galaxy +1'
+            })
+        })
+            .then(res => res.json())
+            .then(data => { console.log(data); closeModals(); });
+    }
+
     const deleteProduct = (id: number) => {
         fetch(`https://dummyjson.com/products/${id}`, { method: 'DELETE', })
             .then(res => res.json())
-            .then(data => {
-                console.log(data);
-                setOpenMenuById(null);
-                setDeleteModalActive(false);
-            });
+            .then(data => { console.log(data); closeModals(); });
+    }
+
+    const closeModals = () => {
+        setOpenMenuById(null); setSelectedProduct(null);
+        setEditModalActive(false); setDeleteModalActive(false);
     }
 
     if (isEditModalActive) {
@@ -44,10 +71,10 @@ function AdminProducts() {
                         {/* Modal Header */}
                         <div className="flex items-start justify-between px-8 py-6 border-b border-slate-100 shrink-0">
                             <div>
-                                <h2 className="text-2xl font-bold text-[#0e0e1b] tracking-tight leading-tight">Add Product</h2>
+                                <h2 className="text-2xl font-bold text-[#0e0e1b] tracking-tight leading-tight">{selectedProduct ? "Edit Product" : "Add Product"}</h2>
                                 <p className="text-slate-500 mt-1 text-sm">Fill in the details below to update your inventory.</p>
                             </div>
-                            <button onClick={() => { setEditModalActive(false); setOpenMenuById(null) }} className="group p-2 rounded-full hover:bg-slate-100 transition-colors">
+                            <button onClick={() => closeModals()} className="group p-2 rounded-full hover:bg-slate-100 transition-colors">
                                 <span className="material-symbols-outlined text-slate-400 group-hover:text-slate-600">close</span>
                             </button>
                         </div>
@@ -166,7 +193,7 @@ function AdminProducts() {
                                 <span>Unsaved changes will be lost</span>
                             </div>
                             <div className="flex items-center gap-3">
-                                <button onClick={() => { setEditModalActive(false); setOpenMenuById(null) }} className="px-6 py-2.5 rounded-lg border border-slate-200 bg-white text-slate-700 hover:bg-slate-50 hover:text-slate-900 font-semibold text-sm transition-all shadow-sm" type="button">
+                                <button onClick={() => closeModals()} className="px-6 py-2.5 rounded-lg border border-slate-200 bg-white text-slate-700 hover:bg-slate-50 hover:text-slate-900 font-semibold text-sm transition-all shadow-sm" type="button">
                                     Cancel
                                 </button>
                                 <button className="px-6 py-2.5 rounded-lg bg-primary hover:bg-[#3b3ddb] text-white font-semibold text-sm shadow-lg shadow-primary/25 flex items-center gap-2 transition-all active:scale-[0.98]" type="button">
@@ -208,7 +235,7 @@ function AdminProducts() {
                         {/* Action Buttons */}
                         <div className="mt-8 flex flex-col-reverse gap-3 sm:flex-row sm:justify-end">
                             {/* Secondary Action (Cancel) */}
-                            <button onClick={() => { setDeleteModalActive(false); setOpenMenuById(null); }} className="inline-flex w-full justify-center items-center rounded-lg bg-white px-4 py-2.5 text-sm font-semibold text-slate-900 shadow-sm ring-1 ring-inset ring-slate-300 hover:bg-slate-50 sm:mt-0 sm:w-auto transition-colors focus:outline-none focus:ring-2 focus:ring-slate-400" type="button">
+                            <button onClick={() => closeModals()} className="inline-flex w-full justify-center items-center rounded-lg bg-white px-4 py-2.5 text-sm font-semibold text-slate-900 shadow-sm ring-1 ring-inset ring-slate-300 hover:bg-slate-50 sm:mt-0 sm:w-auto transition-colors focus:outline-none focus:ring-2 focus:ring-slate-400" type="button">
                                 Cancel
                             </button>
                             {/* Primary Action (Delete) */}
@@ -233,7 +260,7 @@ function AdminProducts() {
                             <h1 className="text-3xl font-bold text-dark-custom tracking-tight mb-2">Product Management</h1>
                             <p className="text-slate-500">Create, edit and manage your inventory efficiently.</p>
                         </div>
-                        <button className="flex items-center gap-2 bg-indigo-600 hover:bg-indigo-600 text-white px-5 py-2.5 rounded-xl font-semibold shadow-sm shadow-primary/30 transition-all active:scale-95 shrink-0">
+                        <button onClick={() => { setEditModalActive(true); setSelectedProduct(null) }} className="flex items-center gap-2 bg-indigo-600 hover:bg-indigo-600 text-white px-5 py-2.5 rounded-xl font-semibold shadow-sm shadow-primary/30 transition-all active:scale-95 shrink-0">
                             <span className="material-symbols-outlined text-[20px]">add</span>
                             <span>Add Product</span>
                         </button>
@@ -334,14 +361,14 @@ function AdminProducts() {
                                                                     <button className="flex items-center w-full text-left px-4 py-2 hover:bg-gray-100"
                                                                         onClick={() => { setEditModalActive(true); setSelectedProduct(item) }}>
                                                                         <span className="material-symbols-outlined me-3">edit</span>
-                                                                        Düzenle
+                                                                        Edit
                                                                     </button>
                                                                 </li>
                                                                 <li>
                                                                     <button className="flex items-center w-full text-left px-4 py-2 hover:bg-gray-100"
                                                                         onClick={() => { setDeleteModalActive(true); setSelectedProduct(item) }}>
                                                                         <span className="material-symbols-outlined me-3">delete</span>
-                                                                        Sil
+                                                                        Delete
                                                                     </button>
                                                                 </li>
                                                             </ul>
