@@ -60,6 +60,13 @@ export default function Navbar() {
             <Link to="/new-arrivals" className="hover:opacity-80">
               New Arrivals
             </Link>
+
+            {isLoggedIn && (
+              <Link to="/orders
+              " className="hover:opacity-80">
+                My Orders
+              </Link>
+            )}
           </div>
         </div>
 
@@ -134,6 +141,12 @@ export default function Navbar() {
           <Link to="/new-arrivals" onClick={() => setOpen(false)}>
             New Arrivals
           </Link>
+
+          {isLoggedIn && (
+            <Link to="/order-history" onClick={() => setOpen(false)}>
+              Order History
+            </Link>
+          )}
         </div>
       )}
     </nav>
