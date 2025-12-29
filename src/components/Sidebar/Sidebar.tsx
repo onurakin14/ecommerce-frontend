@@ -6,6 +6,7 @@ import {
   FiShoppingCart,
   FiSettings,
   FiHelpCircle,
+  FiTag,
 } from "react-icons/fi";
 
 export default function Sidebar() {
@@ -35,6 +36,7 @@ export default function Sidebar() {
         </p>
 
         <SidebarLink to="/admin/products" icon={<FiBox />} label="Products" />
+        <SidebarLink to="/admin/categories" icon={<FiTag />} label="Categories" />
         <SidebarLink to="/admin/orders" icon={<FiShoppingCart />} label="Orders" />
         <SidebarLink to="/admin/users" icon={<FiUsers />} label="Users" />
 

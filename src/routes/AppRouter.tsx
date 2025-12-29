@@ -19,6 +19,16 @@ import Wishlist from "../pages/WishList";
 import OrderSuccess from "../pages/OrderSuccess";
 import OrderHistory from "../pages/OrderHistory";
 import Orders from "../pages/Orders";
+import OrderDetail from "../pages/OrderDetail";
+import Settings from "../pages/Settings";
+
+// ADMIN
+import AdminDashboard from "../pages/Admin/Dashboard";
+import AdminProducts from "../pages/Admin/Products";
+import AdminOrders from "../pages/Admin/Orders";
+import AdminUsers from "../pages/Admin/Users";
+import AdminCategories from "../pages/Admin/Categories";
+import CategoryDetail from "../pages/Admin/CategoryDetail";
 import Compare from "../pages/ComparePage";
 
 export default function AppRouter() {
@@ -62,6 +72,8 @@ export default function AppRouter() {
         <Route path="/admin" element={<AdminLayout />}>
           <Route index element={<AdminDashboard />} />
           <Route path="products" element={<AdminProducts />} />
+          <Route path="categories" element={<AdminCategories />} />
+          <Route path="categories/:slug" element={<CategoryDetail />} />
           <Route path="orders" element={<AdminOrders />} />
           <Route path="users" element={<AdminUsers />} />
         </Route>
