@@ -1,162 +1,220 @@
 import { useSelector } from "react-redux";
 import { useEffect, useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
-import { Heart, ShoppingBag, Loader2, Star } from "lucide-react";
+import { Heart, ShoppingBag, Star } from "lucide-react";
+
 import type { RootState } from "../store/store";
 import type { Product } from "../store/productSlice";
 
 export default function WishlistPage() {
+  /* ---------------- REDUX ---------------- */
   const wishlist = useSelector((state: RootState) => state.wishlist.items);
   const navigate = useNavigate();
 
+  /* ---------------- STATE ---------------- */
   const [products, setProducts] = useState<Product[]>([]);
   const [loading, setLoading] = useState(true);
 
+  const [compareMode, setCompareMode] = useState(false);
+  const [selectedIds, setSelectedIds] = useState<number[]>([]);
+
+  /* ---------------- FETCH ---------------- */
   useEffect(() => {
     setLoading(true);
+
     fetch("https://dummyjson.com/products?limit=200")
       .then((res) => res.json())
-      .then((data) => {
-        setProducts(data.products);
-        setLoading(false);
-      })
-      .catch((err) => {
-        console.error("Fetch error:", err);
-        setLoading(false);
-      });
+      .then((data) => setProducts(data.products))
+      .finally(() => setLoading(false));
   }, []);
 
+  /* ---------------- FILTER ---------------- */
   const filtered = products.filter((p) => wishlist.includes(p.id));
 
+  /* ---------------- COMPARE ---------------- */
+  const toggleSelect = (id: number) => {
+    if (!compareMode) return;
+
+    setSelectedIds((prev) => {
+      if (prev.includes(id)) {
+        return prev.filter((x) => x !== id);
+      }
+      if (prev.length === 3) return prev;
+      return [...prev, id];
+    });
+  };
+
+  const goToCompare = () => {
+    if (selectedIds.length >= 2) {
+      navigate("/compare", { state: { selectedIds } });
+    }
+  };
+
+  /* ---------------- LOADING (SKELETON) ---------------- */
   if (loading) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-gray-50">
-        <div className="text-center">
-          <Loader2 className="w-12 h-12 animate-spin text-blue-600 mx-auto mb-4" />
-          <p className="text-gray-600">Favoriler yükleniyor...</p>
+      <div className="min-h-screen bg-gray-50">
+        <div className="max-w-7xl mx-auto px-4 py-10 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-6">
+          {Array.from({ length: 8 }).map((_, i) => (
+            <div
+              key={i}
+              className="bg-white rounded-2xl p-4 animate-pulse"
+            >
+              <div className="h-44 bg-gray-200 rounded-xl mb-4" />
+              <div className="h-4 bg-gray-200 rounded w-3/4 mb-2" />
+              <div className="h-4 bg-gray-200 rounded w-1/2 mb-4" />
+              <div className="h-10 bg-gray-200 rounded-xl" />
+            </div>
+          ))}
         </div>
       </div>
     );
   }
 
+  /* ---------------- UI ---------------- */
   return (
     <div className="min-h-screen bg-gray-50">
-      <div className="w-full max-w-7xl mx-auto py-8 sm:py-12 px-4">
-        <div className="flex items-center justify-between mb-8">
+      <div className="max-w-7xl mx-auto px-4 py-10">
+
+        {/* HEADER */}
+        <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-8">
           <div>
-            <h1 className="text-3xl sm:text-4xl font-bold text-gray-900 flex items-center gap-3">
-              <Heart className="w-8 h-8 sm:w-10 sm:h-10 text-red-500 fill-red-500" />
+            <h1 className="text-3xl font-bold flex items-center gap-2">
+              <Heart className="text-red-500 fill-red-500" />
               Favorilerim
             </h1>
-            <p className="text-gray-600 mt-2">
-              {filtered.length} ürün listeleniyor
-            </p>
+            <p className="text-gray-500 mt-1">{filtered.length} ürün</p>
           </div>
 
-          <Link
-            to="/products"
-            className="px-4 py-2 sm:px-6 sm:py-3 bg-blue-600 text-white rounded-xl hover:bg-blue-700 transition text-sm sm:text-base font-medium"
-          >
-            Alışverişe Devam
-          </Link>
-        </div>
+          <div className="flex flex-wrap gap-3">
+            {!compareMode ? (
+              <button
+                onClick={() => setCompareMode(true)}
+                className="px-6 py-3 bg-purple-600 text-white rounded-xl hover:bg-purple-700"
+              >
+                Ürün Karşılaştır
+              </button>
+            ) : (
+              <>
+                <button
+                  disabled={selectedIds.length < 2}
+                  onClick={goToCompare}
+                  className={`px-6 py-3 rounded-xl
+                    ${
+                      selectedIds.length < 2
+                        ? "bg-gray-300 text-gray-500"
+                        : "bg-purple-600 text-white hover:bg-purple-700"
+                    }`}
+                >
+                  Karşılaştır ({selectedIds.length}/3)
+                </button>
 
-        {filtered.length === 0 ? (
-          <div className="text-center py-16 sm:py-24 bg-white rounded-2xl shadow-sm">
-            <ShoppingBag className="w-16 h-16 sm:w-20 sm:h-20 text-gray-300 mx-auto mb-6" />
-            <h2 className="text-xl sm:text-2xl font-semibold text-gray-900 mb-3">
-              Favori listeniz boş
-            </h2>
-            <p className="text-gray-600 mb-6 max-w-md mx-auto px-4">
-              Beğendiğiniz ürünleri favorilere ekleyerek daha sonra kolayca
-              bulabilirsiniz.
-            </p>
+                <button
+                  onClick={() => {
+                    setCompareMode(false);
+                    setSelectedIds([]);
+                  }}
+                  className="px-6 py-3 bg-white border rounded-xl"
+                >
+                  İptal
+                </button>
+              </>
+            )}
+
             <Link
               to="/products"
-              className="inline-block px-8 py-3 bg-blue-600 text-white rounded-xl hover:bg-blue-700 transition font-medium"
+              className="px-6 py-3 bg-blue-600 text-white rounded-xl hover:bg-blue-700"
+            >
+              Alışverişe Devam
+            </Link>
+          </div>
+        </div>
+
+        {/* EMPTY */}
+        {filtered.length === 0 && (
+          <div className="text-center py-24 bg-white rounded-2xl">
+            <ShoppingBag className="w-20 h-20 text-gray-300 mx-auto mb-6" />
+            <h2 className="text-2xl font-semibold mb-3">
+              Favori listeniz boş
+            </h2>
+            <Link
+              to="/products"
+              className="px-8 py-3 bg-blue-600 text-white rounded-xl"
             >
               Ürünleri Keşfet
             </Link>
           </div>
-        ) : (
+        )}
+
+        {/* GRID */}
+        {filtered.length > 0 && (
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-6">
-            {filtered.map((product) => (
-              <div
-                key={product.id}
-                className="bg-white rounded-2xl shadow-sm hover:shadow-lg transition-all duration-300 overflow-hidden group flex flex-col h-full"
-              >
-                <div className="p-4 flex flex-col h-full">
-                  {/* IMAGE */}
-                  <div
-                    onClick={() => navigate(`/product/${product.id}`)}
-                    className="
-            bg-gray-50 rounded-xl overflow-hidden
-            h-48 sm:h-52 flex items-center justify-center
-            cursor-pointer group-hover:scale-[1.02] transition
-          "
-                  >
+            {filtered.map((product) => {
+              const isSelected = selectedIds.includes(product.id);
+              const isDisabled =
+                compareMode &&
+                selectedIds.length === 3 &&
+                !isSelected;
+
+              const hasDiscount =
+                (product.discountPercentage ?? 0) > 0;
+
+              return (
+                <div
+                  key={product.id}
+                  onClick={() => toggleSelect(product.id)}
+                  className={`bg-white rounded-2xl p-4 flex flex-col border-2 transition
+                    ${compareMode ? "cursor-pointer" : ""}
+                    ${isSelected ? "border-purple-600 bg-purple-50" : "border-transparent hover:shadow-lg"}
+                    ${isDisabled ? "opacity-40 pointer-events-none" : ""}
+                  `}
+                >
+                  <div className="h-44 bg-gray-50 rounded-xl flex items-center justify-center">
                     <img
-                      src={product.images?.[0] || product.thumbnail}
+                      src={product.thumbnail}
                       alt={product.title}
-                      className="w-36 h-36 sm:w-44 sm:h-44 object-contain"
+                      className="h-32 object-contain"
                     />
                   </div>
 
-                  {/* PRODUCT INFO */}
-                  <div
-                    onClick={() => navigate(`/product/${product.id}`)}
-                    className="mt-4 cursor-pointer flex flex-col flex-1"
-                  >
-                    {/* TITLE */}
-                    <h3 className="font-semibold text-sm sm:text-base text-gray-800 line-clamp-2 min-h-12">
+                  <div className="mt-4 flex-1">
+                    <h3 className="font-semibold text-sm line-clamp-2">
                       {product.title}
                     </h3>
 
-                    {product.brand && (
-                      <p className="text-xs text-gray-500 mt-1">
-                        {product.brand}
+                    <p className="font-bold text-lg mt-2">
+                      ${product.price}
+                    </p>
+
+                    {/* 🔴 SADECE BURADA İNDİRİM */}
+                    {hasDiscount && (
+                      <p className="text-xs text-red-500 font-medium">
+                        %{product.discountPercentage!.toFixed(0)} indirim
                       </p>
                     )}
 
-                    <div className="flex items-center justify-between mt-3">
-                      <div>
-                        <p className="font-bold text-lg sm:text-xl text-gray-900">
-                          ${product.price}
-                        </p>
-
-                        {(product.discountPercentage ?? 0) > 0 && (
-                          <p className="text-xs text-red-500 font-medium">
-                            %{product.discountPercentage?.toFixed(0)} indirim
-                          </p>
-                        )}
+                    {product.rating && (
+                      <div className="flex items-center gap-1 mt-2">
+                        <Star className="w-4 h-4 fill-yellow-400 text-yellow-400" />
+                        <span className="text-sm">
+                          {product.rating.toFixed(1)}
+                        </span>
                       </div>
-
-                      {product.rating && (
-                        <div className="flex items-center gap-1">
-                          <Star className="w-4 h-4 fill-yellow-400 text-yellow-400" />
-                          <span className="text-sm font-medium">
-                            {product.rating.toFixed(1)}
-                          </span>
-                        </div>
-                      )}
-                    </div>
-
-                    {/* BUTTON — ALWAYS AT BOTTOM */}
-                    <button
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        navigate(`/product/${product.id}`);
-                      }}
-                      className="w-full mt-auto bg-blue-600 hover:bg-blue-700 
-              text-white py-2.5 sm:py-3 rounded-xl 
-              text-sm font-medium transition active:scale-95"
-                    >
-                      Ürünü İncele
-                    </button>
+                    )}
                   </div>
+
+                  <button
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      navigate(`/product/${product.id}`);
+                    }}
+                    className="mt-4 w-full py-3 bg-blue-600 text-white rounded-xl hover:bg-blue-700"
+                  >
+                    Ürünü İncele
+                  </button>
                 </div>
-              </div>
-            ))}
+              );
+            })}
           </div>
         )}
       </div>
