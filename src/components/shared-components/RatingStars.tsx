@@ -12,7 +12,7 @@ function RatingStars({ id, rate, maxStars = 5 }: RatingStarsProps) {
         <span
           key={`${id}-fullStar-${i}`}
           style={{ fontVariationSettings: "'FILL' 1" }}
-          className="material-symbols-outlined text-yellow-500 !text-base"
+          className="material-symbols-outlined text-yellow-500 text-base"
         >
           star
         </span>
@@ -22,7 +22,7 @@ function RatingStars({ id, rate, maxStars = 5 }: RatingStarsProps) {
         <span
           key={`halfStar-${id}`}
           style={{ fontVariationSettings: "'FILL' 1" }}
-          className="material-symbols-outlined text-yellow-500 !text-base"
+          className="material-symbols-outlined text-yellow-500 text-base"
         >
           star_half
         </span>
@@ -33,7 +33,7 @@ function RatingStars({ id, rate, maxStars = 5 }: RatingStarsProps) {
           <span
             key={`noStar-${id}-${i}`}
             style={{ fontVariationSettings: "'FILL' 1" }}
-            className="material-symbols-outlined text-gray-300 dark:text-gray-600 !text-base"
+            className="material-symbols-outlined text-gray-300 dark:text-gray-600 text-base"
           >
             star
           </span>

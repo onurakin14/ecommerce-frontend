@@ -30,7 +30,7 @@ export default function Navbar() {
 >
 
       {/* DESKTOP */}
-      <div className="max-w-7xl mx-auto flex items-center justify-between py-3 px-4 text-color:var(--primary-text)">
+      <div className="max-w-7xl mx-auto flex items-center justify-between py-3 px-4 text-(--primary-text)">
         {/* LEFT */}
         <div className="flex items-center gap-10">
           <Link to="/" className="flex items-center gap-2">
