@@ -5,13 +5,14 @@ import { setTheme, THEMES } from "../store/themeSlice";
 
 export default function Settings() {
   const dispatch = useDispatch();
-  const currentTheme =  useSelector((state: RootState) => state.theme.theme) ?? THEMES[0];
+  const currentTheme =
+    useSelector((state: RootState) => state.theme.theme) ?? THEMES[0];
 
   return (
     <div className="max-w-6xl mx-auto">
       <h1 className="text-2xl font-bold mb-8">Theme Settings</h1>
 
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
         {THEMES.map((theme) => {
           const isActive = currentTheme.name === theme.name;
           const isDefault = theme.isBase;
@@ -20,23 +21,28 @@ export default function Settings() {
             <div
               key={theme.name}
               onClick={() => dispatch(setTheme(theme))}
-              className={`border rounded-xl p-6 cursor-pointer transition
-                ${isActive ? "ring-2 ring-blue-500" : ""}
+              className={`
+                bg-white rounded-2xl p-6 cursor-pointer transition
+                border border-gray-200
+                hover:shadow-md hover:-translate-y-0.5
+                ${isActive ? "ring-2 ring-[var(--action)]" : ""}
               `}
             >
               {/* COLOR PREVIEW */}
               <div
-                className="w-10 h-10 rounded mb-4"
+                className="w-10 h-10 rounded-full mb-4 shadow-sm"
                 style={{
                   backgroundColor: isDefault
-                    ? "#e5e7eb" // default için nötr gri
+                    ? "#e5e7eb"
                     : theme.primary,
                 }}
               />
 
-              <h3 className="font-semibold">{theme.name}</h3>
+              <h3 className="font-semibold text-gray-900 mb-0.5">
+                {theme.name}
+              </h3>
 
-              <p className="text-sm text-gray-500 mb-4">
+              <p className="text-xs text-gray-500 mb-4">
                 {isDefault
                   ? "Base theme (no color)"
                   : "Primary color preview"}
@@ -44,19 +50,20 @@ export default function Settings() {
 
               {/* BUTTON PREVIEW */}
               <button
-                className={`px-4 py-2 rounded text-sm
+                disabled={isDefault}
+                className={`
+                  px-4 py-2 rounded-full text-sm font-medium transition
                   ${
                     isDefault
-                      ? "bg-gray-200 text-gray-700 cursor-default"
+                      ? "bg-gray-100 text-gray-400 cursor-not-allowed"
                       : "text-white"
                   }
                 `}
                 style={
-                  isDefault
-                    ? undefined
-                    : { backgroundColor: theme.primary }
+                  !isDefault
+                    ? { backgroundColor: theme.primary }
+                    : undefined
                 }
-                disabled={isDefault}
               >
                 Button preview
               </button>

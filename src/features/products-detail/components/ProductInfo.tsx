@@ -23,11 +23,15 @@ export default function ProductInfo({ product }: Props) {
     type: "success" | "wishlist" | "error";
   } | null>(null);
 
+  const discountedPrice: number = product.discountPercentage
+    ? Number((product.price * (1 - product.discountPercentage / 100)).toFixed(2))
+    : Number(product.price.toFixed(2));
+
   function handleAddToCart() {
     addItem({
       id: product.id.toString(),
       name: product.title,
-      price: parseFloat(discountedPrice),
+      price: discountedPrice,
       quantity: quantity,
       image: product.thumbnail,
     });
@@ -48,10 +52,6 @@ export default function ProductInfo({ product }: Props) {
     });
   }
 
-  const discountedPrice = product.discountPercentage
-    ? (product.price * (1 - product.discountPercentage / 100)).toFixed(2)
-    : product.price;
-
   return (
     <>
       {notification && (
@@ -63,6 +63,7 @@ export default function ProductInfo({ product }: Props) {
       )}
 
       <div className="flex flex-col gap-6">
+        {/* Başlık ve Marka */}
         <div>
           <h1 className="text-3xl sm:text-4xl font-bold text-gray-900 leading-tight">
             {product.title}
@@ -74,10 +75,12 @@ export default function ProductInfo({ product }: Props) {
           )}
         </div>
 
+        {/* Açıklama */}
         <p className="text-gray-600 text-base leading-relaxed">
           {product.description}
         </p>
 
+        {/* Yıldızlar, Puan ve Stok Durumu */}
         <div className="flex items-center gap-4">
           <div className="flex items-center gap-1">
             {[1, 2, 3, 4, 5].map((s) => (
@@ -91,54 +94,53 @@ export default function ProductInfo({ product }: Props) {
               />
             ))}
           </div>
-          <span className="text-sm text-gray-500">
+          <span className="text-sm text-gray-500 font-bold">
             {product.rating?.toFixed(1) ?? "0"}
           </span>
           <span className="text-sm text-gray-400">|</span>
-          <span className="text-sm text-gray-600">
+          <span className="text-sm">
             <span
               className={
                 (product.stock ?? 0) > 0
-                  ? "text-green-600 font-medium"
-                  : "text-red-600"
+                  ? "text-green-600 font-bold"
+                  : "text-red-600 font-bold"
               }
             >
-              {(product.stock ?? 0) > 0
-                ? `${product.stock} adet stokta`
-                : "Stokta yok"}
+              {(product.stock ?? 0) > 0 ? "Stokta Var" : "Stokta Yok"}
             </span>
           </span>
         </div>
 
+          {/* Fiyat Bilgisi */}
         <div className="flex items-center gap-4">
-          {(product.discountPercentage ?? 0) > 0 && (
+          {(product.discountPercentage ?? 0) > 0 ? (
             <div className="flex items-center gap-3">
-              <div className="text-4xl font-bold text-gray-900">
-                ${discountedPrice}
+              <div className="text-4xl font-black text-gray-900">
+                ${discountedPrice.toFixed(2)}
               </div>
               <div className="flex flex-col">
                 <span className="text-lg text-gray-400 line-through">
-                  ${product.price}
+                  ${product.price.toFixed(2)}
                 </span>
-                <span className="text-sm font-medium text-red-500">
+                <span className="text-sm font-bold text-red-500">
                   %{(product.discountPercentage ?? 0).toFixed(0)} indirim
                 </span>
               </div>
             </div>
-          )}
-          {!(product.discountPercentage ?? 0) && (
-            <div className="text-4xl font-bold text-gray-900">
-              ${product.price}
+          ) : (
+            <div className="text-4xl font-black text-gray-900">
+              ${product.price.toFixed(2)}
             </div>
           )}
         </div>
 
+        {/* Etiketler */}
         {product.tags && product.tags.length > 0 && (
           <div className="flex flex-wrap gap-2">
             {product.tags.slice(0, 4).map((tag: string, i: number) => (
               <span
                 key={i}
-                className="px-3 py-1 bg-gray-100 text-gray-700 text-xs rounded-full"
+                className="px-3 py-1 bg-gray-100 text-gray-700 text-xs font-bold rounded-full"
               >
                 #{tag}
               </span>
@@ -146,30 +148,27 @@ export default function ProductInfo({ product }: Props) {
           </div>
         )}
 
+        {/* Miktar Seçici */}
         <div>
-          <label className="block text-sm font-medium text-gray-700 mb-2">
+          <label className="block text-sm font-bold text-gray-700 mb-2">
             Miktar
           </label>
-          <div className="inline-flex items-center border-2 border-gray-200 rounded-xl overflow-hidden">
+          <div className="inline-flex items-center border-2 border-gray-200 rounded-xl overflow-hidden bg-white">
             <button
               onClick={() => setQuantity((q) => Math.max(1, q - 1))}
-              className="px-4 py-3 hover:bg-gray-100 disabled:opacity-50 disabled:cursor-not-allowed transition"
-              aria-label="decrease-quantity"
+              className="px-4 py-3 hover:bg-gray-50 disabled:opacity-30 transition"
               disabled={quantity <= 1}
             >
               <Minus className="w-4 h-4" />
             </button>
 
-            <div className="px-6 py-3 border-x-2 border-gray-200 font-semibold min-w-16 text-center">
+            <div className="px-6 py-3 border-x-2 border-gray-200 font-bold min-w-16 text-center">
               {quantity}
             </div>
 
             <button
-              onClick={() =>
-                setQuantity((q) => Math.min(product.stock ?? 0, q + 1))
-              }
-              className="px-4 py-3 hover:bg-gray-100 disabled:opacity-50 disabled:cursor-not-allowed transition"
-              aria-label="increase-quantity"
+              onClick={() => setQuantity((q) => Math.min(product.stock ?? 0, q + 1))}
+              className="px-4 py-3 hover:bg-gray-50 disabled:opacity-30 transition"
               disabled={quantity >= (product.stock ?? 0)}
             >
               <Plus className="w-4 h-4" />
@@ -177,11 +176,12 @@ export default function ProductInfo({ product }: Props) {
           </div>
         </div>
 
-        <div className="flex flex-col sm:flex-row gap-3">
+        {/* Aksiyon Butonları */}
+        <div className="flex flex-col sm:flex-row gap-3 mt-2">
           <button
             onClick={handleAddToCart}
-            disabled={product.stock === 0}
-            className="flex-1 px-6 py-4 rounded-xl flex items-center justify-center gap-3 text-white font-medium transition-all bg-blue-600 hover:bg-blue-700 disabled:bg-gray-300 disabled:cursor-not-allowed active:scale-95"
+            disabled={(product.stock ?? 0) === 0}
+            className="flex-1 px-8 py-4 rounded-xl flex items-center justify-center gap-3 text-white font-bold transition-all bg-blue-600 hover:bg-blue-700 disabled:bg-gray-300 disabled:cursor-not-allowed active:scale-[0.98] shadow-lg shadow-blue-500/20"
           >
             <ShoppingCart className="w-5 h-5" />
             Sepete Ekle
@@ -189,11 +189,10 @@ export default function ProductInfo({ product }: Props) {
 
           <button
             onClick={handleToggleWishlist}
-            className="p-4 rounded-xl border-2 border-gray-200 hover:border-red-400 transition active:scale-95"
-            aria-label="toggle-wishlist"
+            className="p-4 rounded-xl border-2 border-gray-200 hover:border-red-200 hover:bg-red-50 transition-all active:scale-[0.98]"
           >
             <Heart
-              className={`w-6 h-6 ${
+              className={`w-6 h-6 transition-colors ${
                 isWishlisted ? "fill-red-500 text-red-500" : "text-gray-400"
               }`}
             />
