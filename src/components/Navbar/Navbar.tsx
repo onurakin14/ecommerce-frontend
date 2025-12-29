@@ -30,7 +30,7 @@ export default function Navbar() {
 >
 
       {/* DESKTOP */}
-      <div className="max-w-7xl mx-auto flex items-center justify-between py-3 px-4 text-color:var(--primary-text)">
+      <div className="max-w-7xl mx-auto flex items-center justify-between py-3 px-4 text-[color:var(--primary-text)]">
         {/* LEFT */}
         <div className="flex items-center gap-10">
           <Link to="/" className="flex items-center gap-2">
@@ -60,6 +60,8 @@ export default function Navbar() {
             <Link to="/new-arrivals" className="hover:opacity-80">
               New Arrivals
             </Link>
+
+           
           </div>
         </div>
 
@@ -93,7 +95,15 @@ export default function Navbar() {
               </span>
             )}
           </NavIcon>
-
+ <Link to="/user/1">
+            <div className="hidden md:block w-9 h-9 rounded-full overflow-hidden hover:ring-2 ring-blue-600 cursor-pointer">
+              <img
+                src="https://i.pravatar.cc/100"
+                className="w-full h-full object-cover"
+              />
+            </div>
+          </Link>
+          
           {isLoggedIn ? (
             <div className="hidden md:flex items-center gap-3">
               <span className="text-sm">{user?.username}</span>

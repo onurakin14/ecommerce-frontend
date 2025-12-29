@@ -1,22 +1,20 @@
-import type { ReactNode } from "react";
+import { Outlet } from "react-router-dom";
 import Navbar from "../components/Navbar/Navbar";
 import Footer from "../components/Footer/Footer";
+import ThemeApplier from "../components/theme/ThemeApplier";
 
-interface LayoutProps {
-  children: ReactNode;
-}
-
-export default function Layout({ children }: LayoutProps) {
+export default function Layout() {
   return (
-    <div className="min-h-screen flex flex-col bg-white">
-      {/* NAVBAR */}
+    <div className="min-h-screen flex flex-col">
+      <ThemeApplier />
+
       <Navbar />
-      {/* CONTENT AREA */}
-      <main className="flex-1 bg-white">
-        <div className="max-w-7x4 mx-auto w-full px-4 py-4">{children}</div>
+      <main className="flex-1 bg-[var(--app-bg)]">
+        <div className="max-w-7xl mx-auto w-full px-4 py-4">
+          <Outlet />
+        </div>
       </main>
 
-      {/* FOOTER */}
       <Footer />
     </div>
   );

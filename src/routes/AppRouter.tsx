@@ -1,9 +1,9 @@
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 
-import Wishlist from "../pages/WishList";
 import Layout from "../layout/Layout";
+import AdminLayout from "../layout/AdminLayout";
 
-// Pages
+// SHOP PAGES
 import Home from "../pages/Home";
 import Deals from "../pages/Deals";
 import NewArrivals from "../pages/New Arrivals";
@@ -15,41 +15,58 @@ import ProductList from "../pages/ProductList";
 import CartPage from "../pages/CartPage";
 import ProductDetail from "../pages/ProductDetail";
 import Checkout from "../pages/Checkout";
+import Wishlist from "../pages/WishList";
 import OrderSuccess from "../pages/OrderSuccess";
 import OrderHistory from "../pages/OrderHistory";
-import OrderDetail from "../pages/OrderDetail";
 import Orders from "../pages/Orders";
 import Compare from "../pages/ComparePage";
 
 export default function AppRouter() {
   return (
     <Router>
-      <Layout>
-        <Routes>
-          {/* Logo veya "/" → Home */}
-          <Route path="/" element={<Home />} />
+      <Routes>
 
-          {/* Menü sayfalarının yönlendirmesi */}
-          <Route path="/deals" element={<Deals />} />
-          <Route path="/new-arrivals" element={<NewArrivals />} />
-          <Route path="/categories" element={<Categories />} />
-          <Route path="/shop" element={<Shop />} />
-          <Route path="/shop/all" element={<AllProducts />} />
-          <Route path="/login" element={<Login />} />
-          <Route path="/products" element={<ProductList />} />
-          <Route path="/products/:categoryName" element={<ProductList />} />
-          <Route path="/cart" element={<CartPage />} />
-          <Route path="/checkout" element={<Checkout />} />
-          <Route path="/order-success" element={<OrderSuccess />} />
-          <Route path="/order-history" element={<OrderHistory />} />
+        {/* ========== SHOP ROUTES ========== */}
+        <Route element={<Layout />}>
+          {/* ✅ INDEX ROUTE */}
+          <Route index element={<Home />} />
 
-          <Route path="/product/:id" element={<ProductDetail />} />
-          <Route path="/wishlist" element={<Wishlist />} />
-          <Route path="/orders" element={<Orders />} />
-          <Route path="/order/:id" element={<OrderDetail />} />
-          <Route path="/compare" element={<Compare />} />
-        </Routes>
-      </Layout>
+          <Route path="deals" element={<Deals />} />
+          <Route path="new-arrivals" element={<NewArrivals />} />
+          <Route path="categories" element={<Categories />} />
+          <Route path="shop" element={<Shop />} />
+          <Route path="shop/all" element={<AllProducts />} />
+          <Route path="login" element={<Login />} />
+          <Route path="/user/:id" element={<UserDetail />} />
+
+          <Route path="products" element={<ProductList />} />
+          <Route path="products/:categoryName" element={<ProductList />} />
+
+          <Route path="product/:id" element={<ProductDetail />} />
+
+          <Route path="cart" element={<CartPage />} />
+          <Route path="checkout" element={<Checkout />} />
+
+          <Route path="wishlist" element={<Wishlist />} />
+
+          <Route path="orders" element={<Orders />} />
+          <Route path="order/:id" element={<OrderDetail />} />
+          <Route path="order-history" element={<OrderHistory />} />
+          <Route path="order-success" element={<OrderSuccess />} />
+<Route path="/compare" element={<Compare />} />
+          {/* ✅ SETTINGS – ARTIK SORUNSUZ */}
+          <Route path="settings" element={<Settings />} />
+        </Route>
+
+        {/* ========== ADMIN ROUTES ========== */}
+        <Route path="/admin" element={<AdminLayout />}>
+          <Route index element={<AdminDashboard />} />
+          <Route path="products" element={<AdminProducts />} />
+          <Route path="orders" element={<AdminOrders />} />
+          <Route path="users" element={<AdminUsers />} />
+        </Route>
+
+      </Routes>
     </Router>
   );
 }
