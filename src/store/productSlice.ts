@@ -123,6 +123,7 @@ export const fetchRelated = createAsyncThunk(
   }
 );
 
+// ÜRÜN SAYFALAMA
 export const fetchProductsByPage = createAsyncThunk<Product[], { limit?: string, skip?: string }>(
   "product/fetchProductsByPage", async ({ limit = "5", skip = "0" }) => {
     const apiUrl = `https://dummyjson.com/products?limit=${limit}&skip=${skip}`;
@@ -131,6 +132,7 @@ export const fetchProductsByPage = createAsyncThunk<Product[], { limit?: string,
   }
 );
 
+// ÜRÜN SIRALAMA
 export const fetchProductsSortBy = createAsyncThunk<Product[], { value: string; direction?: "desc" | "asc" }>(
   "product/fetchProductsSortBy", async ({ value, direction = "desc" }) => {
     const sortApiUrl = `https://dummyjson.com/products?sortBy=${value}&order=${direction}`;
@@ -139,6 +141,31 @@ export const fetchProductsSortBy = createAsyncThunk<Product[], { value: string; 
   }
 );
 
+// ÜRÜN EKLE
+export const createProduct = createAsyncThunk<Product, Partial<Product>>(
+  "product/createProduct", async (newProduct) => {
+    const res = await axios.post<Product>("https://dummyjson.com/products/add", newProduct);
+    return res.data;
+  }
+);
+
+// ÜRÜN GÜNCELLE
+export const updateProduct = createAsyncThunk<Product, Partial<Product>>(
+  "product/updateProduct", async (product) => {
+    const res = await axios.patch(`https://dummyjson.com/products/${product.id}`, product);
+    return res.data;
+  }
+);
+
+// ÜRÜN SİL
+export const deleteProduct = createAsyncThunk(
+  "product/deleteProduct", async (id: number) => {
+    const res = await axios.delete(`https://dummyjson.com/products/${id}`)
+    return res.data;
+  }
+);
+
+// KATEGORİ
 export interface Category {
   slug: string,
   name: string,

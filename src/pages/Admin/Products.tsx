@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
-import { type Category, fetchCategories, fetchProductsByPage, type Product } from "../../store/productSlice";
 import { useAppDispatch } from "../../store/hooks";
+import { type Category, createProduct, deleteProduct, fetchCategories, fetchProductsByPage, type Product, updateProduct } from "../../store/productSlice";
 
 function AdminProducts() {
 
@@ -8,6 +8,7 @@ function AdminProducts() {
     const [products, setProducts] = useState<Product[]>([]);
     const [categories, setCategories] = useState<Category[]>([]);
 
+    const [newProduct, setNewProduct] = useState<Product>();
     const [openMenuById, setOpenMenuById] = useState<number | null>(null);
     const [selectedProduct, setSelectedProduct] = useState<Product | null>();
 
@@ -24,35 +25,34 @@ function AdminProducts() {
         }).catch(err => console.error(err));
     }, []);
 
-    const createProduct = () => {
-        fetch('https://dummyjson.com/products/add', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({
-                title: 'BMW Pencil',
-                /* other product data */
-            })
-        })
-            .then(res => res.json())
-            .then(data => { console.log(data); closeModals(); });
+    const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) => {
+        const { name, value } = e.target;
+
+        if (selectedProduct) {
+            setSelectedProduct((data: any) => ({ ...data, [name]: value }));
+            //console.log(selectedProduct);
+        } else {
+            setNewProduct((data: any) => ({ ...data, [name]: value }));
+            //console.log(newProduct);
+        }
+    };
+
+    const handleCreateProduct = () => {
+        dispatch(createProduct(newProduct!)).then(res => {
+            console.log(res.payload); closeModals();
+        }).catch(err => console.error(err));
+    };
+
+    const handleUpdateProduct = () => {
+        dispatch(updateProduct(selectedProduct!)).then(res => {
+            console.log(res.payload); closeModals();
+        }).catch(err => console.error(err));
     }
 
-    const updateProduct = () => {
-        fetch('https://dummyjson.com/products/1', {
-            method: 'PUT', /* or PATCH */
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({
-                title: 'iPhone Galaxy +1'
-            })
-        })
-            .then(res => res.json())
-            .then(data => { console.log(data); closeModals(); });
-    }
-
-    const deleteProduct = (id: number) => {
-        fetch(`https://dummyjson.com/products/${id}`, { method: 'DELETE', })
-            .then(res => res.json())
-            .then(data => { console.log(data); closeModals(); });
+    const handleDeleteProduct = (id: number) => {
+        dispatch(deleteProduct(id)).then(res => {
+            console.log(res.payload); closeModals();
+        }).catch(err => console.error(err));
     }
 
     const closeModals = () => {
@@ -86,14 +86,14 @@ function AdminProducts() {
                                     {/* Product Title */}
                                     <div className="space-y-2">
                                         <label className="block text-sm font-semibold text-[#0e0e1b]">Product Title <span className="text-error">*</span></label>
-                                        <input defaultValue={selectedProduct?.title} className="w-full h-12 px-4 rounded-lg border border-slate-200 bg-white text-[#0e0e1b] placeholder:text-slate-400 focus:outline-none focus:border-primary focus:ring-4 focus:ring-primary/10 transition-all text-sm font-medium" placeholder="e.g. Wireless Noise-Canceling Headphones" type="text" />
+                                        <input name="title" onChange={handleChange} defaultValue={selectedProduct?.title} className="w-full h-12 px-4 rounded-lg border border-slate-200 bg-white text-[#0e0e1b] placeholder:text-slate-400 focus:outline-none focus:border-primary focus:ring-4 focus:ring-primary/10 transition-all text-sm font-medium" placeholder="e.g. Wireless Noise-Canceling Headphones" type="text" />
                                     </div>
                                     {/* Row: Category & Price */}
                                     <div className="grid grid-cols-2 gap-6">
                                         <div className="space-y-2">
                                             <label className="block text-sm font-semibold text-[#0e0e1b]">Category <span className="text-error">*</span></label>
                                             <div className="relative">
-                                                <select defaultValue={selectedProduct?.category} className="w-full h-12 px-4 pr-10 rounded-lg border border-slate-200 bg-white text-[#0e0e1b] focus:outline-none focus:border-primary focus:ring-4 focus:ring-primary/10 appearance-none transition-all text-sm font-medium cursor-pointer">
+                                                <select name="category" onChange={handleChange} defaultValue={selectedProduct?.category} className="w-full h-12 px-4 pr-10 rounded-lg border border-slate-200 bg-white text-[#0e0e1b] focus:outline-none focus:border-primary focus:ring-4 focus:ring-primary/10 appearance-none transition-all text-sm font-medium cursor-pointer">
                                                     <option disabled>Select category</option>
                                                     {categories.map((item, index) => {
                                                         return (
@@ -108,7 +108,7 @@ function AdminProducts() {
                                             <label className="block text-sm font-semibold text-[#0e0e1b]">Price</label>
                                             <div className="relative group">
                                                 <span className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 font-medium group-focus-within:text-primary transition-colors">$</span>
-                                                <input defaultValue={selectedProduct?.price} className="w-full h-12 pl-8 pr-4 rounded-lg border border-slate-200 bg-white text-[#0e0e1b] placeholder:text-slate-400 focus:outline-none focus:border-primary focus:ring-4 focus:ring-primary/10 transition-all text-sm font-medium" placeholder="0.00" type="number" />
+                                                <input name="price" onChange={handleChange} defaultValue={selectedProduct?.price} className="w-full h-12 pl-8 pr-4 rounded-lg border border-slate-200 bg-white text-[#0e0e1b] placeholder:text-slate-400 focus:outline-none focus:border-primary focus:ring-4 focus:ring-primary/10 transition-all text-sm font-medium" placeholder="0.00" type="number" />
                                             </div>
                                         </div>
                                     </div>
@@ -117,14 +117,14 @@ function AdminProducts() {
                                         <div className="space-y-2">
                                             <label className="block text-sm font-semibold text-[#0e0e1b]">Discount</label>
                                             <div className="relative group">
-                                                <input defaultValue={selectedProduct?.discountPercentage} className="w-full h-12 px-4 rounded-lg border border-slate-200 bg-white text-[#0e0e1b] placeholder:text-slate-400 focus:outline-none focus:border-primary focus:ring-4 focus:ring-primary/10 transition-all text-sm font-medium" placeholder="0" type="number" />
+                                                <input name="discountPercentage" onChange={handleChange} defaultValue={selectedProduct?.discountPercentage} className="w-full h-12 px-4 rounded-lg border border-slate-200 bg-white text-[#0e0e1b] placeholder:text-slate-400 focus:outline-none focus:border-primary focus:ring-4 focus:ring-primary/10 transition-all text-sm font-medium" placeholder="0" type="number" />
                                                 <span className="absolute right-4 top-1/2 -translate-y-1/2 text-slate-400 font-medium group-focus-within:text-primary transition-colors">%</span>
                                             </div>
                                         </div>
                                         {/* Error State Example */}
                                         <div className="space-y-2">
                                             <label className="block text-sm font-semibold text-[#0e0e1b]">Stock Quantity</label>
-                                            <input defaultValue={selectedProduct?.stock} className="w-full h-12 px-4 rounded-lg border border-error bg-red-50/10 text-[#0e0e1b] focus:outline-none focus:border-error focus:ring-4 focus:ring-error/10 transition-all text-sm font-medium" type="number" />
+                                            <input name="stock" onChange={handleChange} defaultValue={selectedProduct?.stock} className="w-full h-12 px-4 rounded-lg border border-error bg-red-50/10 text-[#0e0e1b] focus:outline-none focus:border-error focus:ring-4 focus:ring-error/10 transition-all text-sm font-medium" type="number" />
                                             <p className="text-xs text-error font-medium flex items-center gap-1">
                                                 <span className="material-symbols-outlined text-[14px]">error</span>
                                                 Stock cannot be negative
@@ -134,7 +134,7 @@ function AdminProducts() {
                                     {/* Description */}
                                     <div className="space-y-2">
                                         <label className="block text-sm font-semibold text-[#0e0e1b]">Description</label>
-                                        <textarea defaultValue={selectedProduct?.description} className="w-full p-4 rounded-lg border border-slate-200 bg-white text-[#0e0e1b] placeholder:text-slate-400 focus:outline-none focus:border-primary focus:ring-4 focus:ring-primary/10 resize-none transition-all text-sm font-medium" placeholder="Write a detailed description of the product..." rows={5}></textarea>
+                                        <textarea name="description" onChange={handleChange} defaultValue={selectedProduct?.description} className="w-full p-4 rounded-lg border border-slate-200 bg-white text-[#0e0e1b] placeholder:text-slate-400 focus:outline-none focus:border-primary focus:ring-4 focus:ring-primary/10 resize-none transition-all text-sm font-medium" placeholder="Write a detailed description of the product..." rows={5}></textarea>
                                     </div>
                                 </div>
                                 {/* Right Column: Media & Meta */}
@@ -146,7 +146,7 @@ function AdminProducts() {
                                         <div className="flex gap-2 mb-4">
                                             <div className="relative flex-1">
                                                 <span className="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 text-lg">link</span>
-                                                <input defaultValue={selectedProduct?.thumbnail} className="w-full h-10 pl-9 pr-3 rounded-lg border border-slate-200 bg-white text-[#0e0e1b] placeholder:text-slate-400 focus:outline-none focus:border-primary focus:ring-4 focus:ring-primary/10 text-xs font-medium" placeholder="https://..." type="text" />
+                                                <input name="thumbnail" onChange={handleChange} defaultValue={selectedProduct?.thumbnail} className="w-full h-10 pl-9 pr-3 rounded-lg border border-slate-200 bg-white text-[#0e0e1b] placeholder:text-slate-400 focus:outline-none focus:border-primary focus:ring-4 focus:ring-primary/10 text-xs font-medium" placeholder="https://..." type="text" />
                                             </div>
                                             <button className="h-10 px-3 bg-white border border-slate-200 rounded-lg text-slate-600 hover:border-primary hover:text-primary transition-all shadow-sm" type="button">
                                                 <span className="material-symbols-outlined text-lg">refresh</span>
@@ -196,7 +196,7 @@ function AdminProducts() {
                                 <button onClick={() => closeModals()} className="px-6 py-2.5 rounded-lg border border-slate-200 bg-white text-slate-700 hover:bg-slate-50 hover:text-slate-900 font-semibold text-sm transition-all shadow-sm" type="button">
                                     Cancel
                                 </button>
-                                <button className="px-6 py-2.5 rounded-lg bg-primary hover:bg-[#3b3ddb] text-white font-semibold text-sm shadow-lg shadow-primary/25 flex items-center gap-2 transition-all active:scale-[0.98]" type="button">
+                                <button onClick={() => selectedProduct ? handleUpdateProduct() : handleCreateProduct()} className="px-6 py-2.5 rounded-lg bg-primary hover:bg-[#3b3ddb] text-white font-semibold text-sm shadow-lg shadow-primary/25 flex items-center gap-2 transition-all active:scale-[0.98]" type="submit">
                                     <span className="material-symbols-outlined text-[18px]">save</span>
                                     Save Product
                                 </button>
@@ -239,7 +239,7 @@ function AdminProducts() {
                                 Cancel
                             </button>
                             {/* Primary Action (Delete) */}
-                            <button onClick={() => deleteProduct(selectedProduct?.id || 0)} className="inline-flex w-full justify-center items-center gap-2 rounded-lg bg-red-500 px-4 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-red-600 sm:w-auto transition-colors focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2" type="button">
+                            <button onClick={() => handleDeleteProduct(selectedProduct?.id || 0)} className="inline-flex w-full justify-center items-center gap-2 rounded-lg bg-red-500 px-4 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-red-600 sm:w-auto transition-colors focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2" type="button">
                                 <span className="material-symbols-outlined text-[1.125rem]">delete</span>
                                 Delete
                             </button>
