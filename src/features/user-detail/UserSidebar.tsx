@@ -1,81 +1,40 @@
-import { useState, useEffect } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import type { RootState } from "../../store/store";
+import { setTheme, toggleDarkMode, THEMES } from "../../store/themeSlice";
 
 type Props = {
   activePage: "account" | "orders" | "addresses" | "payments" | "notifications";
   setActivePage: (page: Props["activePage"]) => void;
 };
 
-type ThemeColor = "indigo" | "blue" | "emerald" | "rose" | "amber" | "violet";
-
 export default function UserSidebar({ activePage, setActivePage }: Props) {
-  const [isDarkMode, setIsDarkMode] = useState(() => {
-    return localStorage.getItem("darkMode") === "true";
-  });
+  const dispatch = useDispatch();
+  const { theme, isDarkMode } = useSelector((state: RootState) => state.theme);
 
-  const [themeColor, setThemeColor] = useState<ThemeColor>(() => {
-    return (localStorage.getItem("themeColor") as ThemeColor) || "indigo";
-  });
+  const handleToggleTheme = () => {
+    dispatch(toggleDarkMode());
+  };
 
-  useEffect(() => {
-    if (isDarkMode) {
-      document.documentElement.classList.add("dark");
-    } else {
-      document.documentElement.classList.remove("dark");
+  const handleChangeColor = (themeName: string) => {
+    const selectedTheme = THEMES.find((t) => t.name === themeName);
+    if (selectedTheme) {
+      dispatch(setTheme(selectedTheme));
     }
-    localStorage.setItem("darkMode", String(isDarkMode));
-  }, [isDarkMode]);
-
-  useEffect(() => {
-    localStorage.setItem("themeColor", themeColor);
-    // Burada renk değişikliği için CSS variable ayarlayabilirsin
-    document.documentElement.setAttribute("data-theme", themeColor);
-  }, [themeColor]);
-
-  const toggleTheme = () => {
-    setIsDarkMode((prev) => !prev);
   };
 
-  const changeColor = (color: ThemeColor) => {
-    setThemeColor(color);
-  };
-
-  const colorOptions: {
-    color: ThemeColor;
-    bg: string;
-    ring: string;
-    title: string;
-  }[] = [
-    {
-      color: "indigo",
-      bg: "bg-indigo-500",
-      ring: "ring-indigo-500",
-      title: "Indigo",
-    },
-    { color: "blue", bg: "bg-blue-500", ring: "ring-blue-500", title: "Mavi" },
-    {
-      color: "emerald",
-      bg: "bg-emerald-500",
-      ring: "ring-emerald-500",
-      title: "Yeşil",
-    },
-    { color: "rose", bg: "bg-rose-500", ring: "ring-rose-500", title: "Pembe" },
-    {
-      color: "amber",
-      bg: "bg-amber-500",
-      ring: "ring-amber-500",
-      title: "Turuncu",
-    },
-    {
-      color: "violet",
-      bg: "bg-violet-500",
-      ring: "ring-violet-500",
-      title: "Mor",
-    },
+  const colorOptions = [
+    { name: "Default", bg: "bg-indigo-500", title: "Indigo" },
+    { name: "Blue", bg: "bg-blue-500", title: "Blue" },
+    { name: "Emerald", bg: "bg-emerald-500", title: "Green" },
+    { name: "Rose", bg: "bg-rose-500", title: "Pink" },
+    { name: "Orange", bg: "bg-amber-500", title: "Orange" },
+    { name: "Purple", bg: "bg-violet-500", title: "Purple" },
   ];
 
   return (
     <aside className="col-span-12 md:col-span-3">
       <div className="flex flex-col gap-6 rounded-xl bg-white dark:bg-gray-800 p-4 shadow-sm">
+        {/* Profil */}
         <div className="flex items-center gap-4">
           <div
             className="aspect-square h-12 w-12 rounded-full bg-cover bg-center bg-no-repeat"
@@ -92,22 +51,24 @@ export default function UserSidebar({ activePage, setActivePage }: Props) {
             </p>
           </div>
         </div>
+
+        {/* Navigation */}
         <nav className="flex flex-col gap-1">
           <button
             className={`flex items-center gap-3 rounded-lg px-3 py-2 text-sm font-medium ${
               activePage === "account"
-                ? "bg-indigo-50 text-indigo-600 dark:bg-indigo-900/50 dark:text-indigo-400"
+                ? "bg-primary-light text-primary dark:bg-indigo-900/50 dark:text-indigo-400"
                 : "text-gray-600 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-700"
             }`}
             onClick={() => setActivePage("account")}
           >
-            <span className="material-symbols-outlined fill">person</span>
+            <span className="material-symbols-outlined">person</span>
             Account Settings
           </button>
           <button
             className={`flex items-center gap-3 rounded-lg px-3 py-2 text-sm font-medium ${
               activePage === "orders"
-                ? "bg-indigo-50 text-indigo-600 dark:bg-indigo-900/50 dark:text-indigo-400"
+                ? "bg-primary-light text-primary dark:bg-indigo-900/50 dark:text-indigo-400"
                 : "text-gray-600 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-700"
             }`}
             onClick={() => setActivePage("orders")}
@@ -118,7 +79,7 @@ export default function UserSidebar({ activePage, setActivePage }: Props) {
           <button
             className={`flex items-center gap-3 rounded-lg px-3 py-2 text-sm font-medium ${
               activePage === "addresses"
-                ? "bg-indigo-50 text-indigo-600 dark:bg-indigo-900/50 dark:text-indigo-400"
+                ? "bg-primary-light text-primary dark:bg-indigo-900/50 dark:text-indigo-400"
                 : "text-gray-600 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-700"
             }`}
             onClick={() => setActivePage("addresses")}
@@ -129,7 +90,7 @@ export default function UserSidebar({ activePage, setActivePage }: Props) {
           <button
             className={`flex items-center gap-3 rounded-lg px-3 py-2 text-sm font-medium ${
               activePage === "payments"
-                ? "bg-indigo-50 text-indigo-600 dark:bg-indigo-900/50 dark:text-indigo-400"
+                ? "bg-primary-light text-primary dark:bg-indigo-900/50 dark:text-indigo-400"
                 : "text-gray-600 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-700"
             }`}
             onClick={() => setActivePage("payments")}
@@ -140,7 +101,7 @@ export default function UserSidebar({ activePage, setActivePage }: Props) {
           <button
             className={`flex items-center gap-3 rounded-lg px-3 py-2 text-sm font-medium ${
               activePage === "notifications"
-                ? "bg-indigo-50 text-indigo-600 dark:bg-indigo-900/50 dark:text-indigo-400"
+                ? "bg-primary-light text-primary dark:bg-indigo-900/50 dark:text-indigo-400"
                 : "text-gray-600 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-700"
             }`}
             onClick={() => setActivePage("notifications")}
@@ -149,8 +110,10 @@ export default function UserSidebar({ activePage, setActivePage }: Props) {
             Notifications
           </button>
         </nav>
+
+        {/* Logout */}
         <div className="border-t border-gray-200 dark:border-gray-700 pt-4">
-          <button className="flex items-center gap-3 rounded-lg px-3 py-2 text-gray-600 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-700 text-sm font-medium">
+          <button className="flex items-center gap-3 rounded-lg px-3 py-2 text-gray-600 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-700 text-sm font-medium w-full">
             <span className="material-symbols-outlined">logout</span>
             Log Out
           </button>
@@ -193,9 +156,9 @@ export default function UserSidebar({ activePage, setActivePage }: Props) {
             </span>
           </div>
           <button
-            onClick={toggleTheme}
+            onClick={handleToggleTheme}
             className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors ${
-              isDarkMode ? "bg-indigo-600" : "bg-gray-300"
+              isDarkMode ? "bg-primary" : "bg-gray-300"
             }`}
           >
             <span
@@ -208,7 +171,7 @@ export default function UserSidebar({ activePage, setActivePage }: Props) {
 
         {/* Tema Rengi Seçici */}
         <div className="rounded-lg bg-gray-50 dark:bg-gray-700 px-3 py-2.5">
-          <div className="flex items-center gap-3 mb-2">
+          <div className="flex items-center gap-3 mb-3">
             <svg
               className="h-5 w-5 text-gray-600 dark:text-gray-400"
               fill="none"
@@ -229,14 +192,15 @@ export default function UserSidebar({ activePage, setActivePage }: Props) {
           <div className="flex items-center gap-2">
             {colorOptions.map((option) => (
               <button
-                key={option.color}
-                onClick={() => changeColor(option.color)}
+                key={option.name}
+                onClick={() => handleChangeColor(option.name)}
                 className={`h-7 w-7 rounded-full ${
                   option.bg
                 } ring-offset-2 dark:ring-offset-gray-700 transition-all hover:scale-110 ${
-                  themeColor === option.color
-                    ? `ring-2 ${option.ring}`
-                    : `hover:ring-2 hover:${option.ring}`
+                  theme?.name === option.name ||
+                  (!theme && option.name === "Default")
+                    ? "ring-2 ring-gray-800 dark:ring-white"
+                    : ""
                 }`}
                 title={option.title}
               />

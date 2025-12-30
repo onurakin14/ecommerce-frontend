@@ -21,49 +21,72 @@ export default function Navbar() {
   const user = useSelector((state: RootState) => state.auth.user);
   const isLoggedIn = Boolean(token);
 
+  const isDarkMode = useSelector((state: RootState) => state.theme.isDarkMode);
+
   const totalItems = 0;
+
+  // Dark mode'da yazı rengi tema rengi, açık modda var(--primary-text)
+  const textColor = isDarkMode ? "var(--primary)" : "var(--primary-text)";
+
+  // Dark mode'da arka plan siyah, açık modda tema rengi
+  const navBg = isDarkMode ? "#111827" : "var(--primary)";
 
   return (
     <nav
-  className="w-full border-b border-gray-200"
-  style={{ backgroundColor: "var(--primary)" }}
->
-
+      className="w-full border-b transition-colors"
+      style={{
+        backgroundColor: navBg,
+        borderColor: isDarkMode ? "#374151" : "rgba(0,0,0,0.1)",
+      }}
+    >
       {/* DESKTOP */}
-      <div className="max-w-7xl mx-auto flex items-center justify-between py-3 px-4 text-[color:var(--primary-text)]">
+      <div
+        className="max-w-7xl mx-auto flex items-center justify-between py-3 px-4"
+        style={{ color: textColor }}
+      >
         {/* LEFT */}
         <div className="flex items-center gap-10">
           <Link to="/" className="flex items-center gap-2">
             <div
               className="w-8 h-8 rounded-md"
-              style={{ backgroundColor: "var(--brand-primary)" }}
+              style={{ backgroundColor: "var(--primary)" }}
             />
-            <span className="text-xl font-semibold">enoca</span>
+            <span
+              className="text-xl font-semibold"
+              style={{ color: isDarkMode ? "#ffffff" : "inherit" }}
+            >
+              enoca
+            </span>
           </Link>
 
           <div className="hidden md:flex gap-8 text-sm font-medium">
-            <Link to="/" className="hover:opacity-80">
+            <Link to="/" className="hover:opacity-80 transition-opacity">
               Home
             </Link>
 
             <Link
               to="/categories"
-              className="flex items-center gap-1 hover:opacity-80"
+              className="flex items-center gap-1 hover:opacity-80 transition-opacity"
             >
               Categories <FiChevronDown size={14} />
             </Link>
 
-            <Link to="/deals" className="hover:opacity-80">
+            <Link to="/deals" className="hover:opacity-80 transition-opacity">
               Deals
             </Link>
 
-            <Link to="/new-arrivals" className="hover:opacity-80">
+            <Link
+              to="/new-arrivals"
+              className="hover:opacity-80 transition-opacity"
+            >
               New Arrivals
             </Link>
 
             {isLoggedIn && (
-              <Link to="/orders
-              " className="hover:opacity-80">
+              <Link
+                to="/orders"
+                className="hover:opacity-80 transition-opacity"
+              >
                 My Orders
               </Link>
             )}
@@ -73,59 +96,89 @@ export default function Navbar() {
         {/* RIGHT */}
         <div className="flex items-center gap-3">
           {/* SEARCH */}
-          <div className="hidden lg:flex items-center gap-2 px-3 py-2 rounded-lg bg-black/5">
-            <FiSearch className="text-current" />
+          <div
+            className="hidden lg:flex items-center gap-2 px-3 py-2 rounded-lg transition-colors"
+            style={{
+              backgroundColor: isDarkMode
+                ? "rgba(255,255,255,0.1)"
+                : "rgba(0,0,0,0.05)",
+            }}
+          >
+            <FiSearch style={{ color: isDarkMode ? "#9ca3af" : "inherit" }} />
             <input
-              className="bg-transparent outline-none text-sm placeholder-gray-400 text-current"
+              className="bg-transparent outline-none text-sm w-48"
               placeholder="Search products..."
+              style={{
+                color: isDarkMode ? "#ffffff" : "inherit",
+              }}
             />
           </div>
 
-          <NavIcon to="/settings">
+          <NavIcon to="/settings" isDarkMode={isDarkMode}>
             <FiSettings size={18} />
           </NavIcon>
 
-          <NavIcon to="/wishlist">
+          <NavIcon to="/wishlist" isDarkMode={isDarkMode}>
             <AiOutlineHeart size={20} />
           </NavIcon>
 
-          <NavIcon to="/cart">
+          <NavIcon to="/cart" isDarkMode={isDarkMode}>
             <FaShoppingCart size={18} />
             {totalItems > 0 && (
               <span
                 className="absolute -top-1 -right-1 text-[10px] px-1.5 rounded-full text-white"
-                style={{ backgroundColor: "var(--brand-primary)" }}
+                style={{ backgroundColor: "var(--primary)" }}
               >
                 {totalItems}
               </span>
             )}
           </NavIcon>
- <Link to="/user/1">
-            <div className="hidden md:block w-9 h-9 rounded-full overflow-hidden hover:ring-2 ring-blue-600 cursor-pointer">
+
+          <Link to="/user/1">
+            <div
+              className="hidden md:block w-9 h-9 rounded-full overflow-hidden hover:ring-2 cursor-pointer transition-all"
+              style={{
+                boxShadow: `0 0 0 0 var(--primary)`,
+              }}
+            >
               <img
                 src="https://i.pravatar.cc/100"
                 className="w-full h-full object-cover"
+                alt="User"
               />
             </div>
           </Link>
-          
+
           {isLoggedIn ? (
             <div className="hidden md:flex items-center gap-3">
-              <span className="text-sm">{user?.username}</span>
+              <span
+                className="text-sm"
+                style={{ color: isDarkMode ? "#ffffff" : "inherit" }}
+              >
+                {user?.username}
+              </span>
               <button
                 onClick={() => dispatch(logout())}
-                className="text-sm underline"
+                className="text-sm underline hover:opacity-80 transition-opacity"
+                style={{ color: isDarkMode ? "#ef4444" : "inherit" }}
               >
                 Logout
               </button>
             </div>
           ) : (
-            <Link to="/login" className="text-sm underline">
+            <Link
+              to="/login"
+              className="text-sm underline hover:opacity-80 transition-opacity"
+            >
               Login
             </Link>
           )}
 
-          <button className="md:hidden" onClick={() => setOpen(!open)}>
+          <button
+            className="md:hidden"
+            onClick={() => setOpen(!open)}
+            style={{ color: isDarkMode ? "#ffffff" : "inherit" }}
+          >
             {open ? <FiX size={26} /> : <FiMenu size={26} />}
           </button>
         </div>
@@ -134,8 +187,11 @@ export default function Navbar() {
       {/* MOBILE MENU */}
       {open && (
         <div
-          className="md:hidden px-4 pb-4 flex flex-col gap-3 border-t"
-          style={{ color: "var(--primary-text)" }}
+          className="md:hidden px-4 pb-4 flex flex-col gap-3 border-t transition-colors"
+          style={{
+            color: textColor,
+            borderColor: isDarkMode ? "#374151" : "rgba(0,0,0,0.1)",
+          }}
         >
           <Link to="/" onClick={() => setOpen(false)}>
             Home
@@ -165,14 +221,22 @@ export default function Navbar() {
 function NavIcon({
   to,
   children,
+  isDarkMode,
 }: {
   to: string;
   children: React.ReactNode;
+  isDarkMode: boolean;
 }) {
   return (
     <Link
       to={to}
-      className="relative w-9 h-9 flex items-center justify-center rounded-full bg-black/5 hover:bg-black/10 text-current"
+      className="relative w-9 h-9 flex items-center justify-center rounded-full transition-colors"
+      style={{
+        backgroundColor: isDarkMode
+          ? "rgba(255,255,255,0.1)"
+          : "rgba(0,0,0,0.05)",
+        color: isDarkMode ? "var(--primary)" : "inherit",
+      }}
     >
       {children}
     </Link>

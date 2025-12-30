@@ -21,6 +21,7 @@ import OrderHistory from "../pages/OrderHistory";
 import Orders from "../pages/Orders";
 import OrderDetail from "../pages/OrderDetail";
 import Settings from "../pages/Settings";
+import UserDetail from "../pages/UserDetail";
 
 // ADMIN
 import AdminDashboard from "../pages/Admin/Dashboard";
@@ -35,7 +36,6 @@ export default function AppRouter() {
   return (
     <Router>
       <Routes>
-
         {/* ========== SHOP ROUTES ========== */}
         <Route element={<Layout />}>
           {/* ✅ INDEX ROUTE */}
@@ -63,7 +63,7 @@ export default function AppRouter() {
           <Route path="order/:id" element={<OrderDetail />} />
           <Route path="order-history" element={<OrderHistory />} />
           <Route path="order-success" element={<OrderSuccess />} />
-<Route path="/compare" element={<Compare />} />
+          <Route path="/compare" element={<Compare />} />
           {/* ✅ SETTINGS – ARTIK SORUNSUZ */}
           <Route path="settings" element={<Settings />} />
         </Route>
@@ -77,7 +77,6 @@ export default function AppRouter() {
           <Route path="orders" element={<AdminOrders />} />
           <Route path="users" element={<AdminUsers />} />
         </Route>
-
       </Routes>
     </Router>
   );
