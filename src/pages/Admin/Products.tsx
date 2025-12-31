@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useAppDispatch } from "../../store/hooks";
 import { type Category, createProduct, deleteProduct, fetchCategories, fetchProductsByPage, type Product, updateProduct } from "../../store/productSlice";
+import { Link } from "react-router-dom";
 
 function AdminProducts() {
 
@@ -315,15 +316,17 @@ function AdminProducts() {
                                                     <input className="rounded border-slate-300 text-primary focus:ring-primary/20" type="checkbox" />
                                                 </td>
                                                 <td className="px-1 md:px-6 py-4">
-                                                    <div className="flex items-center gap-4">
-                                                        <div className="size-10 rounded-lg bg-white border border-slate-200 p-1 shrink-0">
-                                                            <img alt="Smartphone with screen on" className="w-full h-full object-cover rounded" src={item.thumbnail} />
+                                                    <Link to={`${item.id}`} state={{ item }}>
+                                                        <div className="flex items-center gap-4">
+                                                            <div className="size-10 rounded-lg bg-white border border-slate-200 p-1 shrink-0">
+                                                                <img alt="Smartphone with screen on" className="w-full h-full object-cover rounded" src={item.thumbnail} />
+                                                            </div>
+                                                            <div>
+                                                                <p className="text-sm font-semibold text-dark-custom">{item.title}</p>
+                                                                <p className="text-xs text-slate-500">{item.brand}</p>
+                                                            </div>
                                                         </div>
-                                                        <div>
-                                                            <p className="text-sm font-semibold text-dark-custom">{item.title}</p>
-                                                            <p className="text-xs text-slate-500">{item.brand}</p>
-                                                        </div>
-                                                    </div>
+                                                    </Link>
                                                 </td>
                                                 <td className="px-1 md:px-6 py-4">
                                                     <span className="inline-flex px-2.5 py-0.5 rounded-full text-xs font-medium bg-slate-100 text-slate-600 capitalize">{item.category}</span>

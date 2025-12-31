@@ -21,6 +21,7 @@ import OrderHistory from "../pages/OrderHistory";
 import Orders from "../pages/Orders";
 import OrderDetail from "../pages/OrderDetail";
 import Settings from "../pages/Settings";
+import UserDetail from "../pages/UserDetail";
 
 // ADMIN
 import AdminDashboard from "../pages/Admin/Dashboard";
@@ -30,6 +31,7 @@ import AdminUsers from "../pages/Admin/Users";
 import AdminCategories from "../pages/Admin/Categories";
 import CategoryDetail from "../pages/Admin/CategoryDetail";
 import Compare from "../pages/ComparePage";
+import AdminProductDetail from "../pages/Admin/ProductDetail";
 
 export default function AppRouter() {
   return (
@@ -63,7 +65,7 @@ export default function AppRouter() {
           <Route path="order/:id" element={<OrderDetail />} />
           <Route path="order-history" element={<OrderHistory />} />
           <Route path="order-success" element={<OrderSuccess />} />
-<Route path="/compare" element={<Compare />} />
+          <Route path="/compare" element={<Compare />} />
           {/* ✅ SETTINGS – ARTIK SORUNSUZ */}
           <Route path="settings" element={<Settings />} />
         </Route>
@@ -72,6 +74,7 @@ export default function AppRouter() {
         <Route path="/admin" element={<AdminLayout />}>
           <Route index element={<AdminDashboard />} />
           <Route path="products" element={<AdminProducts />} />
+          <Route path="products/:id" element={<AdminProductDetail />} />
           <Route path="categories" element={<AdminCategories />} />
           <Route path="categories/:slug" element={<CategoryDetail />} />
           <Route path="orders" element={<AdminOrders />} />
