@@ -1,16 +1,18 @@
 import React from "react";
 import { useAppDispatch } from "../../store/hooks";
 import { deleteProduct, type Product } from "../../store/productSlice";
+import { useNavigate } from "react-router-dom";
 
 type DeleteModalProps = { product?: Product | null; onClose: () => void; }
 
 function DeleteConfirmModal({ product, onClose }: DeleteModalProps) {
 
+    const navigate = useNavigate();
     const dispatch = useAppDispatch();
 
     const handleDeleteProduct = () => {
         dispatch(deleteProduct(product?.id || 0)).then(res => {
-            console.log(res.payload); onClose();
+            console.log(res.payload); navigate("/admin/products"); onClose();
         }).catch(err => console.error(err));
     };
 

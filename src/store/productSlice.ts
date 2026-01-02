@@ -124,8 +124,8 @@ export const fetchRelated = createAsyncThunk(
 );
 
 // ÜRÜN SAYFALAMA
-export const fetchProductsByPage = createAsyncThunk<Product[], { limit?: string, skip?: string }>(
-  "product/fetchProductsByPage", async ({ limit = "5", skip = "0" }) => {
+export const fetchProductsByPage = createAsyncThunk<Product[], { limit?: number, skip?: number }>(
+  "product/fetchProductsByPage", async ({ limit = 5, skip = 0 }) => {
     const apiUrl = `https://dummyjson.com/products?limit=${limit}&skip=${skip}`;
     const res = await axios.get<{ products: Product[] }>(apiUrl);
     return res.data.products;

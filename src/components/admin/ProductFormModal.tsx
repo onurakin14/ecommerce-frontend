@@ -1,11 +1,13 @@
 import React, { useEffect, useState } from "react";
 import { useAppDispatch } from "../../store/hooks";
 import { createProduct, fetchCategories, updateProduct, type Category, type Product } from "../../store/productSlice";
+import { useNavigate } from "react-router-dom";
 
 type EditModalProps = { product?: Product | null; onClose: () => void; }
 
 function ProductFormModal({ product, onClose }: EditModalProps) {
 
+    const navigate = useNavigate();
     const dispatch = useAppDispatch();
     const [categories, setCategories] = useState<Category[]>();
 
@@ -32,13 +34,13 @@ function ProductFormModal({ product, onClose }: EditModalProps) {
 
     const handleCreateProduct = () => {
         dispatch(createProduct(newProduct!)).then(res => {
-            console.log(res.payload); onClose();
+            console.log(res.payload); navigate("/admin/products"); onClose();
         }).catch(err => console.error(err));
     };
 
     const handleUpdateProduct = () => {
         dispatch(updateProduct(selectedProduct!)).then(res => {
-            console.log(res.payload); onClose();
+            console.log(res.payload); navigate("/admin/products"); onClose();
         }).catch(err => console.error(err));
     }
 
