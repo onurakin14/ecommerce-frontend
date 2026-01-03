@@ -152,7 +152,7 @@ export const createProduct = createAsyncThunk<Product, Partial<Product>>(
 // ÜRÜN GÜNCELLE
 export const updateProduct = createAsyncThunk<Product, Partial<Product>>(
   "product/updateProduct", async (product) => {
-    const res = await axios.patch(`https://dummyjson.com/products/${product.id}`, product);
+    const res = await axios.put(`https://dummyjson.com/products/${product.id}`, { product });
     return res.data;
   }
 );
