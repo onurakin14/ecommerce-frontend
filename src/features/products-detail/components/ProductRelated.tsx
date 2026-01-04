@@ -78,7 +78,7 @@ export default function ProductRelated({ products }: ProductRelatedProps) {
             >
               {isFeatured && (
                 <div className="absolute top-0 left-0 bg-blue-600 text-white text-xs font-bold px-3 py-1 rounded-br-lg z-10">
-                  ÖNE ÇIKAN
+                  FEATURED
                 </div>
               )}
 
@@ -129,7 +129,7 @@ export default function ProductRelated({ products }: ProductRelatedProps) {
                       {product.discountPercentage &&
                         product.discountPercentage > 0 && (
                           <p className="text-xs text-red-500 font-medium">
-                            %{product.discountPercentage.toFixed(0)} indirim
+                            %{product.discountPercentage.toFixed(0)} discount
                           </p>
                         )}
                     </div>

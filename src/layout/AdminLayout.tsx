@@ -30,15 +30,7 @@ export default function AdminLayout() {
   {/* RIGHT */}
   <div className="flex items-center gap-6">
     
-    {/* SEARCH */}
-    <div className="flex items-center gap-2 bg-gray-100 px-3 py-2 rounded-lg w-64">
-      <FiSearch className="text-gray-400" />
-      <input
-        type="text"
-        placeholder="Search..."
-        className="bg-transparent outline-none text-sm w-full"
-      />
-    </div>
+  
 
     {/* ICONS */}
     <FiBell className="cursor-pointer text-gray-500 hover:text-black" size={18} />

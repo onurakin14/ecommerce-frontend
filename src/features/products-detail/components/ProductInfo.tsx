@@ -36,7 +36,7 @@ export default function ProductInfo({ product }: Props) {
       image: product.thumbnail,
     });
     setNotification({
-      message: `${product.title} sepete eklendi!`,
+      message: `${product.title} added to cart!`,
       type: "success",
     });
     setQuantity(1);
@@ -46,8 +46,8 @@ export default function ProductInfo({ product }: Props) {
     dispatch(toggleWishlist(product.id));
     setNotification({
       message: isWishlisted
-        ? `${product.title} favorilerden çıkarıldı`
-        : `${product.title} favorilere eklendi!`,
+        ? `${product.title} removed from favorites`
+        : `${product.title} added to favorites!`,
       type: "wishlist",
     });
   }
@@ -106,7 +106,7 @@ export default function ProductInfo({ product }: Props) {
                   : "text-red-600 font-bold"
               }
             >
-              {(product.stock ?? 0) > 0 ? "Stokta Var" : "Stokta Yok"}
+              {(product.stock ?? 0) > 0 ? "In Stock" : "Out of Stock"}
             </span>
           </span>
         </div>
@@ -123,7 +123,7 @@ export default function ProductInfo({ product }: Props) {
                   ${product.price.toFixed(2)}
                 </span>
                 <span className="text-sm font-bold text-red-500">
-                  %{(product.discountPercentage ?? 0).toFixed(0)} indirim
+                  %{(product.discountPercentage ?? 0).toFixed(0)} discount
                 </span>
               </div>
             </div>
@@ -151,7 +151,7 @@ export default function ProductInfo({ product }: Props) {
         {/* Miktar Seçici */}
         <div>
           <label className="block text-sm font-bold text-gray-700 mb-2">
-            Miktar
+            Amount
           </label>
           <div className="inline-flex items-center border-2 border-gray-200 rounded-xl overflow-hidden bg-white">
             <button
@@ -184,7 +184,7 @@ export default function ProductInfo({ product }: Props) {
             className="flex-1 px-8 py-4 rounded-xl flex items-center justify-center gap-3 text-white font-bold transition-all bg-blue-600 hover:bg-blue-700 disabled:bg-gray-300 disabled:cursor-not-allowed active:scale-[0.98] shadow-lg shadow-blue-500/20"
           >
             <ShoppingCart className="w-5 h-5" />
-            Sepete Ekle
+            Add to Cart
           </button>
 
           <button

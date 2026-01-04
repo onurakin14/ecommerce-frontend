@@ -50,23 +50,17 @@ export default function AppRouter() {
           <Route path="shop/all" element={<AllProducts />} />
           <Route path="login" element={<Login />} />
           <Route path="/user/:id" element={<UserDetail />} />
-
           <Route path="products" element={<ProductList />} />
           <Route path="products/:categoryName" element={<ProductList />} />
-
           <Route path="product/:id" element={<ProductDetail />} />
-
           <Route path="cart" element={<CartPage />} />
           <Route path="checkout" element={<Checkout />} />
-
           <Route path="wishlist" element={<Wishlist />} />
-
           <Route path="orders" element={<Orders />} />
           <Route path="order/:id" element={<OrderDetail />} />
           <Route path="order-history" element={<OrderHistory />} />
           <Route path="order-success" element={<OrderSuccess />} />
           <Route path="/compare" element={<Compare />} />
-          {/* ✅ SETTINGS – ARTIK SORUNSUZ */}
           <Route path="settings" element={<Settings />} />
         </Route>
 

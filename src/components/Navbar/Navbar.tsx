@@ -1,7 +1,6 @@
 import { useState } from "react";
 import { Link } from "react-router-dom";
 import {
-  FiSearch,
   FiChevronDown,
   FiMenu,
   FiX,
@@ -25,10 +24,9 @@ export default function Navbar() {
 
   return (
     <nav
-  className="w-full border-b border-gray-200"
-  style={{ backgroundColor: "var(--primary)" }}
->
-
+      className="w-full border-b border-gray-200"
+      style={{ backgroundColor: "var(--primary)" }}
+    >
       {/* DESKTOP */}
       <div className="max-w-7xl mx-auto flex items-center justify-between py-3 px-4 text-color:var(--primary-text)">
         {/* LEFT */}
@@ -62,8 +60,7 @@ export default function Navbar() {
             </Link>
 
             {isLoggedIn && (
-              <Link to="/orders
-              " className="hover:opacity-80">
+              <Link to="/orders" className="hover:opacity-80">
                 My Orders
               </Link>
             )}
@@ -72,15 +69,6 @@ export default function Navbar() {
 
         {/* RIGHT */}
         <div className="flex items-center gap-3">
-          {/* SEARCH */}
-          <div className="hidden lg:flex items-center gap-2 px-3 py-2 rounded-lg bg-black/5">
-            <FiSearch className="text-current" />
-            <input
-              className="bg-transparent outline-none text-sm placeholder-gray-400 text-current"
-              placeholder="Search products..."
-            />
-          </div>
-
           <NavIcon to="/settings">
             <FiSettings size={18} />
           </NavIcon>
@@ -100,7 +88,8 @@ export default function Navbar() {
               </span>
             )}
           </NavIcon>
- <Link to="/user/1">
+
+          <Link to="/user/1">
             <div className="hidden md:block w-9 h-9 rounded-full overflow-hidden hover:ring-2 ring-blue-600 cursor-pointer">
               <img
                 src="https://i.pravatar.cc/100"
@@ -108,7 +97,7 @@ export default function Navbar() {
               />
             </div>
           </Link>
-          
+
           {isLoggedIn ? (
             <div className="hidden md:flex items-center gap-3">
               <span className="text-sm">{user?.username}</span>
