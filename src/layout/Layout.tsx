@@ -5,7 +5,7 @@ import ThemeApplier from "../components/theme/ThemeApplier";
 
 export default function Layout() {
   return (
-    <div className="min-h-screen flex flex-col">
+    <div className="min-h-screen flex flex-col bg-[var(--app-bg)] dark:bg-gray-900 transition-colors">
       <ThemeApplier />
 
       <Navbar />

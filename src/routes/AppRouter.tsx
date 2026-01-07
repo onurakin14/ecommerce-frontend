@@ -37,7 +37,6 @@ export default function AppRouter() {
   return (
     <Router>
       <Routes>
-
         {/* ========== SHOP ROUTES ========== */}
         <Route element={<Layout />}>
           {/* ✅ INDEX ROUTE */}
@@ -74,7 +73,6 @@ export default function AppRouter() {
           <Route path="orders" element={<AdminOrders />} />
           <Route path="users" element={<AdminUsers />} />
         </Route>
-
       </Routes>
     </Router>
   );

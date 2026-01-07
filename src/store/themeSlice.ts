@@ -10,17 +10,18 @@ export type Theme = {
 };
 
 type ThemeState = {
-  theme: Theme | null; 
+  theme: Theme | null;
+  isDarkMode: boolean;
 };
 
 export const THEMES: Theme[] = [
-     {
-  name: "Default",
-  primary: "#ffffff",          // navbar beyaz
-  primaryHover: "#f3f4f6",
-  primaryLight: "#ffffff",
-  isBase: true,                // 🔴 KRİTİK FLAG
-},
+  {
+    name: "Default",
+    primary: "#6366f1", // navbar beyaz
+    primaryHover: "#f3f4f6",
+    primaryLight: "#ffffff",
+    isBase: true, // 🔴 KRİTİK FLAG
+  },
   {
     name: "Blue",
     primary: "#2563eb",
@@ -74,8 +75,13 @@ function getInitialTheme(): Theme | null {
   }
 }
 
+function getInitialDarkMode(): boolean {
+  return localStorage.getItem("darkMode") === "true";
+}
+
 const initialState: ThemeState = {
   theme: getInitialTheme(),
+  isDarkMode: getInitialDarkMode(),
 };
 
 const themeSlice = createSlice({
@@ -90,8 +96,17 @@ const themeSlice = createSlice({
       state.theme = null; // 🔥 ANA DEFAULT'A DÖN
       localStorage.removeItem("theme");
     },
+    toggleDarkMode(state) {
+      state.isDarkMode = !state.isDarkMode;
+      localStorage.setItem("darkMode", String(state.isDarkMode));
+    },
+    setDarkMode(state, action: PayloadAction<boolean>) {
+      state.isDarkMode = action.payload;
+      localStorage.setItem("darkMode", String(action.payload));
+    },
   },
 });
 
-export const { setTheme, resetTheme } = themeSlice.actions;
+export const { setTheme, resetTheme, toggleDarkMode, setDarkMode } =
+  themeSlice.actions;
 export default themeSlice.reducer;

@@ -1,19 +1,35 @@
+import { useSelector } from "react-redux";
+import type { RootState } from "../../store/store";
+
 export default function Footer() {
+  const isDarkMode = useSelector((state: RootState) => state.theme.isDarkMode);
+
+  // Dark mode'da yazı rengi = tema rengi, açık modda = primary-text
+  const textColor = isDarkMode ? "var(--primary)" : "var(--primary-text)";
+
+  // Dark mode'da arka plan siyah, açık modda tema rengi
+  const footerBg = isDarkMode ? "#111827" : "var(--primary)";
+
+  // Border rengi
+  const borderColor = isDarkMode ? "#374151" : "rgba(255,255,255,0.2)";
+
   return (
     <footer
-      className="border-t py-12 px-4"
+      className="border-t py-12 px-4 transition-colors"
       style={{
-        backgroundColor: "var(--primary)",
-        color: "var(--primary-text)",
-        borderColor: "#e5e7eb",
+        backgroundColor: footerBg,
+        color: textColor,
+        borderColor: borderColor,
       }}
     >
       <div className="max-w-7xl mx-auto">
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-8">
-
           {/* Quick Links */}
           <div>
-            <h3 className="text-sm font-semibold uppercase tracking-wider mb-4">
+            <h3
+              className="text-sm font-semibold uppercase tracking-wider mb-4"
+              style={{ color: isDarkMode ? "#ffffff" : "inherit" }}
+            >
               Quick Links
             </h3>
             <ul className="space-y-2">
@@ -46,7 +62,10 @@ export default function Footer() {
 
           {/* Customer Service */}
           <div>
-            <h3 className="text-sm font-semibold uppercase tracking-wider mb-4">
+            <h3
+              className="text-sm font-semibold uppercase tracking-wider mb-4"
+              style={{ color: isDarkMode ? "#ffffff" : "inherit" }}
+            >
               Customer Service
             </h3>
             <ul className="space-y-2">
@@ -79,7 +98,10 @@ export default function Footer() {
 
           {/* Follow Us */}
           <div>
-            <h3 className="text-sm font-semibold uppercase tracking-wider mb-4">
+            <h3
+              className="text-sm font-semibold uppercase tracking-wider mb-4"
+              style={{ color: isDarkMode ? "#ffffff" : "inherit" }}
+            >
               Follow Us
             </h3>
             <div className="flex space-x-4">
@@ -114,10 +136,13 @@ export default function Footer() {
 
         {/* Copyright */}
         <div
-          className="border-t pt-8"
-          style={{ borderColor: "#e5e7eb" }}
+          className="border-t pt-8 transition-colors"
+          style={{ borderColor: borderColor }}
         >
-          <p className="text-center text-sm opacity-70">
+          <p
+            className="text-center text-sm opacity-70"
+            style={{ color: isDarkMode ? "#9ca3af" : "inherit" }}
+          >
             © 2025 Storefront, Inc. All rights reserved.
           </p>
         </div>

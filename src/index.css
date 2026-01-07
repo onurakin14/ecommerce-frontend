@@ -1,9 +1,9 @@
 @import "tailwindcss";
 @import url("https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap");
 @import url("https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap");
+
 /* dark mode variant */
 @custom-variant dark (&:where(.dark, .dark *));
-
 
 /* =====================
    BRAND (SABİT)
@@ -21,17 +21,33 @@
   --app-bg: #f9fafb;
   --card-bg: #ffffff;
   --text-color: #111827;
+  --text-muted: #6b7280;
 
   /* Layout / surfaces */
-  --primary: #ffffff;
-  --primary-hover: #f3f4f6;
-  --primary-light: #f9fafb;
+  --primary: #6366f1;
+  --primary-hover: #4f46e5;
+  --primary-light: #eef2ff;
 
   /* Text on primary */
-  --primary-text: #111827;
+  --primary-text: #ffffff;
+
+  /* Borders */
+  --border-color: #e5e7eb;
 
   /* Actions (buttons, CTA) */
   --action: var(--brand-primary);
+}
+
+/* =====================
+   DARK MODE VARIABLES
+===================== */
+.dark {
+  --app-bg: #111827;
+  --card-bg: #1f2937;
+  --text-color: #e5e7eb;
+  --text-muted: #9ca3af;
+  --border-color: #374151;
+  --primary-light: #312e81;
 }
 
 /* =====================
@@ -39,28 +55,26 @@
 ===================== */
 html,
 body,
-  #root {
-    height: 100%;
-    width: 100%;
-  }
-  html,
-  body {
+#root {
+  height: 100%;
+  width: 100%;
+}
+
+html,
+body {
   margin: 0;
   padding: 0;
   font-family: "Inter", sans-serif;
   background-color: var(--app-bg);
   color: var(--text-color);
+  transition: background-color 0.2s, color 0.2s;
 }
 
 /* =====================
    MATERIAL ICON FIX
 ===================== */
 .material-symbols-outlined {
-  font-variation-settings:
-    "FILL" 0,
-    "wght" 400,
-    "GRAD" 0,
-    "opsz" 24;
+  font-variation-settings: "FILL" 0, "wght" 400, "GRAD" 0, "opsz" 24;
 }
 
 .icon-filled {
@@ -75,7 +89,7 @@ body,
   color: var(--primary-text);
 }
 
-.bg-primary-hover:hover {
+.bg-primary:hover {
   background-color: var(--primary-hover);
 }
 
@@ -89,6 +103,29 @@ body,
 
 .border-primary {
   border-color: var(--primary);
+}
+
+.ring-primary {
+  --tw-ring-color: var(--primary);
+}
+
+/* =====================
+   CARD / SURFACE
+===================== */
+.bg-card {
+  background-color: var(--card-bg);
+}
+
+.bg-app {
+  background-color: var(--app-bg);
+}
+
+.text-muted {
+  color: var(--text-muted);
+}
+
+.border-default {
+  border-color: var(--border-color);
 }
 
 /* =====================
@@ -110,35 +147,146 @@ body,
   align-items: center;
   justify-content: center;
   gap: 0.5rem;
-
   padding: 0.5rem 1.25rem;
   border-radius: 9999px;
   font-weight: 500;
   font-size: 0.875rem;
-
   transition: all 0.2s ease;
 }
 
 .btn-primary {
-  background-color: var(--action);
-  color: #ffffff;
+  background-color: var(--primary);
+  color: var(--primary-text);
 }
 
 .btn-primary:hover {
-  filter: brightness(0.95);
+  background-color: var(--primary-hover);
 }
 
 .btn-secondary {
   background-color: transparent;
-  color: var(--action);
-  border: 1px solid var(--action);
+  color: var(--primary);
+  border: 1px solid var(--primary);
 }
 
 .btn-secondary:hover {
-  background-color: var(--primary-hover);
+  background-color: var(--primary-light);
 }
 
 .btn:disabled {
   opacity: 0.5;
   cursor: not-allowed;
+}
+
+/* =====================
+   TAILWIND OVERRIDES
+   (Sadece main içerik alanındaki butonlar)
+   Navbar ve Footer HARİÇ
+===================== */
+main .bg-indigo-600,
+main .bg-blue-600,
+main .bg-purple-600,
+main .bg-emerald-600,
+main .bg-rose-600,
+main .bg-orange-600,
+.content-area .bg-indigo-600,
+.content-area .bg-blue-600,
+.content-area .bg-purple-600,
+.content-area .bg-emerald-600,
+.content-area .bg-rose-600,
+.content-area .bg-orange-600 {
+  background-color: var(--primary) !important;
+  color: var(--primary-text) !important;
+}
+
+main .bg-indigo-600:hover,
+main .bg-blue-600:hover,
+main .bg-purple-600:hover,
+main .bg-emerald-600:hover,
+main .bg-rose-600:hover,
+main .bg-orange-600:hover,
+main .hover\:bg-indigo-700:hover,
+main .hover\:bg-blue-700:hover,
+main .hover\:bg-purple-700:hover,
+main .hover\:bg-emerald-700:hover,
+main .hover\:bg-rose-700:hover,
+main .hover\:bg-orange-700:hover,
+.content-area .hover\:bg-indigo-700:hover,
+.content-area .hover\:bg-blue-700:hover,
+.content-area .hover\:bg-purple-700:hover,
+.content-area .hover\:bg-emerald-700:hover,
+.content-area .hover\:bg-rose-700:hover,
+.content-area .hover\:bg-orange-700:hover {
+  background-color: var(--primary-hover) !important;
+}
+
+/* Text primary override (sadece main içinde) */
+main .text-indigo-600,
+main .text-blue-600,
+main .text-purple-600,
+main .text-emerald-600,
+main .text-rose-600,
+main .text-orange-600 {
+  color: var(--primary) !important;
+}
+
+/* =====================
+   DARK MODE CARD OVERRIDES
+   (Beyaz alanları koyu yap)
+===================== */
+.dark main .bg-white,
+.dark .bg-white {
+  background-color: #1f2937 !important;
+}
+
+.dark main .bg-gray-50,
+.dark .bg-gray-50 {
+  background-color: #111827 !important;
+}
+
+.dark main .bg-gray-100,
+.dark .bg-gray-100 {
+  background-color: #1f2937 !important;
+}
+
+/* Border'ları koyu yap */
+.dark main .border-gray-200,
+.dark main .border-gray-300,
+.dark .border-gray-200,
+.dark .border-gray-300 {
+  border-color: #374151 !important;
+}
+
+/* Yazı renklerini düzelt */
+.dark main .text-gray-900,
+.dark .text-gray-900 {
+  color: #f9fafb !important;
+}
+
+.dark main .text-gray-800,
+.dark .text-gray-800 {
+  color: #e5e7eb !important;
+}
+
+.dark main .text-gray-700,
+.dark main .text-gray-600,
+.dark main .text-gray-500,
+.dark .text-gray-700,
+.dark .text-gray-600,
+.dark .text-gray-500 {
+  color: #9ca3af !important;
+}
+
+/* Input fields dark mode */
+.dark main input,
+.dark main select,
+.dark main textarea {
+  background-color: #374151 !important;
+  color: #f9fafb !important;
+  border-color: #4b5563 !important;
+}
+
+.dark main input::placeholder,
+.dark main textarea::placeholder {
+  color: #9ca3af !important;
 }
