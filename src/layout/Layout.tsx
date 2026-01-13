@@ -9,7 +9,7 @@ export default function Layout() {
       <ThemeApplier />
 
       <Navbar />
-      <main className="flex-1">
+      <main className="flex-1 bg-(--app-bg)">
         <div className="max-w-7xl mx-auto w-full px-4 py-4">
           <Outlet />
         </div>

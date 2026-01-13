@@ -10,7 +10,7 @@ import type { Product } from "../store/productSlice";
 
 export default function ProductDetailPage() {
   const { id } = useParams();
-  const [product, setProduct] = useState<Product | null>(null);
+  const [product, setProduct] = useState<Product| null>(null);
   const [related, setRelated] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
 
@@ -18,15 +18,15 @@ export default function ProductDetailPage() {
     if (!id) return;
 
     setLoading(true);
-    window.scrollTo({ top: 0, behavior: "smooth" });
+    window.scrollTo({ top: 0 });
 
     (async () => {
       try {
         const res = await fetch(`https://dummyjson.com/products/${id}`);
-        const data = await res.json();
+        const data: Product= await res.json();
         setProduct(data);
-      } catch (e) {
-        console.error("Product fetch error:", e);
+      } catch (err) {
+        console.error("Product fetch error:", err);
         setProduct(null);
       } finally {
         setLoading(false);
@@ -45,12 +45,14 @@ export default function ProductDetailPage() {
           )}?limit=12`
         );
         const data = await res.json();
-        const filtered = (data.products || []).filter(
-          (p: any) => p.id !== product.id
+
+        const filtered: Product[] = (data.products || []).filter(
+          (p: Product) => p.id !== product.id
         );
+
         setRelated(filtered);
-      } catch (e) {
-        console.error("Related products error:", e);
+      } catch (err) {
+        console.error("Related products error:", err);
         setRelated([]);
       }
     })();
@@ -60,7 +62,7 @@ export default function ProductDetailPage() {
     return (
       <div className="min-h-screen flex items-center justify-center">
         <div className="text-center">
-          <Loader2 className="w-12 h-12 animate-spin text-blue-600 mx-auto mb-4" />
+          <Loader2 className="w-12 h-12 animate-spin text-indigo-600 mx-auto mb-4" />
           <p className="text-gray-600">Ürün yükleniyor...</p>
         </div>
       </div>
@@ -74,7 +76,7 @@ export default function ProductDetailPage() {
           <p className="text-xl text-gray-600 mb-4">Ürün bulunamadı</p>
           <Link
             to="/"
-            className="text-blue-600 hover:text-blue-700 font-medium underline"
+            className="text-indigo-600 hover:text-indigo-700 font-medium underline"
           >
             Ana sayfaya dön
           </Link>
@@ -84,23 +86,25 @@ export default function ProductDetailPage() {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen bg-slate-50">
       <div className="max-w-7xl mx-auto px-4 py-6">
-        <nav className="flex items-center gap-2 text-sm text-gray-600 mb-6">
-          <Link to="/" className="hover:text-blue-600 transition">
+        {/* Breadcrumb */}
+        <nav className="flex items-center gap-2 text-sm text-slate-500 mb-6">
+          <Link to="/" className="hover:text-indigo-600">
             <Home className="w-4 h-4" />
           </Link>
           <ChevronRight className="w-4 h-4" />
           <span className="capitalize">{product.category}</span>
           <ChevronRight className="w-4 h-4" />
-          <span className="text-gray-900 font-medium truncate max-w-[200px]">
+          <span className="text-slate-900 font-medium truncate max-w-[220px]">
             {product.title}
           </span>
         </nav>
 
+        {/* Main */}
         <div className="bg-white rounded-2xl shadow-sm p-6 sm:p-8">
           <div className="grid md:grid-cols-2 gap-8 lg:gap-12">
-            <ProductGallery images={product.images ?? []} />
+            <ProductGallery images={product.images} />
             <ProductInfo product={product} />
           </div>
 

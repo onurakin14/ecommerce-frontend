@@ -78,7 +78,7 @@ export default function ComparePage() {
     );
     Promise.all(fetchFavs)
       .then(data => setFavProducts(data))
-      .catch(err => console.error("Favoriler yüklenemedi:", err));
+      .catch(err => console.error("Favorites could not be loaded:", err));
   }, [wishlistIds]);
 
   const handleAddToCart = (product: Product) => {
@@ -93,7 +93,7 @@ export default function ComparePage() {
       quantity: 1,
       image: product.thumbnail,
     });
-    setNotification({ message: `${product.title} sepete eklendi!`, type: "success" });
+    setNotification({ message: `${product.title} added to cart!`, type: "success" });
   };
 
   const removeProduct = (id: number) => {
@@ -138,7 +138,7 @@ export default function ComparePage() {
                       </button>
                     </div>
 
-                    {/* Ürün Bilgileri - Yükseklik Sabitleme */}
+                    {/* Ürün Bilgileri */}
                     <div className="flex flex-col grow">
                       <h3 className="text-xl font-extrabold text-gray-900 line-clamp-2 leading-tight min-h-14">
                         {product.title}

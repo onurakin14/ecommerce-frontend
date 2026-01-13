@@ -1,7 +1,6 @@
 import { useState } from "react";
 import { Link } from "react-router-dom";
 import {
-  FiSearch,
   FiChevronDown,
   FiMenu,
   FiX,
@@ -33,17 +32,11 @@ export default function Navbar() {
 
   return (
     <nav
-      className="w-full border-b transition-colors"
-      style={{
-        backgroundColor: navBg,
-        borderColor: isDarkMode ? "#374151" : "rgba(0,0,0,0.1)",
-      }}
+      className="w-full border-b border-gray-200"
+      style={{ backgroundColor: "var(--primary)" }}
     >
       {/* DESKTOP */}
-      <div
-        className="max-w-7xl mx-auto flex items-center justify-between py-3 px-4"
-        style={{ color: textColor }}
-      >
+      <div className="max-w-7xl mx-auto flex items-center justify-between py-3 px-4 text-color:var(--primary-text)">
         {/* LEFT */}
         <div className="flex items-center gap-10">
           <Link to="/" className="flex items-center gap-2">
@@ -83,10 +76,7 @@ export default function Navbar() {
             </Link>
 
             {isLoggedIn && (
-              <Link
-                to="/orders"
-                className="hover:opacity-80 transition-opacity"
-              >
+              <Link to="/orders" className="hover:opacity-80">
                 My Orders
               </Link>
             )}
@@ -95,26 +85,7 @@ export default function Navbar() {
 
         {/* RIGHT */}
         <div className="flex items-center gap-3">
-          {/* SEARCH */}
-          <div
-            className="hidden lg:flex items-center gap-2 px-3 py-2 rounded-lg transition-colors"
-            style={{
-              backgroundColor: isDarkMode
-                ? "rgba(255,255,255,0.1)"
-                : "rgba(0,0,0,0.05)",
-            }}
-          >
-            <FiSearch style={{ color: isDarkMode ? "#9ca3af" : "inherit" }} />
-            <input
-              className="bg-transparent outline-none text-sm w-48"
-              placeholder="Search products..."
-              style={{
-                color: isDarkMode ? "#ffffff" : "inherit",
-              }}
-            />
-          </div>
-
-          <NavIcon to="/settings" isDarkMode={isDarkMode}>
+          <NavIcon to="/settings">
             <FiSettings size={18} />
           </NavIcon>
 
@@ -135,12 +106,7 @@ export default function Navbar() {
           </NavIcon>
 
           <Link to="/user/1">
-            <div
-              className="hidden md:block w-9 h-9 rounded-full overflow-hidden hover:ring-2 cursor-pointer transition-all"
-              style={{
-                boxShadow: `0 0 0 0 var(--primary)`,
-              }}
-            >
+            <div className="hidden md:block w-9 h-9 rounded-full overflow-hidden hover:ring-2 ring-blue-600 cursor-pointer">
               <img
                 src="https://i.pravatar.cc/100"
                 className="w-full h-full object-cover"
