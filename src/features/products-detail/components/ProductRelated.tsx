@@ -4,16 +4,7 @@ import { Heart, ChevronLeft, ChevronRight, Star } from "lucide-react";
 import { useDispatch, useSelector } from "react-redux";
 import { toggleWishlist } from "../../../store/wishlistSlice";
 import type { RootState } from "../../../store/store";
-
-interface Product {
-  id: number;
-  title: string;
-  price: number;
-  thumbnail: string;
-  images?: string[];
-  rating?: number;
-  discountPercentage?: number;
-}
+import type { Product } from "../../../store/productSlice";
 
 interface ProductRelatedProps {
   products: Product[];
@@ -87,7 +78,7 @@ export default function ProductRelated({ products }: ProductRelatedProps) {
             >
               {isFeatured && (
                 <div className="absolute top-0 left-0 bg-blue-600 text-white text-xs font-bold px-3 py-1 rounded-br-lg z-10">
-                  ÖNE ÇIKAN
+                  FEATURED
                 </div>
               )}
 
@@ -138,7 +129,7 @@ export default function ProductRelated({ products }: ProductRelatedProps) {
                       {product.discountPercentage &&
                         product.discountPercentage > 0 && (
                           <p className="text-xs text-red-500 font-medium">
-                            %{product.discountPercentage.toFixed(0)} indirim
+                            %{product.discountPercentage.toFixed(0)} discount
                           </p>
                         )}
                     </div>
