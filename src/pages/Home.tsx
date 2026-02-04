@@ -4,6 +4,7 @@ import { fetchCategories, fetchProductsSortBy, type Category, type Product } fro
 import SkeletonLoader from "../components/shared-components/SkeletonLoader";
 import ProductCard from "../components/shared-components/ProductCard";
 import { useAppDispatch } from "../store/hooks";
+import axios from "axios";
 
 function Home() {
 
@@ -15,6 +16,15 @@ function Home() {
   const dispatch = useAppDispatch();
 
   useEffect(() => {
+
+    axios.get("/api/products").then(res => {
+      console.log(res.data);
+    });
+
+    axios.get("/api/users").then(res => {
+      console.log(res.data);
+    });
+
     // get trend products from api
     dispatch(fetchProductsSortBy({ value: "rating" })).then(res => {
       const data = res.payload as Product[];
