@@ -4,7 +4,6 @@ import { fetchCategories, fetchProductsSortBy, type Category, type Product } fro
 import SkeletonLoader from "../components/shared-components/SkeletonLoader";
 import ProductCard from "../components/shared-components/ProductCard";
 import { useAppDispatch } from "../store/hooks";
-import axios from "axios";
 
 function Home() {
 
@@ -16,26 +15,17 @@ function Home() {
   const dispatch = useAppDispatch();
 
   useEffect(() => {
-
-    axios.get("/api/products").then(res => {
-      console.log(res.data);
-    });
-
-    axios.get("/api/users").then(res => {
-      console.log(res.data);
-    });
-
     // get trend products from api
     dispatch(fetchProductsSortBy({ value: "rating" })).then(res => {
       const data = res.payload as Product[];
-      setTrendProducts(data);
-    }).catch(err => console.error(err)).finally(() => setLoading(false));
+      setTrendProducts(data); setLoading(false);
+    });
 
     // get new products from api
     dispatch(fetchProductsSortBy({ value: "id" })).then(res => {
       const data = res.payload as Product[];
-      setNewProducts(data);
-    }).catch(err => console.error(err)).finally(() => setLoading(false));
+      setNewProducts(data); setLoading(false);
+    });
 
     // get categories from api
     dispatch(fetchCategories()).then(res => {
@@ -100,13 +90,7 @@ function Home() {
           <a className="text-sm font-medium text-primary hover:underline" href="/products">View All</a>
         </div>
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
-          {trendProducts.slice(0, 4).map((item) => {
-            return (
-              <div key={item.id}>
-                <ProductCard product={item}></ProductCard>
-              </div>
-            );
-          })}
+          {trendProducts.slice(0, 4).map(item => <ProductCard key={item.id} product={item}></ProductCard>)}
           {isLoading && (<SkeletonLoader keyValue={"trending"} count={4} />)}
         </div>
       </section>
@@ -117,13 +101,7 @@ function Home() {
           <a className="text-sm font-medium text-primary hover:underline" href="/products">View All</a>
         </div>
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
-          {newProducts.slice(0, 4).map((item) => {
-            return (
-              <div key={item.id}>
-                <ProductCard product={item}></ProductCard>
-              </div>
-            );
-          })}
+          {newProducts.slice(0, 4).map(item => <ProductCard key={item.id} product={item}></ProductCard>)}
           {isLoading && (<SkeletonLoader keyValue={"newsArrivals"} count={4} />)}
         </div>
       </section>
