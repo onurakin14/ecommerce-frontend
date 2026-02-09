@@ -30,7 +30,7 @@ function Home() {
     // get categories from api
     dispatch(fetchCategories()).then(res => {
       setCategories(res.payload as Category[])
-    }).catch(err => console.error(err))
+    });
   }, []);
 
   return (

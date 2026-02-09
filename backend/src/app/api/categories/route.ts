@@ -6,10 +6,10 @@ export async function GET() {
     try {
         await connectDB();
 
-        const categories = Category.find();
+        const categories = await Category.find();
         return NextResponse.json({ categories });
 
     } catch (err: any) {
-        return NextResponse.json({ error: err }, { status: 500 })
+        return NextResponse.json({ error: err.message }, { status: 500 })
     }
 }
