@@ -126,7 +126,8 @@ export const fetchRelated = createAsyncThunk(
 // ÜRÜN SAYFALAMA
 export const fetchProductsByPage = createAsyncThunk<Product[], { limit?: number, skip?: number }>(
   "product/fetchProductsByPage", async ({ limit = 5, skip = 0 }) => {
-    const apiUrl = `https://dummyjson.com/products?limit=${limit}&skip=${skip}`;
+    //const apiUrl = `https://dummyjson.com/products?limit=${limit}&skip=${skip}`;
+    const apiUrl = `/api/products?limit=${limit}&skip=${skip}`;
     const res = await axios.get<{ products: Product[] }>(apiUrl);
     return res.data.products;
   }
@@ -135,7 +136,8 @@ export const fetchProductsByPage = createAsyncThunk<Product[], { limit?: number,
 // ÜRÜN SIRALAMA
 export const fetchProductsSortBy = createAsyncThunk<Product[], { value: string; direction?: "desc" | "asc" }>(
   "product/fetchProductsSortBy", async ({ value, direction = "desc" }) => {
-    const sortApiUrl = `https://dummyjson.com/products?sortBy=${value}&order=${direction}`;
+    //const sortApiUrl = `https://dummyjson.com/products?sortBy=${value}&order=${direction}`;
+    const sortApiUrl = `/api/products?sortBy=${value}&order=${direction}`;
     const res = await axios.get<{ products: Product[] }>(sortApiUrl);
     return res.data.products;
   }
@@ -174,8 +176,9 @@ export interface Category {
 
 export const fetchCategories = createAsyncThunk(
   "category/fetchCategories", async () => {
-    const res = await axios.get<Category[]>('https://dummyjson.com/products/categories');
-    return res.data;
+    //const res = await axios.get<Category[]>('https://dummyjson.com/products/categories');
+    const res = await axios.get<{ categories: Category[] }>("/api/categories");
+    return res.data.categories;
   }
 );
 
