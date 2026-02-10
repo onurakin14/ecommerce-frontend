@@ -1,20 +1,36 @@
 import axios from "axios";
 import React, { useEffect, useState } from "react";
 import { Link, useLocation } from "react-router-dom";
+import { useAppSelector } from "./../store/hooks";
 
 function Checkout() {
 
     const [user, setUser] = useState<any>(null);
     const [userCart, setUserCart] = useState<any>(null);
 
+    const [cartTotal, setCartTotal] = useState(0);
+    const [totalProducts, setTotalProducts] = useState(0);
+    const [totalQuantity, setTotalQuantity] = useState(0);
+
     const location = useLocation();
-    const items = location.state?.items;
+    const items = location.state?.items || [];
+    const auth = useAppSelector(state => state.auth);
 
     useEffect(() => {
-        const userId = 142;
-        axios.get(`https://dummyjson.com/users/${userId}`).then(res => setUser(res.data));
-        axios.get(`https://dummyjson.com/users/${userId}/carts`).then(res => setUserCart(res.data.carts[0]));
-    }, []);
+        if (!auth.user?.id) return;
+        axios.get(`https://dummyjson.com/users/${auth.user.id}`).then(res => setUser(res.data));
+        axios.get(`https://dummyjson.com/users/${auth.user.id}/carts`).then(res => setUserCart(res.data.carts[0]));
+    }, [auth.user?.id]);
+
+    useEffect(() => {
+        const apiProducts = userCart?.products || [];
+        const reduxProducts = items || [];
+        const allProducts = [...apiProducts, ...reduxProducts];
+
+        setTotalProducts(allProducts.length);
+        setTotalQuantity(allProducts.reduce((sum, item) => sum + item.quantity, 0));
+        setCartTotal(allProducts.reduce((sum, item) => sum + item.price * item.quantity, 0));
+    }, [userCart, items]);
 
     return (
         <React.Fragment>
@@ -89,44 +105,40 @@ function Checkout() {
                             </div>
                             <div className="p-6 space-y-4">
                                 {/* api cart data */}
-                                {userCart?.products.map((item: any) => {
-                                    return (
-                                        <div key={item.id} className="flex items-center gap-4">
-                                            <img className="h-16 w-16 rounded-lg object-cover" data-alt="Red and black modern sneaker" src={item.thumbnail} />
-                                            <div className="flex-1">
-                                                <p className="font-medium">{item.title}</p>
-                                                <p className="text-sm text-text-secondary-light dark:text-text-secondary-dark">Qty: {item.quantity}</p>
-                                            </div>
-                                            <p className="font-medium">${item.price}</p>
+                                {userCart?.products.map((item: any) =>
+                                    <div key={item.id} className="flex items-center gap-4">
+                                        <img className="h-16 w-16 rounded-lg object-cover" data-alt="Red and black modern sneaker" src={item.thumbnail} />
+                                        <div className="flex-1">
+                                            <p className="font-medium">{item.title}</p>
+                                            <p className="text-sm text-text-secondary-light dark:text-text-secondary-dark">Qty: {item.quantity}</p>
                                         </div>
-                                    )
-                                })}
+                                        <p className="font-medium">${item.price}</p>
+                                    </div>
+                                )}
                                 {/* redux cart data */}
-                                {items.map((item: any) => {
-                                    return (
-                                        <div key={item.id} className="flex items-center gap-4">
-                                            <img className="h-16 w-16 rounded-lg object-cover" data-alt="Red and black modern sneaker" src={item.image} />
-                                            <div className="flex-1">
-                                                <p className="font-medium">{item.name}</p>
-                                                <p className="text-sm text-text-secondary-light dark:text-text-secondary-dark">Qty: {item.quantity}</p>
-                                            </div>
-                                            <p className="font-medium">${item.price}</p>
+                                {items.map((item: any) =>
+                                    <div key={item.id} className="flex items-center gap-4">
+                                        <img className="h-16 w-16 rounded-lg object-cover" data-alt="Red and black modern sneaker" src={item.image} />
+                                        <div className="flex-1">
+                                            <p className="font-medium">{item.name}</p>
+                                            <p className="text-sm text-text-secondary-light dark:text-text-secondary-dark">Qty: {item.quantity}</p>
                                         </div>
-                                    )
-                                })}
+                                        <p className="font-medium">${item.price}</p>
+                                    </div>
+                                )}
                             </div>
                             <div className="p-6 border-t border-gray-300 space-y-3">
                                 <div className="flex justify-between text-sm">
                                     <p className="text-text-secondary-light dark:text-text-secondary-dark">Total Products</p>
-                                    <p>{userCart?.totalProducts}</p>
+                                    <p>{totalProducts}</p>
                                 </div>
                                 <div className="flex justify-between text-sm">
                                     <p className="text-text-secondary-light dark:text-text-secondary-dark">Total Quantity</p>
-                                    <p>{userCart?.totalQuantity}</p>
+                                    <p>{totalQuantity}</p>
                                 </div>
                                 <div className="flex justify-between font-bold text-lg pt-2 border-t border-gray-300 mt-3">
                                     <p>Total</p>
-                                    <p>${userCart?.total}</p>
+                                    <p>${cartTotal}</p>
                                 </div>
                             </div>
                         </div>
