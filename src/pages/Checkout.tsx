@@ -18,8 +18,8 @@ function Checkout() {
 
     useEffect(() => {
         if (!auth.user?.id) return;
-        axios.get(`https://dummyjson.com/users/${auth.user.id}`).then(res => setUser(res.data));
-        axios.get(`https://dummyjson.com/users/${auth.user.id}/carts`).then(res => setUserCart(res.data.carts[0]));
+        axios.get(`/api/users/${auth.user.id}`).then(res => setUser(res.data));
+        axios.get(`/api/users/${auth.user.id}/carts`).then(res => setUserCart(res.data.carts[0]));
     }, [auth.user?.id]);
 
     useEffect(() => {
