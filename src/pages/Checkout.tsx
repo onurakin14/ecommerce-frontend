@@ -163,13 +163,13 @@ function Checkout() {
                                         <p className="text-sm font-medium pb-2 text-text-primary-light dark:text-text-primary-dark">Card Number</p>
                                         <div className="relative">
                                             <span className="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-text-secondary-light dark:text-text-secondary-dark">credit_card</span>
-                                            <input defaultValue={user?.bank.cardNumber.replace(/(\d{4})(?=\d)/g, "$1 ")} className="form-input flex w-full rounded-lg text-sm text-text-primary-light dark:text-text-primary-dark focus:outline-0 focus:ring-2 focus:ring-primary/50 border border-gray-300 h-11 placeholder:text-text-secondary-light dark:placeholder:text-text-secondary-dark pl-10 pr-3" placeholder="**** **** **** 1234" />
+                                            <input defaultValue={user?.bank?.cardNumber?.replace(/(\d{4})(?=\d)/g, "$1 ")} className="form-input flex w-full rounded-lg text-sm text-text-primary-light dark:text-text-primary-dark focus:outline-0 focus:ring-2 focus:ring-primary/50 border border-gray-300 h-11 placeholder:text-text-secondary-light dark:placeholder:text-text-secondary-dark pl-10 pr-3" placeholder="**** **** **** 1234" />
                                         </div>
                                     </label>
                                     <div className="grid grid-cols-2 gap-4">
                                         <label className="flex flex-col">
                                             <p className="text-sm font-medium pb-2 text-text-primary-light dark:text-text-primary-dark">Expiration Date</p>
-                                            <input defaultValue={user?.bank.cardExpire} className="form-input flex w-full rounded-lg text-sm text-text-primary-light dark:text-text-primary-dark focus:outline-0 focus:ring-2 focus:ring-primary/50 border border-gray-300 h-11 placeholder:text-text-secondary-light dark:placeholder:text-text-secondary-dark px-3" placeholder="MM / YY" />
+                                            <input defaultValue={user?.bank?.cardExpire} className="form-input flex w-full rounded-lg text-sm text-text-primary-light dark:text-text-primary-dark focus:outline-0 focus:ring-2 focus:ring-primary/50 border border-gray-300 h-11 placeholder:text-text-secondary-light dark:placeholder:text-text-secondary-dark px-3" placeholder="MM / YY" />
                                         </label>
                                         <label className="flex flex-col">
                                             <p className="text-sm font-medium pb-2 text-text-primary-light dark:text-text-primary-dark">CVC</p>

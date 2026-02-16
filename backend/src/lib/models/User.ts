@@ -7,7 +7,7 @@ const userSchema = new Schema({
     email: { type: String, unique: true },
     password: String,
     adress: String,
-    bank: String
+    bank: []
 });
 
 const User = models.User || model("User", userSchema);
