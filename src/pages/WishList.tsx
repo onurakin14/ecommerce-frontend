@@ -3,6 +3,7 @@ import { useEffect, useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import { Heart, ShoppingBag, Star } from "lucide-react";
 
+import { apiUrl } from "../lib/api";
 import type { RootState } from "../store/store";
 import type { Product } from "../store/productSlice";
 
@@ -18,13 +19,12 @@ export default function WishlistPage() {
   const [compareMode, setCompareMode] = useState(false);
   const [selectedIds, setSelectedIds] = useState<number[]>([]);
 
-  /* FETCH */
+  /* FETCH — backend product collection */
   useEffect(() => {
     setLoading(true);
-
-    fetch("https://dummyjson.com/products?limit=200")
+    fetch(apiUrl("/api/products"))
       .then((res) => res.json())
-      .then((data) => setProducts(data.products))
+      .then((data) => setProducts(data.products ?? []))
       .finally(() => setLoading(false));
   }, []);
 
