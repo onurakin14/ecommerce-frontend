@@ -1,15 +1,16 @@
 // src/components/admin/StatCards.tsx
 import { useEffect, useState } from "react";
 import { FiBox, FiUsers, FiShoppingCart, FiDollarSign } from "react-icons/fi";
+import { apiUrl } from "../../lib/api";
 
 export default function StatCards() {
   const [totalProducts, setTotalProducts] = useState<number | null>(null);
 
   useEffect(() => {
-    fetch("https://dummyjson.com/products")
+    fetch(apiUrl("/api/products"))
       .then((res) => res.json())
       .then((data) => {
-        setTotalProducts(data.total);
+        setTotalProducts(data.total ?? (data.products?.length ?? 0));
       })
       .catch(() => {
         setTotalProducts(0);
