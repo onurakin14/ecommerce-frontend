@@ -4,6 +4,7 @@ import { useSelector } from "react-redux";
 import { X, Plus, Star } from "lucide-react";
 
 // TİPLER VE REDUX
+import { apiUrl } from "../lib/api";
 import type { RootState } from "../store/store";
 import type { Product } from "../store/productSlice";
 import { useCart } from "../features/shopping-cart/CartContext";
@@ -51,34 +52,41 @@ export default function ComparePage() {
     return cache ? JSON.parse(cache) : [];
   });
 
+  /* Karşılaştırılan Ürünleri Çekme */
   useEffect(() => {
     if (selectedIds.length === 0) {
+      setProducts([]);
       setLoading(false);
       return;
     }
     setLoading(true);
-    const fetchPromises = selectedIds.map(id => 
-      fetch(`https://dummyjson.com/products/${id}`).then(res => res.json())
-    );
-    Promise.all(fetchPromises)
-      .then(data => {
-        setProducts(data);
+    
+    
+    const idsString = selectedIds.join(",");
+    
+    fetch(apiUrl(`/api/products?ids=${idsString}`))
+      .then((res) => res.json())
+      .then((data) => {
+        setProducts(data.products ?? []);
         setLoading(false);
       })
       .catch(() => setLoading(false));
   }, [selectedIds]);
 
+  /* Modaldaki Favori Ürünleri Çekme */
   useEffect(() => {
     if (wishlistIds.length === 0) {
       setFavProducts([]);
       return;
     }
-    const fetchFavs = wishlistIds.map(id => 
-      fetch(`https://dummyjson.com/products/${id}`).then(res => res.json())
-    );
-    Promise.all(fetchFavs)
-      .then(data => setFavProducts(data))
-      .catch(err => console.error("Favoriler yüklenemedi:", err));
+    
+    
+    const idsString = wishlistIds.join(",");
+    
+    fetch(apiUrl(`/api/products?ids=${idsString}`))
+      .then((res) => res.json())
+      .then((data) => setFavProducts(data.products ?? []))
+      .catch((err) => console.error("Favorites could not be loaded:", err));
   }, [wishlistIds]);
 
   const handleAddToCart = (product: Product) => {
@@ -93,7 +101,7 @@ export default function ComparePage() {
       quantity: 1,
       image: product.thumbnail,
     });
-    setNotification({ message: `${product.title} sepete eklendi!`, type: "success" });
+    setNotification({ message: `${product.title} added to cart!`, type: "success" });
   };
 
   const removeProduct = (id: number) => {
@@ -138,7 +146,7 @@ export default function ComparePage() {
                       </button>
                     </div>
 
-                    {/* Ürün Bilgileri - Yükseklik Sabitleme */}
+                    {/* Ürün Bilgileri */}
                     <div className="flex flex-col grow">
                       <h3 className="text-xl font-extrabold text-gray-900 line-clamp-2 leading-tight min-h-14">
                         {product.title}

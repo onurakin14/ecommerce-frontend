@@ -2,9 +2,8 @@
  * Product Redux Slice
  *
  * Ürün verilerini ve filtrelerini yöneten Redux store
- * - FakeStore API'den ürünleri axios ile çeker
+ * - Backend API'den (product collection) ürünleri çeker
  * - Loading ve error state'lerini yönetir
- * - Ürün CRUD işlemleri için reducer'lar içerir
  */
 
 import {
@@ -13,6 +12,7 @@ import {
   type PayloadAction,
 } from "@reduxjs/toolkit";
 import axios from "axios";
+import { apiUrl } from "../lib/api";
 
 // PRODUCT MODEL
 export interface Product {
@@ -46,11 +46,13 @@ export interface Product {
     barcode: string;
     qrCode: string;
   };
-  reviews: [{
+  reviews: {
     reviewerName: string;
     comment: string;
     rating: number;
-  }];
+    date: string;        
+    reviewerEmail?: string; 
+  }[];                    
 }
 
 // Filtre seçenekleri için interface
@@ -89,15 +91,15 @@ const initialState: ProductState = {
   error: null,
 };
 
-// ASYNC THUNKS
+// ASYNC THUNKS — Backend (product collection)
 // TÜM ÜRÜNLER
 export const fetchProducts = createAsyncThunk(
   "product/fetchProducts",
   async () => {
     const res = await axios.get<{ products: Product[] }>(
-      "https://dummyjson.com/products"
+      apiUrl("/api/products")
     );
-    return res.data.products;
+    return res.data.products ?? [];
   }
 );
 
@@ -105,41 +107,78 @@ export const fetchProducts = createAsyncThunk(
 export const fetchProduct = createAsyncThunk<Product, string>(
   "product/fetchProduct",
   async (id) => {
-    const res = await axios.get<Product>(
-      `https://dummyjson.com/products/${id}`
-    );
+    const res = await axios.get<Product>(apiUrl(`/api/products/${id}`));
     return res.data;
   }
 );
 
-// RELATED
+// RELATED (backend'den tümünü al, ilk 4'ü kullan)
 export const fetchRelated = createAsyncThunk(
   "product/fetchRelated",
   async () => {
     const res = await axios.get<{ products: Product[] }>(
-      `https://dummyjson.com/products?limit=4`
+      apiUrl("/api/products?limit=4")
     );
-    return res.data.products;
+    return res.data.products ?? [];
   }
 );
 
-export const fetchProductsSortBy = createAsyncThunk(
-  `product/fetchProductsSortBy`, async (value: string) => {
-    const sortApiUrl = `https://dummyjson.com/products?sortBy=${value}&order=desc`;
-    const res = await axios.get<{ products: Product[] }>(sortApiUrl);
-    return res.data.products;
+// ÜRÜN SAYFALAMA (backend'den tümünü al, frontend'de slice)
+export const fetchProductsByPage = createAsyncThunk<Product[], { limit?: number, skip?: number }>(
+  "product/fetchProductsByPage", async ({ limit = 5, skip = 0 }) => {
+    const res = await axios.get<{ products: Product[] }>(apiUrl("/api/products"));
+    const list = res.data.products ?? [];
+    return list.slice(skip, skip + limit);
   }
 );
 
+// ÜRÜN SIRALAMA (backend'den tümünü al, frontend'de sırala)
+export const fetchProductsSortBy = createAsyncThunk<Product[], { value: string; direction?: "desc" | "asc" }>(
+  "product/fetchProductsSortBy", async ({ value, direction = "desc" }) => {
+    const res = await axios.get<{ products: Product[] }>(apiUrl("/api/products"));
+    const list = res.data.products ?? [];
+    const sorted = [...list].sort((a, b) => {
+      const av = (a as unknown as Record<string, unknown>)[value] as number | undefined;
+      const bv = (b as unknown as Record<string, unknown>)[value] as number | undefined;
+      if (av == null || bv == null) return 0;
+      return direction === "asc" ? av - bv : bv - av;
+    });
+    return sorted;
+  }
+);
+
+// ÜRÜN EKLE / GÜNCELLE / SİL — backend'de endpoint yoksa dummyjson (admin için)
+export const createProduct = createAsyncThunk<Product, Partial<Product>>(
+  "product/createProduct", async (newProduct) => {
+    const res = await axios.post<Product>("https://dummyjson.com/products/add", newProduct);
+    return res.data;
+  }
+);
+
+export const updateProduct = createAsyncThunk<Product, Partial<Product>>(
+  "product/updateProduct", async (product) => {
+    const res = await axios.put(`https://dummyjson.com/products/${product.id}`, { product });
+    return res.data;
+  }
+);
+
+export const deleteProduct = createAsyncThunk(
+  "product/deleteProduct", async (id: number) => {
+    const res = await axios.delete(`https://dummyjson.com/products/${id}`);
+    return res.data;
+  }
+);
+
+// KATEGORİ (dummyjson — backend'de categories endpoint yok)
 export interface Category {
-  slug: string,
-  name: string,
-  url: string
+  slug: string;
+  name: string;
+  url: string;
 }
 
 export const fetchCategories = createAsyncThunk(
   "category/fetchCategories", async () => {
-    const res = await axios.get<Category[]>('https://dummyjson.com/products/categories');
+    const res = await axios.get<Category[]>("https://dummyjson.com/products/categories");
     return res.data;
   }
 );

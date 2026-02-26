@@ -3,35 +3,50 @@ import { useEffect, useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import { Heart, ShoppingBag, Star } from "lucide-react";
 
+import { apiUrl } from "../lib/api";
 import type { RootState } from "../store/store";
 import type { Product } from "../store/productSlice";
 
 export default function WishlistPage() {
-  /* ---------------- REDUX ---------------- */
+  /* REDUX */
   const wishlist = useSelector((state: RootState) => state.wishlist.items);
   const navigate = useNavigate();
 
-  /* ---------------- STATE ---------------- */
+  /* STATE */
   const [products, setProducts] = useState<Product[]>([]);
   const [loading, setLoading] = useState(true);
 
   const [compareMode, setCompareMode] = useState(false);
   const [selectedIds, setSelectedIds] = useState<number[]>([]);
 
-  /* ---------------- FETCH ---------------- */
   useEffect(() => {
+    // Eğer favoriler boşsa boşuna backend'e istek atma
+    if (!wishlist || wishlist.length === 0) {
+      setProducts([]);
+      setLoading(false);
+      return;
+    }
+
     setLoading(true);
+    // Redux'taki [3, 8, 15] dizisini "3,8,15" formatına çevir
+    const idsString = wishlist.join(",");
 
-    fetch("https://dummyjson.com/products?limit=200")
+    // Sadece bu ID'lere sahip ürünleri backend'den iste
+    fetch(apiUrl(`/api/products?ids=${idsString}`))
       .then((res) => res.json())
-      .then((data) => setProducts(data.products))
+      .then((data) => {
+        // Gelen sadece favori ürünleri state'e kaydet
+        setProducts(data.products ?? []);
+      })
+      .catch((err) => console.error("Favoriler çekilirken hata oluştu:", err))
       .finally(() => setLoading(false));
-  }, []);
+  }, [wishlist]); // wishlist değiştiğinde useEffect tekrar çalışır
 
-  /* ---------------- FILTER ---------------- */
-  const filtered = products.filter((p) => wishlist.includes(p.id));
+  /* Artık filter işlemine gerek yok, çünkü backend sadece favorileri gönderiyor */
+  // const filtered = products.filter((p) => wishlist.includes(p.id)); 
+  // (Bunun yerine doğrudan "products" dizisini kullanacağız)
 
-  /* ---------------- COMPARE ---------------- */
+  /* COMPARE */
   const toggleSelect = (id: number) => {
     if (!compareMode) return;
 
@@ -50,7 +65,7 @@ export default function WishlistPage() {
     }
   };
 
-  /* ---------------- LOADING (SKELETON) ---------------- */
+  /* LOADING (SKELETON) */
   if (loading) {
     return (
       <div className="min-h-screen bg-gray-50">
@@ -71,7 +86,7 @@ export default function WishlistPage() {
     );
   }
 
-  /* ---------------- UI ---------------- */
+  /* UI */
   return (
     <div className="min-h-screen bg-gray-50">
       <div className="max-w-7xl mx-auto px-4 py-10">
@@ -81,9 +96,9 @@ export default function WishlistPage() {
           <div>
             <h1 className="text-3xl font-bold flex items-center gap-2">
               <Heart className="text-red-500 fill-red-500" />
-              Favorilerim
+              My favorites
             </h1>
-            <p className="text-gray-500 mt-1">{filtered.length} ürün</p>
+            <p className="text-gray-500 mt-1">{products.length} product</p>
           </div>
 
           <div className="flex flex-wrap gap-3">
@@ -92,7 +107,7 @@ export default function WishlistPage() {
                 onClick={() => setCompareMode(true)}
                 className="px-6 py-3 bg-purple-600 text-white rounded-xl hover:bg-purple-700"
               >
-                Ürün Karşılaştır
+                Product Comparison
               </button>
             ) : (
               <>
@@ -106,7 +121,7 @@ export default function WishlistPage() {
                         : "bg-purple-600 text-white hover:bg-purple-700"
                     }`}
                 >
-                  Karşılaştır ({selectedIds.length}/3)
+                  Compare ({selectedIds.length}/3)
                 </button>
 
                 <button
@@ -116,7 +131,7 @@ export default function WishlistPage() {
                   }}
                   className="px-6 py-3 bg-white border rounded-xl"
                 >
-                  İptal
+                  Cancel
                 </button>
               </>
             )}
@@ -125,31 +140,31 @@ export default function WishlistPage() {
               to="/products"
               className="px-6 py-3 bg-blue-600 text-white rounded-xl hover:bg-blue-700"
             >
-              Alışverişe Devam
+              Back to Shop
             </Link>
           </div>
         </div>
 
         {/* EMPTY */}
-        {filtered.length === 0 && (
+        {products.length === 0 && (
           <div className="text-center py-24 bg-white rounded-2xl">
             <ShoppingBag className="w-20 h-20 text-gray-300 mx-auto mb-6" />
             <h2 className="text-2xl font-semibold mb-3">
-              Favori listeniz boş
+              Your favorites list is empty.
             </h2>
             <Link
               to="/products"
               className="px-8 py-3 bg-blue-600 text-white rounded-xl"
             >
-              Ürünleri Keşfet
+              Explore Products
             </Link>
           </div>
         )}
 
         {/* GRID */}
-        {filtered.length > 0 && (
+        {products.length > 0 && (
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-6">
-            {filtered.map((product) => {
+            {products.map((product) => {
               const isSelected = selectedIds.includes(product.id);
               const isDisabled =
                 compareMode &&
@@ -186,10 +201,9 @@ export default function WishlistPage() {
                       ${product.price}
                     </p>
 
-                    {/* 🔴 SADECE BURADA İNDİRİM */}
                     {hasDiscount && (
                       <p className="text-xs text-red-500 font-medium">
-                        %{product.discountPercentage!.toFixed(0)} indirim
+                        %{product.discountPercentage!.toFixed(0)} discount
                       </p>
                     )}
 
@@ -210,7 +224,7 @@ export default function WishlistPage() {
                     }}
                     className="mt-4 w-full py-3 bg-blue-600 text-white rounded-xl hover:bg-blue-700"
                   >
-                    Ürünü İncele
+                    View Product
                   </button>
                 </div>
               );

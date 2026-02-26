@@ -5,6 +5,7 @@ import { loginUser } from "../../store/authSlice";
 import { useNavigate, Link } from "react-router-dom";
 import { FcGoogle } from "react-icons/fc";
 import { FaFacebookF } from "react-icons/fa";
+import { ADMIN_USERS } from "../../store/authSlice";
 
 export default function Login() {
   const dispatch = useDispatch<AppDispatch>();
@@ -12,20 +13,33 @@ export default function Login() {
 
   const loading = useSelector((state: RootState) => state.auth.loading);
 
-  const [username, setUsername] = useState("emilys");   
-  const [password, setPassword] = useState("emilyspass");
+const [username, setUsername] = useState("emilys");
+const [password, setPassword] = useState("emilyspass");
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    const result = await dispatch(loginUser({ username, password }));
 
-    if (loginUser.fulfilled.match(result)) {
-      alert("Login successful 🎉");
-      navigate("/"); 
+
+
+const handleSubmit = async (e: React.FormEvent) => {
+  e.preventDefault();
+
+  const result = await dispatch(loginUser({ username, password }));
+
+  if (loginUser.fulfilled.match(result)) {
+    const user = result.payload;
+
+    alert("Login successful 🎉");
+
+    const isAdmin = ADMIN_USERS.includes(user.username);
+
+    if (isAdmin) {
+      navigate("/admin");
     } else {
-      alert("Login failed ❌ Check credentials!");
+      navigate("/");
     }
-  };
+  } else {
+    alert("Login failed ❌ Check credentials!");
+  }
+};
 
   return (
     <div className="w-full min-h-screen flex items-center justify-center bg-gray-100 px-4">

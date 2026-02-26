@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { Star, User, Calendar } from "lucide-react";
 import type { Product } from "../../../store/productSlice";
 
@@ -8,54 +8,14 @@ interface Props {
 
 type TabType = "description" | "reviews" | "specifications";
 
-interface Review {
-  rating: number;
-  comment: string;
-  date: string;
-  reviewerName: string;
-  reviewerEmail: string;
-}
-
 export default function ProductTabs({ product }: Props) {
   const [active, setActive] = useState<TabType>("description");
-  const [reviews, setReviews] = useState<Review[]>([]);
-  const [loadingReviews, setLoadingReviews] = useState(false);
-
-  useEffect(() => {
-    if (!product?.id) return;
-
-    async function loadReviews() {
-      setLoadingReviews(true);
-      try {
-        const res = await fetch(
-          `https://dummyjson.com/comments/post/${product.id}`
-        );
-        const data = await res.json();
-
-        const mockReviews: Review[] =
-          data.comments?.slice(0, 5).map((c: any) => ({
-            rating: Math.floor(Math.random() * 2) + 4,
-            comment: c.body,
-            date: new Date().toISOString(),
-            reviewerName: c.user?.username || "Anonymous",
-            reviewerEmail: `${c.user?.id}@example.com`,
-          })) || [];
-
-        setReviews(mockReviews);
-      } catch {
-        setReviews([]);
-      } finally {
-        setLoadingReviews(false);
-      }
-    }
-
-    loadReviews();
-  }, [product.id]);
+  const reviews = product?.reviews || [];
 
   const tabs = [
-    { id: "description", label: "Açıklama" },
-    { id: "reviews", label: "Yorumlar" },
-    { id: "specifications", label: "Özellikler" },
+    { id: "description", label: "Description" },
+    { id: "reviews", label: "Reviews" },
+    { id: "specifications", label: "Specifications" },
   ];
 
   const d = product.dimensions;
@@ -88,13 +48,13 @@ export default function ProductTabs({ product }: Props) {
         {active === "description" && (
           <div className="prose max-w-none">
             <p className="text-gray-700 leading-relaxed">
-              {product.description || "Ürün açıklaması bulunmamaktadır."}
+              {product.description || "No product description is available."}
             </p>
 
             {product.shippingInformation && (
               <div className="mt-6 p-4 bg-blue-50 rounded-xl">
                 <h4 className="font-semibold text-gray-900 mb-2">
-                  Kargo Bilgisi
+                  Shipping Information
                 </h4>
                 <p className="text-gray-700 text-sm">
                   {product.shippingInformation}
@@ -105,7 +65,7 @@ export default function ProductTabs({ product }: Props) {
             {product.returnPolicy && (
               <div className="mt-4 p-4 bg-green-50 rounded-xl">
                 <h4 className="font-semibold text-gray-900 mb-2">
-                  İade Politikası
+                  Return policy
                 </h4>
                 <p className="text-gray-700 text-sm">
                   {product.returnPolicy}
@@ -118,15 +78,11 @@ export default function ProductTabs({ product }: Props) {
         {/* REVIEWS */}
         {active === "reviews" && (
           <div className="space-y-4">
-            {loadingReviews ? (
-              <div className="text-center py-8 text-gray-500">
-                Yorumlar yükleniyor...
-              </div>
-            ) : reviews.length === 0 ? (
+            {reviews.length === 0 ? (
               <div className="text-center py-12">
-                <p className="text-gray-500">Henüz yorum yapılmamış.</p>
+                <p className="text-gray-500">No comments yet.</p>
                 <button className="mt-4 px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition">
-                  İlk yorumu siz yapın
+                  Be the first to review!
                 </button>
               </div>
             ) : (
@@ -147,7 +103,7 @@ export default function ProductTabs({ product }: Props) {
                           </p>
                           <p className="flex items-center gap-1 text-xs text-gray-500">
                             <Calendar className="w-3 h-3" />
-                            {new Date(r.date).toLocaleDateString("tr-TR")}
+                            {r.date ? new Date(r.date).toLocaleDateString("tr-TR") : "Bilinmeyen Tarih"}
                           </p>
                         </div>
                       </div>
@@ -183,14 +139,14 @@ export default function ProductTabs({ product }: Props) {
               )}
               {product.category && (
                 <Spec
-                  label="Kategori"
+                  label="Category"
                   value={product.category}
                   capitalize
                 />
               )}
               {product.availabilityStatus && (
                 <Spec
-                  label="Stok Durumu"
+                  label="Availability Status"
                   value={product.availabilityStatus}
                   highlight
                 />
@@ -200,19 +156,19 @@ export default function ProductTabs({ product }: Props) {
             <div className="space-y-3">
               {product.warrantyInformation && (
                 <Spec
-                  label="Garanti"
+                  label="Guarantee"
                   value={product.warrantyInformation}
                 />
               )}
               {d?.width && d?.height && d?.depth && (
                 <Spec
-                  label="Boyutlar"
+                  label="Dimensions"
                   value={`${d.width} x ${d.height} x ${d.depth} cm`}
                 />
               )}
               {product.weight && (
                 <Spec
-                  label="Ağırlık"
+                  label="Weight"
                   value={`${product.weight} kg`}
                 />
               )}
