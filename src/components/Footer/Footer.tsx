@@ -127,7 +127,7 @@ export default function Footer() {
                   fill="currentColor"
                   viewBox="0 0 24 24"
                 >
-                  <path d="M12.315 2c2.43 0 2.784 0.013 3.808..." />
+                  <path d="M12.315 2c2.43 0 2.784.013 3.808..." />
                 </svg>
               </a>
             </div>
