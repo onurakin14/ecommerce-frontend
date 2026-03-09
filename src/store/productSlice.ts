@@ -125,24 +125,20 @@ export const fetchRelated = createAsyncThunk(
 // ÜRÜN SAYFALAMA (backend'den tümünü al, frontend'de slice)
 export const fetchProductsByPage = createAsyncThunk<Product[], { limit?: number, skip?: number }>(
   "product/fetchProductsByPage", async ({ limit = 5, skip = 0 }) => {
-    const res = await axios.get<{ products: Product[] }>(apiUrl("/api/products"));
-    const list = res.data.products ?? [];
-    return list.slice(skip, skip + limit);
+    //const apiUrl = `https://dummyjson.com/products?limit=${limit}&skip=${skip}`;
+    const apiUrl = `/api/products?limit=${limit}&skip=${skip}`;
+    const res = await axios.get<{ products: Product[] }>(apiUrl);
+    return res.data.products;
   }
 );
 
 // ÜRÜN SIRALAMA (backend'den tümünü al, frontend'de sırala)
 export const fetchProductsSortBy = createAsyncThunk<Product[], { value: string; direction?: "desc" | "asc" }>(
   "product/fetchProductsSortBy", async ({ value, direction = "desc" }) => {
-    const res = await axios.get<{ products: Product[] }>(apiUrl("/api/products"));
-    const list = res.data.products ?? [];
-    const sorted = [...list].sort((a, b) => {
-      const av = (a as unknown as Record<string, unknown>)[value] as number | undefined;
-      const bv = (b as unknown as Record<string, unknown>)[value] as number | undefined;
-      if (av == null || bv == null) return 0;
-      return direction === "asc" ? av - bv : bv - av;
-    });
-    return sorted;
+    //const sortApiUrl = `https://dummyjson.com/products?sortBy=${value}&order=${direction}`;
+    const sortApiUrl = `/api/products?sortBy=${value}&order=${direction}`;
+    const res = await axios.get<{ products: Product[] }>(sortApiUrl);
+    return res.data.products;
   }
 );
 
@@ -177,8 +173,9 @@ export interface Category {
 
 export const fetchCategories = createAsyncThunk(
   "category/fetchCategories", async () => {
-    const res = await axios.get<Category[]>("https://dummyjson.com/products/categories");
-    return res.data;
+    //const res = await axios.get<Category[]>('https://dummyjson.com/products/categories');
+    const res = await axios.get<{ categories: Category[] }>("/api/categories");
+    return res.data.categories;
   }
 );
 
