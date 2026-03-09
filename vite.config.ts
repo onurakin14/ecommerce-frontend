@@ -10,6 +10,10 @@ export default defineConfig({
         target: "https://dummyjson.com",
         changeOrigin: true,
         secure: false,
+      },
+      "/api": {
+        target: "http://localhost:3000",
+        changeOrigin: true
       }
     }
   }

@@ -126,6 +126,10 @@ export const fetchRelated = createAsyncThunk(
 // ÜRÜN SAYFALAMA (backend'den tümünü al, frontend'de slice)
 export const fetchProductsByPage = createAsyncThunk<Product[], { limit?: number, skip?: number }>(
   "product/fetchProductsByPage", async ({ limit = 5, skip = 0 }) => {
+    //const apiUrl = `https://dummyjson.com/products?limit=${limit}&skip=${skip}`;
+    //const apiUrl = `/api/products?limit=${limit}&skip=${skip}`;
+    //const res = await axios.get<{ products: Product[] }>(apiUrl);
+    //return res.data.products;
     const res = await axios.get<{ products: Product[] }>(apiUrl("/api/products"));
     const list = res.data.products ?? [];
     return list.slice(skip, skip + limit);
@@ -135,6 +139,10 @@ export const fetchProductsByPage = createAsyncThunk<Product[], { limit?: number,
 // ÜRÜN SIRALAMA (backend'den tümünü al, frontend'de sırala)
 export const fetchProductsSortBy = createAsyncThunk<Product[], { value: string; direction?: "desc" | "asc" }>(
   "product/fetchProductsSortBy", async ({ value, direction = "desc" }) => {
+    //const sortApiUrl = `https://dummyjson.com/products?sortBy=${value}&order=${direction}`;
+    //const sortApiUrl = `/api/products?sortBy=${value}&order=${direction}`;
+    //const res = await axios.get<{ products: Product[] }>(sortApiUrl);
+    //return res.data.products;
     const res = await axios.get<{ products: Product[] }>(apiUrl("/api/products"));
     const list = res.data.products ?? [];
     const sorted = [...list].sort((a, b) => {
@@ -178,6 +186,9 @@ export interface Category {
 
 export const fetchCategories = createAsyncThunk(
   "category/fetchCategories", async () => {
+    //const res = await axios.get<Category[]>('https://dummyjson.com/products/categories');
+    //const res = await axios.get<{ categories: Category[] }>("/api/categories");
+    //return res.data.categories;
     const res = await axios.get<Category[]>("https://dummyjson.com/products/categories");
     return res.data;
   }
