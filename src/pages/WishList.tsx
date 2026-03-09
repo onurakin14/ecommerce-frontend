@@ -19,17 +19,32 @@ export default function WishlistPage() {
   const [compareMode, setCompareMode] = useState(false);
   const [selectedIds, setSelectedIds] = useState<number[]>([]);
 
-  /* FETCH — backend product collection */
   useEffect(() => {
-    setLoading(true);
-    fetch(apiUrl("/api/products"))
-      .then((res) => res.json())
-      .then((data) => setProducts(data.products ?? []))
-      .finally(() => setLoading(false));
-  }, []);
+    // Eğer favoriler boşsa boşuna backend'e istek atma
+    if (!wishlist || wishlist.length === 0) {
+      setProducts([]);
+      setLoading(false);
+      return;
+    }
 
-  /* FILTER */
-  const filtered = products.filter((p) => wishlist.includes(p.id));
+    setLoading(true);
+    // Redux'taki [3, 8, 15] dizisini "3,8,15" formatına çevir
+    const idsString = wishlist.join(",");
+
+    // Sadece bu ID'lere sahip ürünleri backend'den iste
+    fetch(apiUrl(`/api/products?ids=${idsString}`))
+      .then((res) => res.json())
+      .then((data) => {
+        // Gelen sadece favori ürünleri state'e kaydet
+        setProducts(data.products ?? []);
+      })
+      .catch((err) => console.error("Favoriler çekilirken hata oluştu:", err))
+      .finally(() => setLoading(false));
+  }, [wishlist]); // wishlist değiştiğinde useEffect tekrar çalışır
+
+  /* Artık filter işlemine gerek yok, çünkü backend sadece favorileri gönderiyor */
+  // const filtered = products.filter((p) => wishlist.includes(p.id)); 
+  // (Bunun yerine doğrudan "products" dizisini kullanacağız)
 
   /* COMPARE */
   const toggleSelect = (id: number) => {
@@ -83,7 +98,7 @@ export default function WishlistPage() {
               <Heart className="text-red-500 fill-red-500" />
               My favorites
             </h1>
-            <p className="text-gray-500 mt-1">{filtered.length} product</p>
+            <p className="text-gray-500 mt-1">{products.length} product</p>
           </div>
 
           <div className="flex flex-wrap gap-3">
@@ -131,7 +146,7 @@ export default function WishlistPage() {
         </div>
 
         {/* EMPTY */}
-        {filtered.length === 0 && (
+        {products.length === 0 && (
           <div className="text-center py-24 bg-white rounded-2xl">
             <ShoppingBag className="w-20 h-20 text-gray-300 mx-auto mb-6" />
             <h2 className="text-2xl font-semibold mb-3">
@@ -147,9 +162,9 @@ export default function WishlistPage() {
         )}
 
         {/* GRID */}
-        {filtered.length > 0 && (
+        {products.length > 0 && (
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-6">
-            {filtered.map((product) => {
+            {products.map((product) => {
               const isSelected = selectedIds.includes(product.id);
               const isDisabled =
                 compareMode &&

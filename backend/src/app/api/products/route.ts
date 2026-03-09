@@ -7,6 +7,7 @@ const corsHeaders = {
   "Access-Control-Allow-Headers": "Content-Type",
 };
 
+
 export async function GET() {
   await connectDB();
 

@@ -46,11 +46,13 @@ export interface Product {
     barcode: string;
     qrCode: string;
   };
-  reviews: [{
+  reviews: {
     reviewerName: string;
     comment: string;
     rating: number;
-  }];
+    date: string;        
+    reviewerEmail?: string; 
+  }[];                    
 }
 
 // Filtre seçenekleri için interface
@@ -115,10 +117,9 @@ export const fetchRelated = createAsyncThunk(
   "product/fetchRelated",
   async () => {
     const res = await axios.get<{ products: Product[] }>(
-      apiUrl("/api/products")
+      apiUrl("/api/products?limit=4")
     );
-    const list = res.data.products ?? [];
-    return list.slice(0, 4);
+    return res.data.products ?? [];
   }
 );
 

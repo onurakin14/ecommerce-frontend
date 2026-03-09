@@ -8,6 +8,10 @@ class ProductService {
   async getProductById(id: number) {
     return productRepository.findById(id);
   }
+
+  async getProductsByIds(ids: number[]) {
+    return productRepository.findByIds(ids);
+  }
 }
 
 export const productService = new ProductService();

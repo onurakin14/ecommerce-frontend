@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { Star, User, Calendar } from "lucide-react";
 import type { Product } from "../../../store/productSlice";
 
@@ -8,49 +8,9 @@ interface Props {
 
 type TabType = "description" | "reviews" | "specifications";
 
-interface Review {
-  rating: number;
-  comment: string;
-  date: string;
-  reviewerName: string;
-  reviewerEmail: string;
-}
-
 export default function ProductTabs({ product }: Props) {
   const [active, setActive] = useState<TabType>("description");
-  const [reviews, setReviews] = useState<Review[]>([]);
-  const [loadingReviews, setLoadingReviews] = useState(false);
-
-  useEffect(() => {
-    if (!product?.id) return;
-
-    async function loadReviews() {
-      setLoadingReviews(true);
-      try {
-        const res = await fetch(
-          `https://dummyjson.com/comments/post/${product.id}`
-        );
-        const data = await res.json();
-
-        const mockReviews: Review[] =
-          data.comments?.slice(0, 5).map((c: any) => ({
-            rating: Math.floor(Math.random() * 2) + 4,
-            comment: c.body,
-            date: new Date().toISOString(),
-            reviewerName: c.user?.username || "Anonymous",
-            reviewerEmail: `${c.user?.id}@example.com`,
-          })) || [];
-
-        setReviews(mockReviews);
-      } catch {
-        setReviews([]);
-      } finally {
-        setLoadingReviews(false);
-      }
-    }
-
-    loadReviews();
-  }, [product.id]);
+  const reviews = product?.reviews || [];
 
   const tabs = [
     { id: "description", label: "Description" },
@@ -118,11 +78,7 @@ export default function ProductTabs({ product }: Props) {
         {/* REVIEWS */}
         {active === "reviews" && (
           <div className="space-y-4">
-            {loadingReviews ? (
-              <div className="text-center py-8 text-gray-500">
-                Comments are loading...
-              </div>
-            ) : reviews.length === 0 ? (
+            {reviews.length === 0 ? (
               <div className="text-center py-12">
                 <p className="text-gray-500">No comments yet.</p>
                 <button className="mt-4 px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition">
@@ -147,7 +103,7 @@ export default function ProductTabs({ product }: Props) {
                           </p>
                           <p className="flex items-center gap-1 text-xs text-gray-500">
                             <Calendar className="w-3 h-3" />
-                            {new Date(r.date).toLocaleDateString("tr-TR")}
+                            {r.date ? new Date(r.date).toLocaleDateString("tr-TR") : "Bilinmeyen Tarih"}
                           </p>
                         </div>
                       </div>
