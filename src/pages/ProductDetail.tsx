@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { useParams, Link } from "react-router-dom";
 import { ChevronRight, Home, Loader2 } from "lucide-react";
 
+import { apiUrl } from "../lib/api";
 import ProductGallery from "../features/products-detail/components/ProductGallery";
 import ProductInfo from "../features/products-detail/components/ProductInfo";
 import ProductTabs from "../features/products-detail/components/ProductTabs";
@@ -22,8 +23,12 @@ export default function ProductDetailPage() {
 
     (async () => {
       try {
-        const res = await fetch(`https://dummyjson.com/products/${id}`);
-        const data: Product= await res.json();
+        const res = await fetch(apiUrl(`/api/products/${id}`));
+        if (!res.ok) {
+          setProduct(null);
+          return;
+        }
+        const data: Product = await res.json();
         setProduct(data);
       } catch (err) {
         console.error("Product fetch error:", err);
@@ -39,17 +44,12 @@ export default function ProductDetailPage() {
 
     (async () => {
       try {
-        const res = await fetch(
-          `https://dummyjson.com/products/category/${encodeURIComponent(
-            product.category
-          )}?limit=12`
-        );
+        const res = await fetch(apiUrl("/api/products"));
         const data = await res.json();
-
-        const filtered: Product[] = (data.products || []).filter(
-          (p: Product) => p.id !== product.id
-        );
-
+        const list: Product[] = data.products ?? [];
+        const filtered = list
+          .filter((p: Product) => p.category === product.category && p.id !== product.id)
+          .slice(0, 12);
         setRelated(filtered);
       } catch (err) {
         console.error("Related products error:", err);

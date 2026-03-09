@@ -4,6 +4,7 @@ import { useSelector } from "react-redux";
 import { X, Plus, Star } from "lucide-react";
 
 // TİPLER VE REDUX
+import { apiUrl } from "../lib/api";
 import type { RootState } from "../store/store";
 import type { Product } from "../store/productSlice";
 import { useCart } from "../features/shopping-cart/CartContext";
@@ -57,8 +58,8 @@ export default function ComparePage() {
       return;
     }
     setLoading(true);
-    const fetchPromises = selectedIds.map(id => 
-      fetch(`https://dummyjson.com/products/${id}`).then(res => res.json())
+    const fetchPromises = selectedIds.map(id =>
+      fetch(apiUrl(`/api/products/${id}`)).then(res => res.json())
     );
     Promise.all(fetchPromises)
       .then(data => {
@@ -73,8 +74,8 @@ export default function ComparePage() {
       setFavProducts([]);
       return;
     }
-    const fetchFavs = wishlistIds.map(id => 
-      fetch(`https://dummyjson.com/products/${id}`).then(res => res.json())
+    const fetchFavs = wishlistIds.map(id =>
+      fetch(apiUrl(`/api/products/${id}`)).then(res => res.json())
     );
     Promise.all(fetchFavs)
       .then(data => setFavProducts(data))
